@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ModuleTypeRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ModuleTypeRepository::class)]
 class ModuleType
@@ -13,15 +15,29 @@ class ModuleType
     #[ORM\Column]
     private ?int $id = null;
 
-
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[Assert\NotBlank]
     private string $name;
 
-    #[ORM\Column(type: "text")]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(max: 5000)]
     private string $description;
 
-    #[ORM\Column(type: "string", length: 100)]
+    #[ORM\Column(type: Types::STRING, length: 50)]
+    #[Assert\Length(max: 50)]
     private string $unitOfMeasure;
+
+    #[ORM\Column(type: Types::TEXT, length: 5000)]
+    #[Assert\Length(max: 5000)]
+    private string $unitDescription;
+
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    private ?float $minValue = null;
+
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    private ?float $maxValue = null;
+
+    private string $max;
 
     public function getId(): ?int
     {
@@ -59,6 +75,37 @@ class ModuleType
     {
         $this->description = $description;
         return $this;
+    }
+
+    public function getUnitDescription(): string
+    {
+        return $this->unitDescription;
+    }
+
+    public function setUnitDescription(string $unitDescription): self
+    {
+        $this->unitDescription = $unitDescription;
+        return $this;
+    }
+
+    public function getMinValue(): ?float
+    {
+        return $this->minValue;
+    }
+
+    public function setMinValue(?float $minValue): void
+    {
+        $this->minValue = $minValue;
+    }
+
+    public function getMaxValue(): ?float
+    {
+        return $this->maxValue;
+    }
+
+    public function setMaxValue(?float $maxValue): void
+    {
+        $this->maxValue = $maxValue;
     }
 
 }

@@ -3,8 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\ModuleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module
 {
@@ -12,34 +16,29 @@ class Module
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-
-
-
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $name;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description;
 
-    #[ORM\Column(type: "string", length: 255)]
-    private string $status;
 
-    #[ORM\Column(type: "float", nullable: true)]
-    private ?float $lastMeasuredValue;
+    #[ORM\ManyToOne(targetEntity: ModuleType::class)]
+    private ?ModuleType $type = null;
 
-    #[ORM\Column(type: "datetime")]
-    private \DateTimeInterface $createdAt;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: "datetime")]
-    private \DateTimeInterface $updatedAt;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $updatedAt = null;
+
 
     public function getId(): ?int
     {
         return $this->id;
     }
-    #[ORM\OneToMany(targetEntity:ModuleHistory::class, mappedBy:"module")]
 
+    #[ORM\OneToMany(targetEntity: ModuleHistory::class, mappedBy: "module")]
     private Collection $histories;
 
     public function __construct()
@@ -76,4 +75,58 @@ class Module
 
         return $this;
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getType(): ?ModuleType
+    {
+        return $this->type;
+    }
+
+    public function setType(?ModuleType $type): self
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updatedTimestamps(): void
+    {
+        $this->updatedAt = new \DateTime('now');
+        if ($this->getCreatedAt() === null) {
+            $this->createdAt = new \DateTime('now');
+        }
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+
 }
