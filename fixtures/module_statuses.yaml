@@ -1,0 +1,15 @@
+App\Entity\ModuleStatus:
+    module_status_online:
+        name: "En ligne"
+        slug: "en-ligne"
+    module_status_offline:
+        name: "Hors ligne"
+        slug: "hors-ligne"
+
+    module_status_faulty:
+        name: "En panne"
+        slug: "en-panne"
+
+    module_status_other:
+        name: "Autre"
+        slug: "autre"
