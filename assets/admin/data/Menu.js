@@ -4,58 +4,28 @@ const dashboardMenu = [
         "link": "/dashboard/finance",
         "icon": "ri-pie-chart-2-line"
     },
-    {
-        "label": "Events Management",
-        "link": "/dashboard/events",
-        "icon": "ri-calendar-todo-line"
-    },
+
     {
         "label": "Sales Monitoring",
         "link": "/dashboard/sales",
         "icon": "ri-shopping-bag-3-line"
     },
-    {
-        "label": "Website Analytics",
-        "link": "/dashboard/analytics",
-        "icon": "ri-bar-chart-2-line"
-    },
-    {
-        "label": "Cryptocurrency",
-        "link": "/dashboard/crypto",
-        "icon": "ri-coin-line"
-    },
-    {
-        "label": "Helpdesk Service",
-        "link": "/dashboard/helpdesk",
-        "icon": "ri-service-line"
-    },
+    
     {
         "label": "Storage Management",
         "link": "/dashboard/storage",
         "icon": "ri-hard-drive-2-line"
-    },
-    {
-        "label": "Product Management",
-        "link": "/dashboard/product",
-        "icon": "ri-suitcase-2-line"
     }
+
 ];
 
 const applicationsMenu = [
-
-
     {
         "label": "Calendar",
         "link": "/apps/calendar",
         "icon": "ri-calendar-line"
     },
 
-    {
-        "label": "Task Manager",
-        "link": "/apps/tasks",
-        "icon": "ri-checkbox-multiple-line"
-    },
-    
 ];
 
 const pagesMenu = [
@@ -67,22 +37,7 @@ const pagesMenu = [
                 "label": "User Profile",
                 "link": "/pages/profile"
             },
-            {
-                "label": "People & Groups",
-                "link": "/pages/people"
-            },
-            {
-                "label": "Activity Log",
-                "link": "/pages/activity"
-            },
-            {
-                "label": "Events",
-                "link": "/pages/events"
-            },
-            {
-                "label": "Settings",
-                "link": "/pages/settings"
-            }
+
         ]
     },
     {

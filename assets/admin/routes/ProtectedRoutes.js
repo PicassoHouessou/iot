@@ -1,26 +1,16 @@
 import React from "react";
 
 // Dashboard
-import EventManagement from "../dashboard/EventManagement";
 import SalesMonitoring from "../dashboard/SalesMonitoring";
-import WebsiteAnalytics from "../dashboard/WebsiteAnalytics";
 import FinanceMonitoring from "../dashboard/FinanceMonitoring";
-import Cryptocurrency from "../dashboard/Cryptocurrency";
-import HelpdeskService from "../dashboard/HelpdeskService";
 import StorageManagement from "../dashboard/StorageManagement";
-import ProductManagement from "../dashboard/ProductManagement";
 
 // Apps
 import AppCalendar from "../apps/AppCalendar";
 
 // Pages
-import Pricing from "../pages/Pricing";
 import Faq from "../pages/Faq";
 import Profile from "../pages/Profile";
-import People from "../pages/People";
-import Activity from "../pages/Activity";
-import Events from "../pages/Events";
-import Settings from "../pages/Settings";
 
 // UI Elements
 import LayoutColumns from "../docs/LayoutColumns";
@@ -76,21 +66,11 @@ import IconFeather from "../docs/IconFeather";
 
 const protectedRoutes = [
     {path: "dashboard/finance", element: <FinanceMonitoring/>},
-    {path: "dashboard/events", element: <EventManagement/>},
     {path: "dashboard/sales", element: <SalesMonitoring/>},
-    {path: "dashboard/analytics", element: <WebsiteAnalytics/>},
-    {path: "dashboard/crypto", element: <Cryptocurrency/>},
-    {path: "dashboard/helpdesk", element: <HelpdeskService/>},
     {path: "dashboard/storage", element: <StorageManagement/>},
-    {path: "dashboard/product", element: <ProductManagement/>},
     {path: "apps/calendar", element: <AppCalendar/>},
-    {path: "pages/pricing", element: <Pricing/>},
     {path: "pages/faq", element: <Faq/>},
     {path: "pages/profile", element: <Profile/>},
-    {path: "pages/people", element: <People/>},
-    {path: "pages/activity", element: <Activity/>},
-    {path: "pages/events", element: <Events/>},
-    {path: "pages/settings", element: <Settings/>},
     {path: "docs/layout/grid", element: <LayoutGrid/>},
     {path: "docs/layout/columns", element: <LayoutColumns/>},
     {path: "docs/layout/gutters", element: <LayoutGutters/>},
