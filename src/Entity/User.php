@@ -2,14 +2,102 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\ChangePasswordController;
+use App\Controller\EditAvatarController;
 use App\Repository\UserRepository;
+use App\State\UserProcessor;
 use Doctrine\ORM\Mapping as ORM;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[ApiResource(
+    operations: [
+        new Get(security: 'is_granted(\'view\',object)'),
+        new Put(security: 'is_granted(\'edit\',object)'),
+        new Delete(security: 'is_granted(\'edit\',object)'),
+        new Patch,
+        new Put(
+            uriTemplate: '/users/password/update/{id}',
+            requirements: ['id' => '.+', '_method' => 'PUT'],
+            controller: ChangePasswordController::class,
+            openapiContext: [
+                'summary' => 'Change the password of User Resource',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                '' => 'object',
+                                'properties' => [
+                                    'oldPassword' => ['type' => 'string'],
+                                    'newPassword' => ['type' => 'string'],
+                                    'confirmPassword' => ['type' => 'string']
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            security: 'is_granted(\'edit\',object)'
+        ),
+        new Post(
+            uriTemplate: '/users/avatar/{id}',
+            requirements: ['id' => '.+', '_method' => 'POST'],
+            controller: EditAvatarController::class,
+            openapiContext: [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'photoProfile' => [
+                                        'type' => 'string',
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            security: 'is_granted(\'edit\',object)',
+            deserialize: false
+        ),
+        new GetCollection(),
+        new Post(),
+    ],
+    normalizationContext: ['groups' => ['read:User']],
+    denormalizationContext: ['groups' => ['write:User']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+    processor: UserProcessor::class,
+    extraProperties: [
+        'standard_put' => false,
+    ]
+)]
+#[ORM\HasLifecycleCallbacks]
+#[UniqueEntity("email")]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'email', 'pec', 'firstName', 'lastName', 'roles', 'dateInsert', 'dateUpdate'])]
+#[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'firstName' => 'partial', 'lastName' => 'partial', 'email' => 'partial', 'pec' => 'partial', 'roles' => 'partial'])]
+#[ApiFilter(filterClass: DateFilter::class, properties: ['dateInsert', 'dateUpdate'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,6 +106,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180)]
     private ?string $email = null;
+
+    #[Groups(["read:User", "write:User"])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private $isVerified = false;
 
     /**
      * @var list<string> The user roles
@@ -31,9 +123,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    public static function createFromPayload($id, array $payload): JWTUserInterface
+    {
+        $user = new self;
+
+        //$user->setId(Uuid::fromString($id));
+        $user->setId($id);
+        $user->setEmail($payload['username'] ?? '');
+        $user->setRoles($payload['roles']);
+
+        return $user;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -55,13 +166,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
+     * @return list<string>
      * @see UserInterface
      *
-     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -104,5 +215,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+        return $this;
     }
 }
