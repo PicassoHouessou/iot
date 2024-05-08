@@ -8,13 +8,13 @@ import Signup from "../pages/Signup";
 import VerifyAccount from "../pages/VerifyAccount";
 
 const publicRoutes = [
-    {path: "pages/signin", element: <Signin/>},
-    {path: "pages/signup", element: <Signup/>},
-    {path: "pages/verify", element: <VerifyAccount/>},
-    {path: "pages/forgot", element: <ForgotPassword/>},
-    {path: "pages/lock", element: <LockScreen/>},
-    {path: "pages/error-404", element: <NotFound/>},
-    {path: "pages/error-500", element: <InternalServerError/>},
+    {path: "signin", element: <Signin/>},
+    {path: "signup", element: <Signup/>},
+    {path: "verify", element: <VerifyAccount/>},
+    {path: "forgot", element: <ForgotPassword/>},
+    {path: "lock", element: <LockScreen/>},
+    {path: "error-404", element: <NotFound/>},
+    {path: "error-500", element: <InternalServerError/>},
 ];
 
 export default publicRoutes;

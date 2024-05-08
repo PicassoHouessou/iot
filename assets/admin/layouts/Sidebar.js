@@ -16,7 +16,7 @@ export default class Sidebar extends Component {
         return (
             <div className="sidebar">
                 <div className="sidebar-header">
-                    <Link to="/" className="sidebar-logo">dashbyte</Link>
+                    <Link to="/" className="sidebar-logo">IoTAdmin</Link>
                 </div>
                 <PerfectScrollbar className="sidebar-body" ref={ref => this._scrollBarRef = ref}>
                     <SidebarMenu onUpdateSize={() => this._scrollBarRef.updateScroll()}/>
@@ -121,14 +121,14 @@ class SidebarMenu extends Component {
                     {this.populateMenu(dashboardMenu)}
                 </div>
                 <div className="nav-group show">
-                    <div className="nav-label" onClick={this.toggleMenu}>Applications</div>
+                    <div className="nav-label" onClick={this.toggleMenu}>Modules</div>
                     {this.populateMenu(applicationsMenu)}
                 </div>
                 <div className="nav-group show">
                     <div className="nav-label" onClick={this.toggleMenu}>Pages</div>
                     {this.populateMenu(pagesMenu)}
                 </div>
-                
+
             </React.Fragment>
         )
     }

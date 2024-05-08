@@ -16,13 +16,14 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\ModuleHistoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
-        new Get(security: 'is_granted(\'view\',object)'),
-        new Put(security: 'is_granted(\'edit\',object)'),
-        new Patch(security: 'is_granted(\'edit\',object)'),
-        new Delete(security: 'is_granted(\'edit\',object)'),
+        new Get(),
+        new Put(),
+        new Patch(),
+        new Delete(),
         new GetCollection(),
         new Post(),
     ],

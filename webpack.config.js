@@ -21,7 +21,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('admin', './assets/admin/index.js')
+    .addEntry('admin', './assets/admin/index.tsx')
     .addEntry('app', './assets/app.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -60,12 +60,17 @@ Encore
     .enableStimulusBridge("./assets/controllers.json")
 
     // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
+    .enableTypeScriptLoader()
 
     // uncomment if you use React
     .enableReactPreset()
     //Force case sensitivity check
     .addPlugin(new CaseSensitivePathsPlugin())
+    //Add Alias to make absolute import easy
+    .addAliases({
+        "@App": `${__dirname}/assets`,
+        "@Admin": `${__dirname}/assets/admin`,
+    })
 
 // uncomment to get integrity="..." attributes on your script & link tags
 // requires WebpackEncoreBundle 1.4 or higher

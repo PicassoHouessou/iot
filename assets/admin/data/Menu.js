@@ -1,25 +1,36 @@
+import {AdminPages} from "@Admin/constants";
+
 const dashboardMenu = [
     {
-        "label": "Finance Monitoring",
-        "link": "/dashboard/finance",
+        "label": "Tableau de bord",
+        "link": "/dashboard",
         "icon": "ri-pie-chart-2-line"
     },
-
-    {
-        "label": "Sales Monitoring",
-        "link": "/dashboard/sales",
-        "icon": "ri-shopping-bag-3-line"
-    },
-    
     {
         "label": "Storage Management",
         "link": "/dashboard/storage",
         "icon": "ri-hard-drive-2-line"
-    }
+    },
+
 
 ];
 
 const applicationsMenu = [
+    {
+        "label": "Modules",
+        "link": AdminPages.MODULES,
+        "icon": "ri-pie-chart-2-line"
+    },
+    {
+        "label": "Types",
+        "link": AdminPages.MODULE_TYPES,
+        "icon": "ri-pie-chart-2-line"
+    },
+    {
+        "label": "Etats",
+        "link": AdminPages.MODULE_STATUSES,
+        "icon": "ri-pie-chart-2-line"
+    },
     {
         "label": "Calendar",
         "link": "/apps/calendar",
@@ -29,6 +40,11 @@ const applicationsMenu = [
 ];
 
 const pagesMenu = [
+    {
+        "label": "Calendar",
+        "link": "/logs",
+        "icon": "ri-calendar-line"
+    },
     {
         "label": "User Pages",
         "icon": "ri-account-circle-line",
@@ -47,31 +63,31 @@ const pagesMenu = [
         "submenu": [
             {
                 "label": "Sign In Basic",
-                "link": "/pages/signin"
+                "link": "//signin"
             },
             {
                 "label": "Sign In Cover",
-                "link": "/pages/signin2"
+                "link": "//signin2"
             },
             {
                 "label": "Sign Up Basic",
-                "link": "/pages/signup"
+                "link": "//signup"
             },
             {
                 "label": "Sign Up Cover",
-                "link": "/pages/signup2"
+                "link": "//signup2"
             },
             {
                 "label": "Verify Account",
-                "link": "/pages/verify"
+                "link": "/verify"
             },
             {
                 "label": "Forgot Password",
-                "link": "/pages/forgot"
+                "link": "/forgot"
             },
             {
                 "label": "Lock Screen",
-                "link": "/pages/lock"
+                "link": "/lock"
             }
         ]
     },
@@ -81,29 +97,16 @@ const pagesMenu = [
         "submenu": [
             {
                 "label": "Page Not Found",
-                "link": "/pages/error-404"
+                "link": "/error-404"
             },
             {
                 "label": "Internal Server Error",
-                "link": "/pages/error-500"
+                "link": "/error-500"
             },
 
         ]
     },
-    {
-        "label": "Other Pages",
-        "icon": "ri-file-text-line",
-        "submenu": [
-            {
-                "label": "Pricing",
-                "link": "/pages/pricing"
-            },
-            {
-                "label": "FAQ",
-                "link": "/pages/faq"
-            }
-        ]
-    }
+
 ];
 
 

@@ -3,8 +3,7 @@ import {Outlet, useLocation} from "react-router-dom";
 import Sidebar from "./Sidebar";
 
 export default function Main() {
-
-    const offsets = ["/apps/file-manager", "/apps/email", " /apps/calendar"];
+    const offsets = ["/apps/calendar"];
     const {pathname} = useLocation();
     const bc = document.body.classList;
 

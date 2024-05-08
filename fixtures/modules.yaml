@@ -1,4 +1,3 @@
-# src/DataFixtures/modules.yaml
 App\Entity\Module:
     module_temperature_1:
         name: "Module Température 1"
@@ -24,3 +23,6 @@ App\Entity\Module:
         name: "Module Luminosité 2"
         type: '@module_type_light'
 
+    module_temperature{3..100}:
+        name: 'Module Température <current()>{3}'
+        type: '@module_type_temperature'

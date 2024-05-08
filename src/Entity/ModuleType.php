@@ -16,13 +16,14 @@ use App\Repository\ModuleTypeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
-        new Get(security: 'is_granted(\'view\',object)'),
-        new Put(security: 'is_granted(\'edit\',object)'),
-        new Delete(security: 'is_granted(\'edit\',object)'),
+        new Get(),
+        new Put(),
+        new Delete(),
         new Patch,
         new GetCollection(),
         new Post(),
@@ -43,28 +44,36 @@ class ModuleType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["module_type:read", "module_type:write"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 250)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private string $name;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\Length(max: 5000)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private string $description;
 
     #[ORM\Column(type: Types::STRING, length: 50)]
     #[Assert\Length(max: 50)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private string $unitOfMeasure;
 
     #[ORM\Column(type: Types::TEXT, length: 5000)]
     #[Assert\Length(max: 5000)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private string $unitDescription;
 
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private ?float $minValue = null;
 
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private ?float $maxValue = null;
 
 

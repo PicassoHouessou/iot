@@ -15,19 +15,20 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\ModuleStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
-        new Get(security: 'is_granted(\'view\',object)'),
-        new Put(security: 'is_granted(\'edit\',object)'),
-        new Delete(security: 'is_granted(\'edit\',object)'),
+        new Get(),
+        new Put(),
+        new Delete(),
         new Patch,
         new GetCollection(),
         new Post(),
     ],
-    normalizationContext: ['groups' => ['module_type:read']],
-    denormalizationContext: ['groups' => ['module_type:write']],
+    normalizationContext: ['groups' => ['module_status:read']],
+    denormalizationContext: ['groups' => ['module_status:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
@@ -43,14 +44,18 @@ class ModuleStatus
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["module_status:read"])]
     private ?int $id = null;
 
     #[ORM\Column(type: "string", length: 255, unique: true)]
     #[Assert\Length(max: 255)]
+    #[Assert\NotNull()]
+    #[Groups(["module_status:read", "module_status:write"])]
     private string $name;
 
     #[ORM\Column(type: "string", length: 255, unique: true)]
     #[Assert\Length(max: 255)]
+    #[Groups(["module_status:read", "module_status:write"])]
     private string $slug;
 
     public function getId(): ?int

@@ -19,10 +19,11 @@ use App\Repository\UserRepository;
 use App\State\UserProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
@@ -64,7 +65,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
                             'schema' => [
                                 'type' => 'object',
                                 'properties' => [
-                                    'photoProfile' => [
+                                    'avatar' => [
                                         'type' => 'string',
                                         'format' => 'binary'
                                     ]
@@ -105,9 +106,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(["user:read", "user:write"])]
     private ?string $email = null;
 
-    #[Groups(["read:User", "write:User"])]
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["user:read", "user:write"])]
+    #[Assert\Sequentially([
+        new Assert\Length(max: 250)
+    ])]
+    private ?string $firstName = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["user:read", "user:write"])]
+    #[Assert\Sequentially([
+        new Assert\Length(max: 250)
+    ])]
+    private ?string $lastName = null;
+
+    #[ApiProperty(iris: ['https://schema.org/image'], openapiContext: ['type' => 'string'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["user:read", "user:avatar"])]
+    private $avatar;
+
+    #[Groups(["read:User"])]
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private $isVerified = false;
 
@@ -226,6 +247,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): static
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): static
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
         return $this;
     }
 }

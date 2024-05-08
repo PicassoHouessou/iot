@@ -13,18 +13,21 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Filter\ModuleSearchFilter;
 use App\Repository\ModuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
-        new Get(security: 'is_granted(\'view\',object)'),
-        new Put(security: 'is_granted(\'edit\',object)'),
-        new Patch(security: 'is_granted(\'edit\',object)'),
-        new Delete(security: 'is_granted(\'edit\',object)'),
+        new Get(),
+        new Put(),
+        new Patch(),
+        new Delete(),
         new GetCollection(),
         new Post(),
     ],
@@ -37,6 +40,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'type' => 'exact'])]
 #[ApiFilter(DateFilter::class, properties: ['createdAt', 'updatedAt'])]
+#[ApiFilter(filterClass: ModuleSearchFilter::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module
@@ -48,14 +52,18 @@ class Module
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
+    #[Assert\Length(max: 250)]
+    #[Assert\NotBlank]
     #[Groups(["module:read", "module:write"])]
     private string $name;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, length: 5000, nullable: true)]
+    #[Assert\Length(max: 5000)]
     #[Groups(["module:read", "module:write"])]
     private ?string $description;
 
     #[ORM\ManyToOne(targetEntity: ModuleType::class)]
+    #[Assert\NotBlank]
     #[Groups(["module:read", "module:write"])]
     private ?ModuleType $type = null;
 
@@ -116,9 +124,10 @@ class Module
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(string $name): static
     {
         $this->name = $name;
+        return $this;
     }
 
     public function getDescription(): ?string
