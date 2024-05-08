@@ -5,17 +5,17 @@ import authReducer from "@Admin/features/authSlice";
 import { adminModuleApi } from "@Admin/services/adminModuleApi";
 
 export const store = configureStore({
-  reducer: {
-    [adminModuleApi.reducerPath]: adminModuleApi.reducer,
-    auth: authReducer,
-  },
-  middleware: (getDefaultMiddleware) => {
-    const middleware = getDefaultMiddleware();
-    // return getDefaultMiddleware().concat(adminModuleApi.middleware);
-    middleware.push(adminModuleApi.middleware);
+    reducer: {
+        [adminModuleApi.reducerPath]: adminModuleApi.reducer,
+        auth: authReducer,
+    },
+    middleware: (getDefaultMiddleware) => {
+        const middleware = getDefaultMiddleware();
+        // return getDefaultMiddleware().concat(adminModuleApi.middleware);
+        middleware.push(adminModuleApi.middleware);
 
-    return middleware;
-  },
+        return middleware;
+    },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
