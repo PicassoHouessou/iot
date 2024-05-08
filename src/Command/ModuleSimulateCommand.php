@@ -54,7 +54,7 @@ class ModuleSimulateCommand extends Command
                 $moduleHistory->setValue($value);
                 $moduleHistory->setStatus($status);
                 $this->entityManager->persist($moduleHistory);
-                $output->writeln("Ajout d'un historique ayant le statut :" . $status->getName());
+                $output->writeln("Ajout d'un historique ayant le statut : " . $status->getName());
             }
             $this->entityManager->flush();
             $output->writeln('<info>Fin de simulation du module :' . $module->getName() . '</info>');

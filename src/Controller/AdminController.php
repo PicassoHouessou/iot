@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AdminController extends AbstractController
 {
-    #[Route('/{reactRouting}', name: 'app_admin', requirements: ['reactRouting' => '^(?!api).+'], defaults: ['reactRouting' => null], priority: 100)]
+    #[Route('/{reactRouting}', name: 'app_admin', requirements: ['reactRouting' => '^(?!api|(_(profiler|wdt)|css|images|js)/).+'], defaults: ['reactRouting' => null], priority: 100)]
     public function index(): Response
     {
         return $this->render('admin/index.html.twig', [

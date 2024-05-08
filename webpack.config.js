@@ -1,5 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
 var CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 //const Dotenv = require("dotenv-webpack");
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -61,6 +62,7 @@ Encore
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
+    .enableEslintPlugin()
 
     // uncomment if you use React
     .enableReactPreset()
@@ -71,6 +73,7 @@ Encore
         "@App": `${__dirname}/assets`,
         "@Admin": `${__dirname}/assets/admin`,
     })
+    .addPlugin(new Dotenv({path: `${__dirname}/.env`, systemvars: true}))
 
 // uncomment to get integrity="..." attributes on your script & link tags
 // requires WebpackEncoreBundle 1.4 or higher
