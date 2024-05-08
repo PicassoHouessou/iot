@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, Container, Form } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Footer from "../../layouts/Footer";
-import Header from "../../layouts/Header";
-import { useSkinMode } from "@Admin/hooks";
-import { ModuleType } from "@Admin/models";
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import Footer from '../../layouts/Footer';
+import Header from '../../layouts/Header';
+import { useSkinMode } from '@Admin/hooks';
+import { ModuleType } from '@Admin/models';
 import {
     useAddModuleTypeMutation,
     useModuleTypeQuery,
     useUpdateModuleTypeMutation,
-} from "@Admin/services/modulesApi";
-import { getErrorMessage } from "@Admin/utils";
-import { toast } from "react-toastify";
+} from '@Admin/services/modulesApi';
+import { getErrorMessage } from '@Admin/utils';
+import { toast } from 'react-toastify';
 
 const initialState = {
-    id: "",
-    name: "",
-    description: "",
-    type: "",
-    unitOfMeasure: "",
-    unitDescription: "",
+    id: '',
+    name: '',
+    description: '',
+    type: '',
+    unitOfMeasure: '',
+    unitDescription: '',
     minValue: 0,
     maxValue: 100,
 };
@@ -60,7 +60,7 @@ export default function AddOrEdit() {
             ...formValue,
             [name]: value,
         });
-        setErrors((prevState) => ({ ...prevState, [name]: "" }));
+        setErrors((prevState) => ({ ...prevState, [name]: '' }));
     };
 
     const handleSubmit = async (e: any) => {
@@ -75,7 +75,7 @@ export default function AddOrEdit() {
                 await addData(data).unwrap();
                 setErrors({});
                 navigate(-1);
-                toast.success("Enregistrement effectué");
+                toast.success('Enregistrement effectué');
             } else {
                 setErrors({});
                 await updateData({
@@ -83,7 +83,7 @@ export default function AddOrEdit() {
                     id,
                 }).unwrap();
                 navigate(-1);
-                toast.success("Enregistrement effectué");
+                toast.success('Enregistrement effectué');
             }
         } catch (err) {
             const { detail, errors } = getErrorMessage(err);
@@ -103,15 +103,12 @@ export default function AddOrEdit() {
                             <li className="breadcrumb-item">
                                 <Link to="/modules">Modules</Link>
                             </li>
-                            <li
-                                className="breadcrumb-item active"
-                                aria-current="page"
-                            >
-                                {editMode ? "Modification" : "Ajout"}
+                            <li className="breadcrumb-item active" aria-current="page">
+                                {editMode ? 'Modification' : 'Ajout'}
                             </li>
                         </ol>
                         <h4 className="main-title mb-0">
-                            {editMode ? "Modifier" : "Ajout"} un type de module
+                            {editMode ? 'Modifier' : 'Ajout'} un type de module
                         </h4>
                     </div>
                     {/*
@@ -131,9 +128,7 @@ export default function AddOrEdit() {
                             <Card.Body>
                                 <Form onSubmit={handleSubmit}>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="name">
-                                            Nom
-                                        </Form.Label>
+                                        <Form.Label htmlFor="name">Nom</Form.Label>
                                         <Form.Control
                                             id="name"
                                             name="name"
@@ -206,9 +201,7 @@ export default function AddOrEdit() {
                                                     name="minValue"
                                                     value={formValue.minValue}
                                                     onChange={handleInputChange}
-                                                    isInvalid={
-                                                        !!errors.minValue
-                                                    }
+                                                    isInvalid={!!errors.minValue}
                                                 ></Form.Control>
                                                 <Form.Control.Feedback type="invalid">
                                                     {errors?.minValue}
@@ -224,9 +217,7 @@ export default function AddOrEdit() {
                                                     name="maxValue"
                                                     value={formValue.maxValue}
                                                     onChange={handleInputChange}
-                                                    isInvalid={
-                                                        !!errors.maxValue
-                                                    }
+                                                    isInvalid={!!errors.maxValue}
                                                 ></Form.Control>
                                                 <Form.Control.Feedback type="invalid">
                                                     {errors?.maxValue}

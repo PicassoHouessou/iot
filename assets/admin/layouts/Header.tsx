@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Dropdown from "react-bootstrap/Dropdown";
-import userAvatar from "../assets/img/img1.jpg";
-import notification from "../data/Notification";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Dropdown from 'react-bootstrap/Dropdown';
+import userAvatar from '../assets/img/img1.jpg';
+import notification from '../data/Notification';
 
 export default function Header({
     onSkin,
@@ -36,14 +36,14 @@ export default function Header({
 
     const toggleSidebar = (e: any) => {
         e.preventDefault();
-        const isOffset = document.body.classList.contains("sidebar-offset");
+        const isOffset = document.body.classList.contains('sidebar-offset');
         if (isOffset) {
-            document.body.classList.toggle("sidebar-show");
+            document.body.classList.toggle('sidebar-show');
         } else {
-            if (window.matchMedia("(max-width: 991px)").matches) {
-                document.body.classList.toggle("sidebar-show");
+            if (window.matchMedia('(max-width: 991px)').matches) {
+                document.body.classList.toggle('sidebar-show');
             } else {
-                document.body.classList.toggle("sidebar-hide");
+                document.body.classList.toggle('sidebar-hide');
             }
         }
     };
@@ -53,11 +53,7 @@ export default function Header({
             return (
                 <li className="list-group-item" key={key}>
                     <div
-                        className={
-                            item.status === "online"
-                                ? "avatar online"
-                                : "avatar"
-                        }
+                        className={item.status === 'online' ? 'avatar online' : 'avatar'}
                     >
                         {item.avatar}
                     </div>
@@ -74,71 +70,63 @@ export default function Header({
 
     const skinMode = (e: any) => {
         e.preventDefault();
-        e.target.classList.add("active");
+        e.target.classList.add('active');
 
         let node = e.target.parentNode.firstChild;
         while (node) {
             if (node !== e.target && node.nodeType === Node.ELEMENT_NODE)
-                node.classList.remove("active");
+                node.classList.remove('active');
             node = node.nextElementSibling || node.nextSibling;
         }
 
         const skin = e.target.textContent.toLowerCase();
-        const HTMLTag = document.querySelector("html")!;
+        const HTMLTag = document.querySelector('html')!;
 
-        if (skin === "dark") {
-            HTMLTag.setAttribute("data-skin", skin);
-            localStorage.setItem("skin-mode", skin);
+        if (skin === 'dark') {
+            HTMLTag.setAttribute('data-skin', skin);
+            localStorage.setItem('skin-mode', skin);
 
             onSkin(skin);
         } else {
-            HTMLTag.removeAttribute("data-skin");
-            localStorage.removeItem("skin-mode");
+            HTMLTag.removeAttribute('data-skin');
+            localStorage.removeItem('skin-mode');
 
-            onSkin("");
+            onSkin('');
         }
     };
 
     const sidebarSkin = (e: any) => {
         e.preventDefault();
-        e.target.classList.add("active");
+        e.target.classList.add('active');
 
         let node = e.target.parentNode.firstChild;
         while (node) {
             if (node !== e.target && node.nodeType === Node.ELEMENT_NODE)
-                node.classList.remove("active");
+                node.classList.remove('active');
             node = node.nextElementSibling || node.nextSibling;
         }
 
         const skin = e.target.textContent.toLowerCase();
-        const HTMLTag = document.querySelector("html")!;
+        const HTMLTag = document.querySelector('html')!;
 
-        HTMLTag.removeAttribute("data-sidebar");
+        HTMLTag.removeAttribute('data-sidebar');
 
-        if (skin !== "default") {
-            HTMLTag.setAttribute("data-sidebar", skin);
-            localStorage.setItem("sidebar-skin", skin);
+        if (skin !== 'default') {
+            HTMLTag.setAttribute('data-sidebar', skin);
+            localStorage.setItem('sidebar-skin', skin);
         } else {
-            localStorage.removeItem("sidebar-skin");
+            localStorage.removeItem('sidebar-skin');
         }
     };
 
     return (
         <div className="header-main px-3 px-lg-4">
-            <Link
-                to=""
-                onClick={toggleSidebar}
-                className="menu-link me-3 me-lg-4"
-            >
+            <Link to="" onClick={toggleSidebar} className="menu-link me-3 me-lg-4">
                 <i className="ri-menu-2-fill"></i>
             </Link>
 
             <div className="form-search me-auto">
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search"
-                />
+                <input type="text" className="form-control" placeholder="Search" />
                 <i className="ri-search-line"></i>
             </div>
 
@@ -153,9 +141,9 @@ export default function Header({
                             to=""
                             onClick={skinMode}
                             className={
-                                localStorage.getItem("skin-mode")
-                                    ? "nav-link"
-                                    : "nav-link active"
+                                localStorage.getItem('skin-mode')
+                                    ? 'nav-link'
+                                    : 'nav-link active'
                             }
                         >
                             Light
@@ -164,9 +152,9 @@ export default function Header({
                             to=""
                             onClick={skinMode}
                             className={
-                                localStorage.getItem("skin-mode")
-                                    ? "nav-link active"
-                                    : "nav-link"
+                                localStorage.getItem('skin-mode')
+                                    ? 'nav-link active'
+                                    : 'nav-link'
                             }
                         >
                             Dark
@@ -179,9 +167,9 @@ export default function Header({
                             to=""
                             onClick={sidebarSkin}
                             className={
-                                !localStorage.getItem("sidebar-skin")
-                                    ? "nav-link active"
-                                    : "nav-link"
+                                !localStorage.getItem('sidebar-skin')
+                                    ? 'nav-link active'
+                                    : 'nav-link'
                             }
                         >
                             Default
@@ -190,9 +178,9 @@ export default function Header({
                             to=""
                             onClick={sidebarSkin}
                             className={
-                                localStorage.getItem("sidebar-skin") === "prime"
-                                    ? "nav-link active"
-                                    : "nav-link"
+                                localStorage.getItem('sidebar-skin') === 'prime'
+                                    ? 'nav-link active'
+                                    : 'nav-link'
                             }
                         >
                             Prime
@@ -201,9 +189,9 @@ export default function Header({
                             to=""
                             onClick={sidebarSkin}
                             className={
-                                localStorage.getItem("sidebar-skin") === "dark"
-                                    ? "nav-link active"
-                                    : "nav-link"
+                                localStorage.getItem('sidebar-skin') === 'dark'
+                                    ? 'nav-link active'
+                                    : 'nav-link'
                             }
                         >
                             Dark
@@ -212,10 +200,7 @@ export default function Header({
                 </Dropdown.Menu>
             </Dropdown>
 
-            <Dropdown
-                className="dropdown-notification ms-3 ms-xl-4"
-                align="end"
-            >
+            <Dropdown className="dropdown-notification ms-3 ms-xl-4" align="end">
                 <Dropdown.Toggle as={CustomToggle}>
                     <small>3</small>
                     <i className="ri-notification-3-line"></i>
@@ -242,9 +227,7 @@ export default function Header({
                         <div className="avatar avatar-xl online mb-3">
                             <img src={userAvatar} alt="" />
                         </div>
-                        <h5 className="mb-1 text-dark fw-semibold">
-                            Shaira Diaz
-                        </h5>
+                        <h5 className="mb-1 text-dark fw-semibold">Shaira Diaz</h5>
                         <p className="fs-sm text-secondary">Premium Member</p>
 
                         <nav className="nav">
@@ -261,12 +244,10 @@ export default function Header({
                                 <i className="ri-question-line"></i> Help Center
                             </Link>
                             <Link to="">
-                                <i className="ri-lock-line"></i> Privacy
-                                Settings
+                                <i className="ri-lock-line"></i> Privacy Settings
                             </Link>
                             <Link to="">
-                                <i className="ri-user-settings-line"></i>{" "}
-                                Account Settings
+                                <i className="ri-user-settings-line"></i> Account Settings
                             </Link>
                             <Link to="//signin">
                                 <i className="ri-logout-box-r-line"></i> Log Out

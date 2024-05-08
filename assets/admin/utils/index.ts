@@ -1,4 +1,4 @@
-import { ApiRoutesWithoutPrefix } from "@Admin/constants";
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
 
 export const extractIntegerFromIRI = (iri: string): number | null => {
     // Regular expression to find a single number in the IRI
@@ -24,59 +24,57 @@ const isUUID = (str: string): boolean => {
 export const generateIRI = (
     baseString: ApiRoutesWithoutPrefix,
     id: number | string | object,
-    prefix: string = "/api",
+    prefix: string = '/api',
 ): string | object => {
-    if (typeof id === "object") {
+    if (typeof id === 'object') {
         return id;
     }
-    let lastPart = "";
+    let lastPart = '';
     // If the id is a string, try to extract the number from it
-    if (typeof id === "string") {
+    if (typeof id === 'string') {
         // Extract the last part of the path
-        const parts = id.split("/");
+        const parts = id.split('/');
         lastPart = parts[parts.length - 1];
 
         // Check if it matches UUID format
         if (isUUID(lastPart)) {
             lastPart = lastPart;
         } else {
-            const extractedNumber = parseInt(id.split("/").pop() || "");
+            const extractedNumber = parseInt(id.split('/').pop() || '');
             if (!isNaN(extractedNumber)) {
                 // If a valid number is extracted from the string, use it as the ID
                 lastPart = extractedNumber as unknown as string;
             }
         }
     }
-    if (typeof id === "number") {
+    if (typeof id === 'number') {
         lastPart = id as unknown as string;
     }
     // Remove trailing slashes from the base string
-    const trimmedBaseString = baseString.replace(/\/+$/, "");
+    const trimmedBaseString = baseString.replace(/\/+$/, '');
     // Append the ID to the base string to create the IRI
     const iri = `${prefix}${trimmedBaseString}/${lastPart}`;
     return iri;
 };
 
 export const switchSkin = (skin: string) => {
-    if (skin === "dark") {
-        const btnWhite = document.getElementsByClassName("btn-white");
+    if (skin === 'dark') {
+        const btnWhite = document.getElementsByClassName('btn-white');
 
         for (const btn of btnWhite) {
-            btn.classList.add("btn-outline-primary");
-            btn.classList.remove("btn-white");
+            btn.classList.add('btn-outline-primary');
+            btn.classList.remove('btn-white');
         }
     } else {
-        const btnOutlinePrimary = document.getElementsByClassName(
-            "btn-outline-primary",
-        );
+        const btnOutlinePrimary = document.getElementsByClassName('btn-outline-primary');
 
         for (const btn of btnOutlinePrimary) {
-            btn.classList.remove("btn-outline-primary");
-            btn.classList.add("btn-white");
+            btn.classList.remove('btn-outline-primary');
+            btn.classList.add('btn-white');
         }
     }
 };
-export * from "./useUserByToken";
-export * from "./getErrorMessage";
-export * from "./truncate";
-export * from "./generateUrl";
+export * from './useUserByToken';
+export * from './getErrorMessage';
+export * from './truncate';
+export * from './generateUrl';

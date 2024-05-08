@@ -1,10 +1,10 @@
-import React from "react";
-import { Button, Dropdown, Row, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Footer from "@Admin/layouts/Footer";
-import Header from "@Admin/layouts/Header";
-import { CustomToggle } from "@Admin/components/CustomToggle";
-import { useSkinMode } from "@Admin/hooks";
+import React from 'react';
+import { Button, Dropdown, Row, Table } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Footer from '@Admin/layouts/Footer';
+import Header from '@Admin/layouts/Header';
+import { CustomToggle } from '@Admin/components/CustomToggle';
+import { useSkinMode } from '@Admin/hooks';
 
 export default function Logs() {
     const [, setSkin] = useSkinMode();
@@ -19,10 +19,7 @@ export default function Logs() {
                             <li className="breadcrumb-item">
                                 <Link to="#">Dashboard</Link>
                             </li>
-                            <li
-                                className="breadcrumb-item active"
-                                aria-current="page"
-                            >
+                            <li className="breadcrumb-item active" aria-current="page">
                                 Modules
                             </li>
                         </ol>
@@ -68,18 +65,18 @@ export default function Logs() {
                         <tbody>
                             {[
                                 {
-                                    color: "primary",
-                                    icon: "ri-folder-5-line",
-                                    name: "Dashboard Concepts",
-                                    date: "Aug 20, 2023",
-                                    size: "21.5MB",
+                                    color: 'primary',
+                                    icon: 'ri-folder-5-line',
+                                    name: 'Dashboard Concepts',
+                                    date: 'Aug 20, 2023',
+                                    size: '21.5MB',
                                 },
                                 {
-                                    color: "primary",
-                                    icon: "ri-folder-5-line",
-                                    name: "Gallery",
-                                    date: "Aug 19, 2023",
-                                    size: "341.2MB",
+                                    color: 'primary',
+                                    icon: 'ri-folder-5-line',
+                                    name: 'Gallery',
+                                    date: 'Aug 19, 2023',
+                                    size: '341.2MB',
                                 },
                             ].map((file, index) => (
                                 <tr key={index}>
@@ -94,32 +91,26 @@ export default function Logs() {
                                     <td>{file.date}</td>
                                     <td>{file.size}</td>
                                     <td>
-                                        <Dropdown
-                                            align="end"
-                                            className="dropdown-file"
-                                        >
+                                        <Dropdown align="end" className="dropdown-file">
                                             <Dropdown.Toggle as={CustomToggle}>
                                                 <i className="ri-more-2-fill"></i>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu>
                                                 <Dropdown.Item className="details">
-                                                    <Link to={"/modules/see"}>
-                                                        <i className="ri-information-line"></i>{" "}
+                                                    <Link to={'/modules/see'}>
+                                                        <i className="ri-information-line"></i>{' '}
                                                         Voir Détails
                                                     </Link>
                                                 </Dropdown.Item>
-                                                <Dropdown.Item
-                                                    href="#"
-                                                    className="share"
-                                                >
-                                                    <i className="ri-edit-line"></i>{" "}
+                                                <Dropdown.Item href="#" className="share">
+                                                    <i className="ri-edit-line"></i>{' '}
                                                     Modifier
                                                 </Dropdown.Item>
                                                 <Dropdown.Item
                                                     href="#"
                                                     className="delete"
                                                 >
-                                                    <i className="ri-delete-bin-line"></i>{" "}
+                                                    <i className="ri-delete-bin-line"></i>{' '}
                                                     Delete
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>

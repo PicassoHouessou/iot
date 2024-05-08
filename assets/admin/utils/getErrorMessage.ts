@@ -1,25 +1,21 @@
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 /**
  * Type predicate to narrow an unknown error to `FetchBaseQueryError`
  */
-export function isFetchBaseQueryError(
-    error: unknown,
-): error is FetchBaseQueryError {
-    return typeof error === "object" && error != null && "status" in error;
+export function isFetchBaseQueryError(error: unknown): error is FetchBaseQueryError {
+    return typeof error === 'object' && error != null && 'status' in error;
 }
 
 /**
  * Type predicate to narrow an unknown error to an object with a string 'message' property
  */
-export function isErrorWithMessage(
-    error: unknown,
-): error is { message: string } {
+export function isErrorWithMessage(error: unknown): error is { message: string } {
     return (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error != null &&
-        "message" in error &&
-        typeof (error as any).message === "string"
+        'message' in error &&
+        typeof (error as any).message === 'string'
     );
 }
 
@@ -28,10 +24,10 @@ export function isErrorWithMessage(
  */
 export function isErrorWithDetail(error: unknown): error is { detail: string } {
     return (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error != null &&
-        "detail" in error &&
-        typeof (error as any).detail === "string"
+        'detail' in error &&
+        typeof (error as any).detail === 'string'
     );
 }
 
@@ -43,13 +39,11 @@ interface Violation {
 /**
  * Type predicate to narrow an unknown error to an object with a 'violations' array property
  */
-export function isViolationError(
-    error: unknown,
-): error is { violations: Violation[] } {
+export function isViolationError(error: unknown): error is { violations: Violation[] } {
     return (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error != null &&
-        "violations" in error &&
+        'violations' in error &&
         Array.isArray((error as any).violations)
     );
 }
@@ -63,10 +57,10 @@ export const getErrorMessage = (err: unknown): ErrorDetails => {
     const errorDetails: ErrorDetails = {};
 
     if (isFetchBaseQueryError(err)) {
-        if ("error" in err) {
+        if ('error' in err) {
             errorDetails.detail = err.error;
         } else {
-            if (typeof err.data === "object") {
+            if (typeof err.data === 'object') {
                 const data: any = err.data;
                 if (isViolationError(data)) {
                     errorDetails.errors = data.violations.reduce(
@@ -76,9 +70,9 @@ export const getErrorMessage = (err: unknown): ErrorDetails => {
                         },
                         {} as { [propertyPath: string]: string },
                     );
-                } else if ("detail" in data) {
+                } else if ('detail' in data) {
                     errorDetails.detail = data.detail;
-                } else if ("message" in data) {
+                } else if ('message' in data) {
                     errorDetails.detail = data.message;
                 }
             }

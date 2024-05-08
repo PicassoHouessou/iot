@@ -1,11 +1,11 @@
-import React from "react";
-import { Col, Container, Nav, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import pageSvg from "../assets/svg/server_down.svg";
-import { AdminPages } from "@Admin/constants";
+import React from 'react';
+import { Col, Container, Nav, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import pageSvg from '../assets/svg/server_down.svg';
+import { AdminPages } from '@Admin/constants';
 
 export default function NotFound() {
-    document.body.classList.remove("sidebar-show");
+    document.body.classList.remove('sidebar-show');
 
     return (
         <div className="page-error">
@@ -31,16 +31,12 @@ export default function NotFound() {
             <div className="content">
                 <Container>
                     <Row className="gx-5">
-                        <Col
-                            lg="5"
-                            className="d-flex flex-column align-items-center"
-                        >
+                        <Col lg="5" className="d-flex flex-column align-items-center">
                             <h1 className="error-number">404</h1>
                             <h2 className="error-title">Page Not Found</h2>
                             <p className="error-text">
-                                Oopps. The page you were looking for doesn't
-                                exist. You may have mistyped the address or the
-                                page may have moved.
+                                Oopps. The page you were looking for doesn't exist. You
+                                may have mistyped the address or the page may have moved.
                             </p>
                             <Link
                                 to={AdminPages.DASHBOARD}

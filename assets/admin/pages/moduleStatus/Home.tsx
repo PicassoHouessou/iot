@@ -1,35 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { Button, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Footer from "../../layouts/Footer";
-import Header from "../../layouts/Header";
-import { useSkinMode } from "@Admin/hooks";
-import type { GetProp, MenuProps, TableProps } from "antd";
-import { Dropdown, Table } from "antd";
+import React, { useEffect, useState } from 'react';
+import { Button, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Footer from '../../layouts/Footer';
+import Header from '../../layouts/Header';
+import { useSkinMode } from '@Admin/hooks';
+import type { GetProp, MenuProps, TableProps } from 'antd';
+import { Dropdown, Table } from 'antd';
 import {
     useDeleteModuleMutation,
     useModuleStatusesJsonLdQuery,
-} from "@Admin/services/modulesApi";
-import { ModuleStatus } from "@Admin/models";
-import { getErrorMessage } from "@Admin/utils";
-import { AdminPages } from "@Admin/constants";
-import {
-    useFiltersQuery,
-    useHandleTableChange,
-} from "@Admin/hooks/useFilterQuery";
-import { toast } from "react-toastify";
+} from '@Admin/services/modulesApi';
+import { ModuleStatus } from '@Admin/models';
+import { getErrorMessage } from '@Admin/utils';
+import { AdminPages } from '@Admin/constants';
+import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
+import { toast } from 'react-toastify';
 
-type ColumnsType<T> = TableProps<T>["columns"];
-type TablePaginationConfig = Exclude<
-    GetProp<TableProps, "pagination">,
-    boolean
->;
+type ColumnsType<T> = TableProps<T>['columns'];
+type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
 interface TableParams {
     pagination?: TablePaginationConfig;
     sortField?: string;
     sortOrder?: string;
-    filters?: Parameters<GetProp<TableProps, "onChange">>[1];
+    filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
 
 export default function Home() {
@@ -71,7 +65,7 @@ export default function Home() {
     } = useModuleStatusesJsonLdQuery(query);
 
     const handleDelete = async (id: any) => {
-        if (window.confirm("Etes-vous sûr")) {
+        if (window.confirm('Etes-vous sûr')) {
             try {
                 await deleteItem(id).unwrap();
                 //toast.success(t("cms Deleted Successfully"));
@@ -83,22 +77,22 @@ export default function Home() {
     };
     const columns: ColumnsType<ModuleStatus> = [
         {
-            title: "Nom",
-            dataIndex: "name",
+            title: 'Nom',
+            dataIndex: 'name',
             sorter: true,
         },
         {
-            title: "Slug",
-            dataIndex: "slug",
+            title: 'Slug',
+            dataIndex: 'slug',
             sorter: true,
         },
         {
-            title: "Action",
-            key: "operation",
-            fixed: "right",
+            title: 'Action',
+            key: 'operation',
+            fixed: 'right',
             width: 100,
             render: (text, record) => {
-                const items: MenuProps["items"] = [
+                const items: MenuProps['items'] = [
                     {
                         label: (
                             <Link
@@ -108,7 +102,7 @@ export default function Home() {
                                 <i className="ri-edit-line"></i> Modifier
                             </Link>
                         ),
-                        key: "0",
+                        key: '0',
                     },
                     {
                         label: (
@@ -119,7 +113,7 @@ export default function Home() {
                                 <i className="ri-delete-bin-line"></i> Delete
                             </span>
                         ),
-                        key: "1",
+                        key: '1',
                     },
                 ];
 
@@ -138,9 +132,7 @@ export default function Home() {
                 ...prevState,
                 total: Math.ceil(
                     Number(
-                        dataApis[
-                            "hydra:totalItems" as unknown as keyof typeof dataApis
-                        ],
+                        dataApis['hydra:totalItems' as unknown as keyof typeof dataApis],
                     ),
                 ),
             }));
@@ -151,9 +143,7 @@ export default function Home() {
 
              */
 
-            setData(
-                dataApis["hydra:member" as unknown as keyof typeof dataApis],
-            );
+            setData(dataApis['hydra:member' as unknown as keyof typeof dataApis]);
         }
     }, [error, setPagination, dataApis, itemsPerPage]);
 
@@ -185,10 +175,7 @@ export default function Home() {
                             <li className="breadcrumb-item">
                                 <Link to={AdminPages.DASHBOARD}>Dashboard</Link>
                             </li>
-                            <li
-                                className="breadcrumb-item active"
-                                aria-current="page"
-                            >
+                            <li className="breadcrumb-item active" aria-current="page">
                                 Etats de module
                             </li>
                         </ol>
@@ -212,9 +199,7 @@ export default function Home() {
                             <Button
                                 variant=""
                                 className="btn-white d-flex align-items-center gap-2"
-                                onClick={(
-                                    e: React.MouseEvent<HTMLButtonElement>,
-                                ) => {
+                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                     e.preventDefault();
                                     clickOnClearButton();
                                 }}
@@ -226,12 +211,12 @@ export default function Home() {
                         <input
                             type="search"
                             className="form-control form-control-lg"
-                            placeholder={"Rechercher"}
+                            placeholder={'Rechercher'}
                             value={searchFormValue}
                             onChange={(e) => setSearchFormValue(e.target.value)}
-                            onKeyUp={(
-                                e: React.KeyboardEvent<HTMLInputElement>,
-                            ) => handleSearch(e)}
+                            onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                                handleSearch(e)
+                            }
                         />
                     </div>
                 </div>

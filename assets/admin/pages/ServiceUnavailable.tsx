@@ -1,9 +1,9 @@
-import React from "react";
-import { Button, Col, Container, Nav, Row } from "react-bootstrap";
-import pageSvg from "../assets/svg/software_engineer.svg";
+import React from 'react';
+import { Button, Col, Container, Nav, Row } from 'react-bootstrap';
+import pageSvg from '../assets/svg/software_engineer.svg';
 
 export default function ServiceUnavailable() {
-    document.body.classList.remove("sidebar-show");
+    document.body.classList.remove('sidebar-show');
 
     return (
         <div className="page-error">
@@ -29,16 +29,13 @@ export default function ServiceUnavailable() {
             <div className="content">
                 <Container>
                     <Row className="gx-5">
-                        <Col
-                            lg="5"
-                            className="d-flex flex-column align-items-center"
-                        >
+                        <Col lg="5" className="d-flex flex-column align-items-center">
                             <h1 className="error-number">503</h1>
                             <h2 className="error-title">Service Unavailable</h2>
                             <p className="error-text">
-                                Oopps. The server is unable to service your
-                                request due to maintenance downtime or capacity
-                                problems. Please try again later.
+                                Oopps. The server is unable to service your request due to
+                                maintenance downtime or capacity problems. Please try
+                                again later.
                             </p>
                             <Button variant="primary" className="btn-error">
                                 Back to Dashboard

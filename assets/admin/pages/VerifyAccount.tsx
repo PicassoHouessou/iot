@@ -1,11 +1,11 @@
-import React from "react";
-import { Button, Card, Col, Container, Nav, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Button, Card, Col, Container, Nav, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-import pageSvg from "../assets/svg/mailbox.svg";
+import pageSvg from '../assets/svg/mailbox.svg';
 
 export default function VerifyAccount() {
-    document.body.classList.remove("sidebar-show");
+    document.body.classList.remove('sidebar-show');
 
     return (
         <div className="page-auth">
@@ -42,8 +42,8 @@ export default function VerifyAccount() {
                             </div>
                             <Card.Title>Verify your email address</Card.Title>
                             <Card.Text className="mb-5">
-                                Please check your email and click the verify
-                                button or link to verify your account.
+                                Please check your email and click the verify button or
+                                link to verify your account.
                             </Card.Text>
 
                             <Row className="g-2 g-sm-3">
@@ -53,9 +53,7 @@ export default function VerifyAccount() {
                                     </Button>
                                 </Col>
                                 <Col sm>
-                                    <Button variant="secondary">
-                                        Contact Support
-                                    </Button>
+                                    <Button variant="secondary">Contact Support</Button>
                                 </Col>
                             </Row>
                         </Card.Body>

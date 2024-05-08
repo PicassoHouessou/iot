@@ -1,8 +1,8 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import AddOrEdit from "@Admin/pages/moduleTypes/AddOrEdit";
-import Home from "@Admin/pages/moduleTypes/Home";
-import View from "@Admin/pages/moduleTypes/View";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import AddOrEdit from '@Admin/pages/moduleTypes/AddOrEdit';
+import Home from '@Admin/pages/moduleTypes/Home';
+import View from '@Admin/pages/moduleTypes/View';
 
 const ModuleTypes = () => {
     return (

@@ -1,6 +1,6 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "@Admin/store/store";
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '@Admin/store/store';
 
 export interface UserAuth {
     id: string;
@@ -23,20 +23,20 @@ type AuthState = {
 };
 
 const getToken = () => {
-    const tokenString = localStorage.getItem("token");
+    const tokenString = localStorage.getItem('token');
     if (tokenString == null) {
         return null;
     }
-    const userToken = tokenString.replace('"', "");
+    const userToken = tokenString.replace('"', '');
     return userToken;
 };
 
 const getRefreshToken = () => {
-    const tokenString = localStorage.getItem("refresh_token");
+    const tokenString = localStorage.getItem('refresh_token');
     if (!tokenString) {
         return null;
     }
-    const refresh_token = tokenString.replace('"', "");
+    const refresh_token = tokenString.replace('"', '');
     return refresh_token;
 };
 
@@ -45,7 +45,7 @@ const getUserFromLocalStorage = () => {
     // localStorage.setItem('testObject', JSON.stringify(testObject));
 
     // Retrieve the object from storage
-    const user = localStorage.getItem("user");
+    const user = localStorage.getItem('user');
     if (user) {
         return JSON.parse(user);
     }
@@ -58,7 +58,7 @@ const initialState: AuthState = {
     refresh_token: getRefreshToken(),
 };
 export const authSlice = createSlice({
-    name: "auth",
+    name: 'auth',
     initialState: initialState,
 
     reducers: {
@@ -70,11 +70,11 @@ export const authSlice = createSlice({
             { payload: { user } }: PayloadAction<{ user: UserAuth }>,
         ) => {
             state.user = user;
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("id", user.id);
-            localStorage.setItem("firstName", user.firstName);
-            localStorage.setItem("lastName", user.lastName);
-            localStorage.setItem("photo", user.avatar);
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('id', user.id);
+            localStorage.setItem('firstName', user.firstName);
+            localStorage.setItem('lastName', user.lastName);
+            localStorage.setItem('photo', user.avatar);
         },
         setTokenCredentials: (
             state,
@@ -88,13 +88,13 @@ export const authSlice = createSlice({
             if (token && refresh_token) {
                 state.token = token;
                 state.refresh_token = refresh_token;
-                localStorage.setItem("token", token);
-                localStorage.setItem("refresh_token", refresh_token);
+                localStorage.setItem('token', token);
+                localStorage.setItem('refresh_token', refresh_token);
             }
         },
         // eslint-disable-next-line
         logOut: (state) => {
-            fetch("/api/logout", { credentials: "include" }).finally(() => {
+            fetch('/api/logout', { credentials: 'include' }).finally(() => {
                 localStorage.clear();
                 sessionStorage.clear();
                 state = initialState;
@@ -108,8 +108,7 @@ export const { loginReducer } = authSlice.actions;
 
 //export const selectUser = (state: UserState) => state.user;
 
-export const { setCredentials, setTokenCredentials, logOut } =
-    authSlice.actions;
+export const { setCredentials, setTokenCredentials, logOut } = authSlice.actions;
 
 export default authSlice.reducer;
 

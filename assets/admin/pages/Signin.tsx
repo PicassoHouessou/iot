@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { setCredentials, setTokenCredentials } from "@Admin/features/authSlice";
-import { getErrorMessage } from "@Admin/utils/getErrorMessage";
-import { useLoginMutation } from "@Admin/services/usersApi";
-import { useAppDispatch } from "@Admin/store/store";
+import React, { useState } from 'react';
+import { Button, Card, Form } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { setCredentials, setTokenCredentials } from '@Admin/features/authSlice';
+import { getErrorMessage } from '@Admin/utils/getErrorMessage';
+import { useLoginMutation } from '@Admin/services/usersApi';
+import { useAppDispatch } from '@Admin/store/store';
 
 const form = {
-    email: "admin@otp.picassohouessou.com",
-    password: "admin",
+    email: 'admin@otp.picassohouessou.com',
+    password: 'admin',
 };
 export default function Signin() {
     const [formValue, setFormValue] = useState(form);
@@ -32,8 +32,8 @@ export default function Signin() {
             }).unwrap();
             if (
                 res?.user &&
-                (res.user?.roles?.includes("ROLE_ADMIN") ||
-                    res.user?.roles?.includes("ROLE_USER"))
+                (res.user?.roles?.includes('ROLE_ADMIN') ||
+                    res.user?.roles?.includes('ROLE_USER'))
             ) {
                 dispatch(setCredentials({ user: res.user }));
                 dispatch(
@@ -42,11 +42,9 @@ export default function Signin() {
                         refresh_token: res?.refresh_token,
                     }),
                 );
-                navigate("/dashboard");
+                navigate('/dashboard');
             } else {
-                setErrorMessage(
-                    "Vous n'êtes pas autorisé à accéder à cette page",
-                );
+                setErrorMessage("Vous n'êtes pas autorisé à accéder à cette page");
             }
         } catch (err) {
             const errorMessage = getErrorMessage(err);
@@ -84,8 +82,7 @@ export default function Signin() {
                         </div>
                         <div className="mb-4">
                             <Form.Label className="d-flex justify-content-between">
-                                Mot de passe{" "}
-                                <Link to="">Mot de passe oublié?</Link>
+                                Mot de passe <Link to="">Mot de passe oublié?</Link>
                             </Form.Label>
                             <Form.Control
                                 type="password"
@@ -94,11 +91,7 @@ export default function Signin() {
                                 onChange={setFormChange}
                             />
                         </div>
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            className="btn-sign"
-                        >
+                        <Button type="submit" variant="primary" className="btn-sign">
                             Sign In
                         </Button>
 
@@ -108,8 +101,7 @@ export default function Signin() {
                     </Form>
                 </Card.Body>
                 <Card.Footer>
-                    Don't have an account?{" "}
-                    <Link to="/signup">Create an Account</Link>
+                    Don't have an account? <Link to="/signup">Create an Account</Link>
                 </Card.Footer>
             </Card>
         </div>

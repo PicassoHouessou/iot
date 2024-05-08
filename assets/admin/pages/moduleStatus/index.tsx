@@ -1,7 +1,7 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import AddOrEdit from "@Admin/pages/moduleStatus/AddOrEdit";
-import Home from "@Admin/pages/moduleStatus/Home";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import AddOrEdit from '@Admin/pages/moduleStatus/AddOrEdit';
+import Home from '@Admin/pages/moduleStatus/Home';
 
 const ModuleStatuses = () => {
     return (

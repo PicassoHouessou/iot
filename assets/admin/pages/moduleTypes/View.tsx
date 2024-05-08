@@ -1,19 +1,19 @@
-import React from "react";
-import { Button, Card, Container, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Footer from "../../layouts/Footer";
-import Header from "../../layouts/Header";
-import Select from "react-select";
-import { useSkinMode } from "@Admin/hooks";
-import { AdminPages } from "@Admin/constants";
+import React from 'react';
+import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Footer from '../../layouts/Footer';
+import Header from '../../layouts/Header';
+import Select from 'react-select';
+import { useSkinMode } from '@Admin/hooks';
+import { AdminPages } from '@Admin/constants';
 
 export default function View() {
     const [, setSkin] = useSkinMode();
 
     const selectOptions = [
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry" },
-        { value: "vanilla", label: "Vanilla" },
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' },
     ];
     return (
         <React.Fragment>
@@ -23,14 +23,9 @@ export default function View() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.MODULE_TYPES}>
-                                    Modules
-                                </Link>
+                                <Link to={AdminPages.MODULE_TYPES}>Modules</Link>
                             </li>
-                            <li
-                                className="breadcrumb-item active"
-                                aria-current="page"
-                            >
+                            <li className="breadcrumb-item active" aria-current="page">
                                 Ajout
                             </li>
                         </ol>
@@ -78,15 +73,10 @@ export default function View() {
                                     <Form.Label htmlFor="exampleFormControlTextarea1">
                                         Type
                                     </Form.Label>
-                                    <Select
-                                        options={selectOptions}
-                                        isSearchable={true}
-                                    />
+                                    <Select options={selectOptions} isSearchable={true} />
                                 </div>
                                 <div>
-                                    <Button variant="primary">
-                                        Enregistrer
-                                    </Button>
+                                    <Button variant="primary">Enregistrer</Button>
                                 </div>
                             </Card.Body>
                         </Card>

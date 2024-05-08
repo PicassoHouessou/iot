@@ -1,6 +1,6 @@
-import { useUserQuery } from "@Admin/services/usersApi";
-import { logOut } from "@Admin/features/authSlice";
-import { useAppDispatch, useAppSelector } from "@Admin/store/store";
+import { useUserQuery } from '@Admin/services/usersApi';
+import { logOut } from '@Admin/features/authSlice';
+import { useAppDispatch, useAppSelector } from '@Admin/store/store';
 
 /**
  *
@@ -21,9 +21,9 @@ export const useUserByToken = () => {
 
     if (isLoading === false && isError === false && userData) {
         if (userData) {
-            localStorage.setItem("firstName", userData.firstName);
-            localStorage.setItem("lastName", userData.lastName);
-            localStorage.setItem("photo", userData.avatar);
+            localStorage.setItem('firstName', userData.firstName);
+            localStorage.setItem('lastName', userData.lastName);
+            localStorage.setItem('photo', userData.avatar);
         }
     }
     return userData;

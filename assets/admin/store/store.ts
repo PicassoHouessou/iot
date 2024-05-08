@@ -1,8 +1,8 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import authReducer from "@Admin/features/authSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import authReducer from '@Admin/features/authSlice';
 
-import { adminModuleApi } from "@Admin/services/adminModuleApi";
+import { adminModuleApi } from '@Admin/services/adminModuleApi';
 
 export const store = configureStore({
     reducer: {

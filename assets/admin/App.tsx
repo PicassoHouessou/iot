@@ -1,27 +1,27 @@
-import React, { ErrorInfo, ReactNode } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Main from "./layouts/Main";
-import NotFound from "./pages/NotFound";
-import { useAuth } from "./hooks";
+import React, { ErrorInfo, ReactNode } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Main from './layouts/Main';
+import NotFound from './pages/NotFound';
+import { useAuth } from './hooks';
 
-import publicRoutes from "./routes/PublicRoutes";
-import protectedRoutes from "./routes/ProtectedRoutes";
+import publicRoutes from './routes/PublicRoutes';
+import protectedRoutes from './routes/ProtectedRoutes';
 
 // import css
-import "./assets/css/remixicon.css";
+import './assets/css/remixicon.css';
 
 // import scss
-import "./scss/style.scss";
+import './scss/style.scss';
 
 // set skin on load
-window.addEventListener("load", function () {
-    const skinMode = localStorage.getItem("skin-mode");
-    const HTMLTag = document.querySelector("html")!;
+window.addEventListener('load', function () {
+    const skinMode = localStorage.getItem('skin-mode');
+    const HTMLTag = document.querySelector('html')!;
 
     if (skinMode) {
-        HTMLTag.setAttribute("data-skin", skinMode);
+        HTMLTag.setAttribute('data-skin', skinMode);
     }
 });
 
@@ -45,7 +45,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         // eslint-disable-next-line
-        console.error("Uncaught error:", error, errorInfo);
+        console.error('Uncaught error:', error, errorInfo);
     }
 
     public render() {
@@ -64,10 +64,7 @@ export default function App() {
         if (user == null) {
             return false;
         }
-        if (
-            user?.roles?.includes("ROLE_ADMIN") ||
-            user?.roles?.includes("ROLE_USER")
-        ) {
+        if (user?.roles?.includes('ROLE_ADMIN') || user?.roles?.includes('ROLE_USER')) {
             return true;
         }
         return false;
@@ -99,17 +96,10 @@ export default function App() {
                             ))}
                         </Route>
                     ) : (
-                        <Route
-                            path="/"
-                            element={<Navigate to="/signin" replace />}
-                        />
+                        <Route path="/" element={<Navigate to="/signin" replace />} />
                     )}
                     {publicRoutes.map((route, index) => (
-                        <Route
-                            path={route.path}
-                            element={route.element}
-                            key={index}
-                        />
+                        <Route path={route.path} element={route.element} key={index} />
                     ))}
                     <Route path="*" element={<NotFound />} />
                 </Routes>

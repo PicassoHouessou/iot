@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, Container, Form } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Footer from "../../layouts/Footer";
-import Header from "../../layouts/Header";
-import { useSkinMode } from "@Admin/hooks";
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import Footer from '../../layouts/Footer';
+import Header from '../../layouts/Header';
+import { useSkinMode } from '@Admin/hooks';
 import {
     useAddModuleMutation,
     useModuleStatusQuery,
     useUpdateModuleStatusMutation,
-} from "@Admin/services/modulesApi";
-import { ModuleStatus } from "@Admin/models";
-import { generateIRI, getErrorMessage } from "@Admin/utils";
-import { AdminPages, ApiRoutesWithoutPrefix } from "@Admin/constants";
-import { toast } from "react-toastify";
+} from '@Admin/services/modulesApi';
+import { ModuleStatus } from '@Admin/models';
+import { generateIRI, getErrorMessage } from '@Admin/utils';
+import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
+import { toast } from 'react-toastify';
 
 const initialState = {
-    id: "",
-    name: "",
-    description: "",
+    id: '',
+    name: '',
+    description: '',
 };
 
 export default function AddOrEdit() {
@@ -52,16 +52,16 @@ export default function AddOrEdit() {
                 ...formValue,
                 [name]: value,
             });
-            setErrors((prevState) => ({ ...prevState, [name]: "" }));
+            setErrors((prevState) => ({ ...prevState, [name]: '' }));
         };
 
-        if (typeof action === "undefined") {
+        if (typeof action === 'undefined') {
             const { name, value } = e.target;
 
             handleRegularFieldChange(name, value);
         } else {
             switch (action.name) {
-                case "type":
+                case 'type':
                     setSelectedModuleType(e);
                     break;
                 default:
@@ -91,7 +91,7 @@ export default function AddOrEdit() {
                 await addData(data).unwrap();
                 setErrors({});
                 navigate(-1);
-                toast.success("Status enregistré");
+                toast.success('Status enregistré');
             } else {
                 setErrors({});
                 await updateData({
@@ -99,7 +99,7 @@ export default function AddOrEdit() {
                     id,
                 }).unwrap();
                 navigate(-1);
-                toast.success("Status enregistré");
+                toast.success('Status enregistré');
             }
         } catch (err) {
             const { detail, errors } = getErrorMessage(err);
@@ -119,16 +119,11 @@ export default function AddOrEdit() {
                             <li className="breadcrumb-item">
                                 <Link to="/modules">Modules</Link>
                             </li>
-                            <li
-                                className="breadcrumb-item active"
-                                aria-current="page"
-                            >
+                            <li className="breadcrumb-item active" aria-current="page">
                                 Ajout
                             </li>
                         </ol>
-                        <h4 className="main-title mb-0">
-                            Ajouter un status de module
-                        </h4>
+                        <h4 className="main-title mb-0">Ajouter un status de module</h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
                         <Link to={AdminPages.MODULE_STATUSES}>
@@ -149,9 +144,7 @@ export default function AddOrEdit() {
                             <Card.Body>
                                 <Form onSubmit={handleSubmit}>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="name">
-                                            Nom
-                                        </Form.Label>
+                                        <Form.Label htmlFor="name">Nom</Form.Label>
                                         <Form.Control
                                             id="name"
                                             name="name"

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export interface LogState {
     log: {
@@ -17,7 +17,7 @@ export interface LogState {
 }
 
 export const logSlice = createSlice({
-    name: "log",
+    name: 'log',
     initialState: {
         log: null,
     },

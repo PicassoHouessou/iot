@@ -1,17 +1,7 @@
-import {
-    Module,
-    ModuleEdit,
-    ModuleHistory,
-    ModuleStatus,
-    ModuleType,
-} from "../models";
-import { adminModuleApi } from "./adminModuleApi";
-import { generateUrl } from "@Admin/utils";
-import {
-    ApiFormat,
-    ApiRoutesWithoutPrefix,
-    HttpMethod,
-} from "@Admin/constants";
+import { Module, ModuleEdit, ModuleHistory, ModuleStatus, ModuleType } from '../models';
+import { adminModuleApi } from './adminModuleApi';
+import { generateUrl } from '@Admin/utils';
+import { ApiFormat, ApiRoutesWithoutPrefix, HttpMethod } from '@Admin/constants';
 
 export const modulesApi = adminModuleApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -25,7 +15,7 @@ export const modulesApi = adminModuleApi.injectEndpoints({
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         modulesJsonLd: builder.query<any[], object | string | void>({
             query: (params) => {
@@ -37,27 +27,27 @@ export const modulesApi = adminModuleApi.injectEndpoints({
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
 
         module: builder.query<Module, string | number>({
             query: (id) => `/modules/${id}`,
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         addModule: builder.mutation<
             Module,
-            Pick<ModuleEdit, "name" | "type" | "description">
+            Pick<ModuleEdit, 'name' | 'type' | 'description'>
         >({
             query: (data) => ({
                 url: ApiRoutesWithoutPrefix.MODULES,
                 method: HttpMethod.POST,
                 headers: {
                     Accept: ApiFormat.JSON,
-                    "Content-Type": ApiFormat.JSON,
+                    'Content-Type': ApiFormat.JSON,
                 },
                 body: data,
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
         updateModule: builder.mutation<Module, ModuleEdit>({
             query: ({ id, ...rest }) => {
@@ -66,19 +56,19 @@ export const modulesApi = adminModuleApi.injectEndpoints({
                     method: HttpMethod.PATCH,
                     headers: {
                         Accept: ApiFormat.JSON,
-                        "Content-Type": ApiFormat.JSON_MERGE_PATCH,
+                        'Content-Type': ApiFormat.JSON_MERGE_PATCH,
                     },
                     body: rest,
                 };
             },
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
         deleteModule: builder.mutation<void, string>({
             query: (id) => ({
                 url: `${ApiRoutesWithoutPrefix.MODULES}/${id}`,
-                method: "DELETE",
+                method: 'DELETE',
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
         /*
          * Module Type
@@ -86,21 +76,18 @@ export const modulesApi = adminModuleApi.injectEndpoints({
         moduleTypes: builder.query<ModuleType[], object | void>({
             query: (params) => {
                 return {
-                    url: generateUrl(
-                        ApiRoutesWithoutPrefix.MODULE_TYPES,
-                        params,
-                    ),
+                    url: generateUrl(ApiRoutesWithoutPrefix.MODULE_TYPES, params),
                     method: HttpMethod.GET,
                     headers: {
                         Accept: ApiFormat.JSON,
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         moduleType: builder.query<ModuleType, string | number>({
             query: (id) => `${ApiRoutesWithoutPrefix.MODULE_TYPES}/${id}`,
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         addModuleType: builder.mutation<ModuleType, Partial<ModuleType>>({
             query: (data) => ({
@@ -108,11 +95,11 @@ export const modulesApi = adminModuleApi.injectEndpoints({
                 method: HttpMethod.POST,
                 headers: {
                     Accept: ApiFormat.JSON,
-                    "Content-Type": ApiFormat.JSON,
+                    'Content-Type': ApiFormat.JSON,
                 },
                 body: data,
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
         updateModuleType: builder.mutation<ModuleType, Partial<ModuleType>>({
             query: ({ id, ...rest }) => {
@@ -121,35 +108,32 @@ export const modulesApi = adminModuleApi.injectEndpoints({
                     method: HttpMethod.PATCH,
                     headers: {
                         Accept: ApiFormat.JSON,
-                        "Content-Type": ApiFormat.JSON_MERGE_PATCH,
+                        'Content-Type': ApiFormat.JSON_MERGE_PATCH,
                     },
                     body: rest,
                 };
             },
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
         moduleTypesJsonLd: builder.query<any[], object | void>({
             query: (params) => {
                 return {
-                    url: generateUrl(
-                        ApiRoutesWithoutPrefix.MODULE_TYPES,
-                        params,
-                    ),
+                    url: generateUrl(ApiRoutesWithoutPrefix.MODULE_TYPES, params),
                     method: HttpMethod.GET,
                     headers: {
                         Accept: ApiFormat.JSONLD,
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
 
         deleteModuleType: builder.mutation<void, string>({
             query: (id) => ({
                 url: `${ApiRoutesWithoutPrefix.MODULE_TYPES}/${id}`,
-                method: "DELETE",
+                method: 'DELETE',
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
 
         /*
@@ -159,36 +143,30 @@ export const modulesApi = adminModuleApi.injectEndpoints({
         moduleStatuses: builder.query<ModuleStatus[], object | void>({
             query: (params) => {
                 return {
-                    url: generateUrl(
-                        ApiRoutesWithoutPrefix.MODULE_STATUSES,
-                        params,
-                    ),
+                    url: generateUrl(ApiRoutesWithoutPrefix.MODULE_STATUSES, params),
                     method: HttpMethod.GET,
                     headers: {
                         Accept: ApiFormat.JSON,
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         moduleStatusesJsonLd: builder.query<any[], object | void>({
             query: (params) => {
                 return {
-                    url: generateUrl(
-                        ApiRoutesWithoutPrefix.MODULE_STATUSES,
-                        params,
-                    ),
+                    url: generateUrl(ApiRoutesWithoutPrefix.MODULE_STATUSES, params),
                     method: HttpMethod.GET,
                     headers: {
                         Accept: ApiFormat.JSONLD,
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         moduleStatus: builder.query<ModuleStatus, string | number>({
             query: (id) => `${ApiRoutesWithoutPrefix.MODULE_STATUSES}/${id}`,
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         addModuleStatus: builder.mutation<ModuleStatus, Partial<ModuleStatus>>({
             query: (data) => ({
@@ -196,36 +174,33 @@ export const modulesApi = adminModuleApi.injectEndpoints({
                 method: HttpMethod.POST,
                 headers: {
                     Accept: ApiFormat.JSON,
-                    "Content-Type": ApiFormat.JSON,
+                    'Content-Type': ApiFormat.JSON,
                 },
                 body: data,
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
-        updateModuleStatus: builder.mutation<
-            ModuleStatus,
-            Partial<ModuleStatus>
-        >({
+        updateModuleStatus: builder.mutation<ModuleStatus, Partial<ModuleStatus>>({
             query: ({ id, ...rest }) => {
                 return {
                     url: `${ApiRoutesWithoutPrefix.MODULE_STATUSES}/${id}`,
                     method: HttpMethod.PATCH,
                     headers: {
                         Accept: ApiFormat.JSON,
-                        "Content-Type": ApiFormat.JSON_MERGE_PATCH,
+                        'Content-Type': ApiFormat.JSON_MERGE_PATCH,
                     },
                     body: rest,
                 };
             },
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
 
         deleteModuleStatus: builder.mutation<void, string>({
             query: (id) => ({
                 url: `${ApiRoutesWithoutPrefix.MODULE_STATUSES}/${id}`,
-                method: "DELETE",
+                method: 'DELETE',
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
         /**
          * History
@@ -233,51 +208,42 @@ export const modulesApi = adminModuleApi.injectEndpoints({
         moduleHistories: builder.query<ModuleHistory[], object | void>({
             query: (params) => {
                 return {
-                    url: generateUrl(
-                        ApiRoutesWithoutPrefix.MODULE_HISTORIES,
-                        params,
-                    ),
+                    url: generateUrl(ApiRoutesWithoutPrefix.MODULE_HISTORIES, params),
                     method: HttpMethod.GET,
                     headers: {
                         Accept: ApiFormat.JSON,
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         moduleHistoriesJsonLd: builder.query<any[], object | void>({
             query: (params) => {
                 return {
-                    url: generateUrl(
-                        ApiRoutesWithoutPrefix.MODULE_HISTORIES,
-                        params,
-                    ),
+                    url: generateUrl(ApiRoutesWithoutPrefix.MODULE_HISTORIES, params),
                     method: HttpMethod.GET,
                     headers: {
                         Accept: ApiFormat.JSONLD,
                     },
                 };
             },
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
         moduleHistory: builder.query<ModuleHistory, string | number>({
             query: (id) => `${ApiRoutesWithoutPrefix.MODULE_STATUSES}/${id}`,
-            providesTags: ["Module"],
+            providesTags: ['Module'],
         }),
-        addModuleHistory: builder.mutation<
-            ModuleHistory,
-            Partial<ModuleHistory>
-        >({
+        addModuleHistory: builder.mutation<ModuleHistory, Partial<ModuleHistory>>({
             query: (data) => ({
                 url: ApiRoutesWithoutPrefix.MODULE_HISTORIES,
                 method: HttpMethod.POST,
                 headers: {
                     Accept: ApiFormat.JSON,
-                    "Content-Type": ApiFormat.JSON,
+                    'Content-Type': ApiFormat.JSON,
                 },
                 body: data,
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
         updateHistory: builder.mutation<ModuleHistory, Partial<ModuleHistory>>({
             query: ({ id, ...rest }) => {
@@ -286,20 +252,20 @@ export const modulesApi = adminModuleApi.injectEndpoints({
                     method: HttpMethod.PATCH,
                     headers: {
                         Accept: ApiFormat.JSON,
-                        "Content-Type": ApiFormat.JSON_MERGE_PATCH,
+                        'Content-Type': ApiFormat.JSON_MERGE_PATCH,
                     },
                     body: rest,
                 };
             },
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
 
         deleteModuleHistory: builder.mutation<void, string>({
             query: (id) => ({
                 url: `${ApiRoutesWithoutPrefix.MODULE_HISTORIES}/${id}`,
-                method: "DELETE",
+                method: 'DELETE',
             }),
-            invalidatesTags: ["Module"],
+            invalidatesTags: ['Module'],
         }),
     }),
 });

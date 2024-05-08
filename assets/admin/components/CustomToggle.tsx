@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const CustomToggle = React.forwardRef(
     ({ children, onClick }: any, ref: React.ForwardedRef<any>) => (

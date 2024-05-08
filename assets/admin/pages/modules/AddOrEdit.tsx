@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, Container, Form } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Footer from "../../layouts/Footer";
-import Header from "../../layouts/Header";
-import Select from "react-select";
-import { useSkinMode } from "@Admin/hooks";
-import { ModuleEdit, ModuleType } from "@Admin/models";
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import Footer from '../../layouts/Footer';
+import Header from '../../layouts/Header';
+import Select from 'react-select';
+import { useSkinMode } from '@Admin/hooks';
+import { ModuleEdit, ModuleType } from '@Admin/models';
 import {
     useAddModuleMutation,
     useModuleQuery,
     useModuleTypesQuery,
     useUpdateModuleMutation,
-} from "@Admin/services/modulesApi";
-import { generateIRI, getErrorMessage } from "@Admin/utils";
-import { ApiRoutesWithoutPrefix } from "@Admin/constants";
-import { toast } from "react-toastify";
+} from '@Admin/services/modulesApi';
+import { generateIRI, getErrorMessage } from '@Admin/utils';
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
+import { toast } from 'react-toastify';
 
 const initialState = {
-    id: "",
-    name: "",
-    description: "",
-    type: "",
+    id: '',
+    name: '',
+    description: '',
+    type: '',
 };
 
 export default function AddOrEdit() {
@@ -70,16 +70,16 @@ export default function AddOrEdit() {
                 ...formValue,
                 [name]: value,
             });
-            setErrors((prevState) => ({ ...prevState, [name]: "" }));
+            setErrors((prevState) => ({ ...prevState, [name]: '' }));
         };
 
-        if (typeof action === "undefined") {
+        if (typeof action === 'undefined') {
             const { name, value } = e.target;
 
             handleRegularFieldChange(name, value);
         } else {
             switch (action.name) {
-                case "type":
+                case 'type':
                     setSelectedModuleType(e);
                     break;
                 default:
@@ -117,7 +117,7 @@ export default function AddOrEdit() {
                     id,
                 }).unwrap();
                 navigate(-1);
-                toast.success("Module enregistré");
+                toast.success('Module enregistré');
             }
         } catch (err) {
             const { detail, errors } = getErrorMessage(err);
@@ -137,10 +137,7 @@ export default function AddOrEdit() {
                             <li className="breadcrumb-item">
                                 <Link to="/modules">Modules</Link>
                             </li>
-                            <li
-                                className="breadcrumb-item active"
-                                aria-current="page"
-                            >
+                            <li className="breadcrumb-item active" aria-current="page">
                                 Ajout
                             </li>
                         </ol>
@@ -172,9 +169,7 @@ export default function AddOrEdit() {
                             <Card.Body>
                                 <Form onSubmit={handleSubmit}>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="name">
-                                            Nom
-                                        </Form.Label>
+                                        <Form.Label htmlFor="name">Nom</Form.Label>
                                         <Form.Control
                                             id="name"
                                             name="name"
@@ -204,9 +199,7 @@ export default function AddOrEdit() {
                                         </Form.Control.Feedback>
                                     </div>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="type">
-                                            Type
-                                        </Form.Label>
+                                        <Form.Label htmlFor="type">Type</Form.Label>
                                         <Select
                                             name="type"
                                             options={moduleTypeOptions}

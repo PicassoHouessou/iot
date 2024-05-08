@@ -35,24 +35,24 @@ export interface User {
 
 export type UserEditWithoutId = Pick<
     User,
-    | "firstName"
-    | "lastName"
-    | "roles"
-    | "email"
-    | "password"
-    | "isCompany"
-    | "vatNumber"
-    | "isCompany"
-    | "fiscalCode"
-    | "vatNumber"
-    | "social"
-    | "name"
-    | "recipientCode"
+    | 'firstName'
+    | 'lastName'
+    | 'roles'
+    | 'email'
+    | 'password'
+    | 'isCompany'
+    | 'vatNumber'
+    | 'isCompany'
+    | 'fiscalCode'
+    | 'vatNumber'
+    | 'social'
+    | 'name'
+    | 'recipientCode'
 >;
 
 export type UserEdit = UserEditWithoutId & { id: number };
 
-export type AvatarEdit = Pick<User, "avatar"> & { id: string };
+export type AvatarEdit = Pick<User, 'avatar'> & { id: string };
 export type UserChangePaswword = {
     oldPassword: string;
     newPassword: string;
@@ -61,15 +61,15 @@ export type UserChangePaswword = {
 };
 export type UserWithoutPassword = Pick<
     User,
-    | "id"
-    | "firstName"
-    | "lastName"
-    | "email"
-    | "roles"
-    | "avatar"
-    | "dateInsert"
-    | "hasProject"
-    | "dateUpdate"
+    | 'id'
+    | 'firstName'
+    | 'lastName'
+    | 'email'
+    | 'roles'
+    | 'avatar'
+    | 'dateInsert'
+    | 'hasProject'
+    | 'dateUpdate'
 >;
 
 export interface UserAuth {

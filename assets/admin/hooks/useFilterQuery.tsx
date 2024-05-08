@@ -1,23 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-    useLocation,
-    useNavigate,
-    useParams,
-    useSearchParams,
-} from "react-router-dom";
-import { ApiFiltersType } from "@Admin/constants";
-import type { GetProp, TableProps } from "antd";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { ApiFiltersType } from '@Admin/constants';
+import type { GetProp, TableProps } from 'antd';
 
 export const queryToString = (params: object | void): string => {
-    let url = "";
-    if (typeof params === "undefined") {
-        url = "";
+    let url = '';
+    if (typeof params === 'undefined') {
+        url = '';
     } else {
         if (params) {
             const queryString = Object.keys(params)
-                .map((key) => key + "=" + params[key as keyof typeof params])
-                .join("&");
-            url = url + "?" + queryString;
+                .map((key) => key + '=' + params[key as keyof typeof params])
+                .join('&');
+            url = url + '?' + queryString;
         }
     }
     return url;
@@ -38,17 +33,17 @@ export const useFiltersQuery = () => {
     const [query, setQuery] = React.useState<any>(initialQuery);
     //To show clear button
     const [canReset, setCanReset] = React.useState(false);
-    const [searchFormValue, setSearchFormValue] = React.useState<string>("");
+    const [searchFormValue, setSearchFormValue] = React.useState<string>('');
     const [pagination, setPagination] = useState(initialPagination);
 
     const location = useLocation();
 
     const sortData = (by?: ApiFiltersType, orderType?: string) => {
         if (by) {
-            const sort = orderType === "ascend" ? "asc" : "desc";
+            const sort = orderType === 'ascend' ? 'asc' : 'desc';
             const rest: Record<string, string> = {};
             Object.entries(query).forEach(([key, value]) => {
-                if (!key.startsWith("order[")) {
+                if (!key.startsWith('order[')) {
                     rest[key] = value as string;
                 }
             });
@@ -71,7 +66,7 @@ export const useFiltersQuery = () => {
     const resetSortData = () => {
         const rest: Record<string, string> = {};
         Object.entries(query).forEach(([key, value]) => {
-            if (!key.startsWith("order[")) {
+            if (!key.startsWith('order[')) {
                 rest[key] = value as string;
             }
         });
@@ -81,7 +76,7 @@ export const useFiltersQuery = () => {
 
     const resetAllQuery = () => {
         setPagination(initialPagination);
-        setSearchFormValue("");
+        setSearchFormValue('');
         setQuery(initialQuery);
 
         const pathInfo = location.pathname;
@@ -99,11 +94,9 @@ export const useFiltersQuery = () => {
     };
 
     useEffect(() => {
-        const searchValue = searchParams.get("search");
+        const searchValue = searchParams.get('search');
         if (searchValue) {
-            setSearchFormValue((prevState) =>
-                prevState ? prevState : searchValue,
-            );
+            setSearchFormValue((prevState) => (prevState ? prevState : searchValue));
         }
     }, [searchParams, setSearchFormValue]);
 
@@ -127,9 +120,7 @@ export const useFiltersQuery = () => {
     }, [pagination]);
 
     useEffect(() => {
-        const params = Object.fromEntries(
-            new URLSearchParams(window.location.search),
-        );
+        const params = Object.fromEntries(new URLSearchParams(window.location.search));
         setQuery((prevState: any) => ({ ...prevState, ...params }));
     }, [setQuery, setPagination]);
 
@@ -142,7 +133,7 @@ export const useFiltersQuery = () => {
             const params = queryToString(query);
             const urlSearchParams = new URLSearchParams(params);
             const queryItemsPerPage =
-                urlSearchParams.get("itemsPerPage") ??
+                urlSearchParams.get('itemsPerPage') ??
                 query.itemsPerPage ??
                 initialPagination.itemsPerPage;
             if (
@@ -151,13 +142,13 @@ export const useFiltersQuery = () => {
                     queryItemsPerPage == initialPagination.itemsPerPage) ||
                 (queryLength === 2 &&
                     queryItemsPerPage == initialPagination.itemsPerPage &&
-                    query.hasOwnProperty("page"))
+                    query.hasOwnProperty('page'))
             ) {
                 setSearchParams(urlSearchParams);
                 setCanReset(false);
             } else {
                 //Always remove query parameter page
-                urlSearchParams.delete("page");
+                urlSearchParams.delete('page');
                 setSearchParams(urlSearchParams);
                 setCanReset(true);
             }
@@ -181,10 +172,7 @@ export const useFiltersQuery = () => {
         setCanReset,
     };
 };
-type TablePaginationConfig = Exclude<
-    GetProp<TableProps, "pagination">,
-    boolean
->;
+type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
 export const useHandleTableChange = ({
     sortData,
@@ -215,10 +203,8 @@ export const useHandleTableChange = ({
             if (pagination.current) {
                 const page = pagination.current;
                 const basePath = path ? path : location.pathname;
-                let params = new URLSearchParams(
-                    window.location.search,
-                ).toString();
-                params = params ? "?" + params : "";
+                let params = new URLSearchParams(window.location.search).toString();
+                params = params ? '?' + params : '';
 
                 navigate(`${basePath}/${page}${params}`);
                 setPagination((prevState: any) => ({

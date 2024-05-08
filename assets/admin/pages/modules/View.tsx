@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
-import Footer from "../../layouts/Footer";
-import Header from "../../layouts/Header";
-import { useSkinMode } from "@Admin/hooks";
-import { AdminPages } from "@Admin/constants";
-import img1 from "@Admin/assets/img/img1.jpg";
-import {
-    useModuleQuery,
-    useModulesJsonLdQuery,
-} from "@Admin/services/modulesApi";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Link, useParams } from 'react-router-dom';
+import Footer from '../../layouts/Footer';
+import Header from '../../layouts/Header';
+import { useSkinMode } from '@Admin/hooks';
+import { AdminPages } from '@Admin/constants';
+import img1 from '@Admin/assets/img/img1.jpg';
+import { useModuleQuery, useModulesJsonLdQuery } from '@Admin/services/modulesApi';
 
-import { List } from "antd";
+import { List } from 'antd';
 
 interface DataType {
     gender?: string;
@@ -55,20 +52,18 @@ export default function View() {
             // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
             // In real scene, you can using public method of react-virtualized:
             // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-            window.dispatchEvent(new Event("resize"));
+            window.dispatchEvent(new Event('resize'));
         }
     }, [data]);
 
     useEffect(() => {
         if (histories) {
             const newData =
-                histories["hydra:member" as unknown as keyof typeof histories];
+                histories['hydra:member' as unknown as keyof typeof histories];
             setData(newData);
             if (
-                histories["hydra:view" as unknown as keyof typeof histories] &&
-                histories["hydra:view" as unknown as keyof typeof histories][
-                    "hydra:next"
-                ]
+                histories['hydra:view' as unknown as keyof typeof histories] &&
+                histories['hydra:view' as unknown as keyof typeof histories]['hydra:next']
             ) {
                 setCanLoadMore(true);
             } else {
@@ -164,19 +159,14 @@ export default function View() {
                     }
                 >
                     <p className="d-sm-flex align-items-center mb-0">
-                        <Link
-                            to=""
-                            className="avatar avatar-xs me-2 d-none d-sm-inline"
-                        >
+                        <Link to="" className="avatar avatar-xs me-2 d-none d-sm-inline">
                             <img src={img1} alt="" />
                         </Link>
                         <span className="fs-sm">
-                            <strong>You</strong> searched using a keyword{" "}
+                            <strong>You</strong> searched using a keyword{' '}
                             <strong>&quot;restaurant&quot;</strong>
                         </span>
-                        <span className="fs-xs text-secondary ms-auto">
-                            10:00am
-                        </span>
+                        <span className="fs-xs text-secondary ms-auto">10:00am</span>
                     </p>
                 </li>
             </>
@@ -193,10 +183,7 @@ export default function View() {
                             <li className="breadcrumb-item">
                                 <Link to={AdminPages.MODULES}>Modules</Link>
                             </li>
-                            <li
-                                className="breadcrumb-item active"
-                                aria-current="page"
-                            >
+                            <li className="breadcrumb-item active" aria-current="page">
                                 Détails
                             </li>
                         </ol>
@@ -221,14 +208,10 @@ export default function View() {
                             <h2 className="main-title mb-3">
                                 Type: {module?.type?.name}
                             </h2>
-                            <p className="text-secondary mb-5">
-                                {module?.description}
-                            </p>
+                            <p className="text-secondary mb-5">{module?.description}</p>
 
                             <div className="d-flex align-items-center justify-content-between mb-4">
-                                <h5 className="section-title mb-0">
-                                    Post And Comments
-                                </h5>
+                                <h5 className="section-title mb-0">Post And Comments</h5>
                                 <Form.Check
                                     type="switch"
                                     label="Show all activity"
@@ -237,9 +220,7 @@ export default function View() {
                             </div>
 
                             <div className="d-flex align-items-center justify-content-between mb-4">
-                                <h5 className="section-title mb-0">
-                                    Search History
-                                </h5>
+                                <h5 className="section-title mb-0">Search History</h5>
                                 <Link to="">Clear Searches</Link>
                             </div>
 
@@ -249,15 +230,10 @@ export default function View() {
                                 itemLayout="horizontal"
                                 loadMore={isLoading}
                                 dataSource={list}
-                                renderItem={(item, index) =>
-                                    renderItem(item, index)
-                                }
+                                renderItem={(item, index) => renderItem(item, index)}
                                 footer={
                                     isLoading && (
-                                        <Spinner
-                                            animation="border"
-                                            role="status"
-                                        >
+                                        <Spinner animation="border" role="status">
                                             <span className="visually-hidden">
                                                 Loading...
                                             </span>
@@ -276,11 +252,8 @@ export default function View() {
                                             <img src={img1} alt="" />
                                         </Link>
                                         <span className="fs-sm">
-                                            <strong>You</strong> searched using
-                                            a keyword{" "}
-                                            <strong>
-                                                &quot;restaurant&quot;
-                                            </strong>
+                                            <strong>You</strong> searched using a keyword{' '}
+                                            <strong>&quot;restaurant&quot;</strong>
                                         </span>
                                         <span className="fs-xs text-secondary ms-auto">
                                             10:00am
@@ -297,11 +270,8 @@ export default function View() {
                                             <img src={img1} alt="" />
                                         </Link>
                                         <span className="fs-sm">
-                                            <strong>You</strong> searched using
-                                            a keyword{" "}
-                                            <strong>
-                                                &quots;oftware engineer&quot;
-                                            </strong>
+                                            <strong>You</strong> searched using a keyword{' '}
+                                            <strong>&quots;oftware engineer&quot;</strong>
                                         </span>
                                         <span className="fs-xs text-secondary ms-auto">
                                             02:23pm
@@ -317,11 +287,8 @@ export default function View() {
                                             <img src={img1} alt="" />
                                         </Link>
                                         <span className="fs-sm">
-                                            <strong>You</strong> searched using
-                                            a keyword{" "}
-                                            <strong>
-                                                &quot;ui developer&quot;
-                                            </strong>
+                                            <strong>You</strong> searched using a keyword{' '}
+                                            <strong>&quot;ui developer&quot;</strong>
                                         </span>
                                         <span className="fs-xs text-secondary ms-auto">
                                             02:15pm

@@ -1,40 +1,33 @@
-import { BaseQueryApi } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import {
     BaseQueryFn,
     FetchArgs,
     fetchBaseQuery,
     FetchBaseQueryError,
-} from "@reduxjs/toolkit/query";
-import { Mutex } from "async-mutex";
-import { appUrl } from "@Admin/constants";
-import { logOut } from "@Admin/features/authSlice";
+} from '@reduxjs/toolkit/query';
+import { Mutex } from 'async-mutex';
+import { appUrl } from '@Admin/constants';
+import { logOut } from '@Admin/features/authSlice';
 
 /**
  * Save token and Refresh_token in localStorage
  * @param userToken
  */
 const saveToken = (userToken: { token: string; refresh_token: string }) => {
-    localStorage.setItem("token", userToken.token.replace('"', ""));
-    localStorage.setItem(
-        "refresh_token",
-        userToken.refresh_token.replace('"', ""),
-    );
+    localStorage.setItem('token', userToken.token.replace('"', ''));
+    localStorage.setItem('refresh_token', userToken.refresh_token.replace('"', ''));
 };
 
 // Create a new mutex
 const mutex = new Mutex();
-const baseQuery = (
-    args: string | FetchArgs,
-    api: BaseQueryApi,
-    extraOptions: object,
-) => {
+const baseQuery = (args: string | FetchArgs, api: BaseQueryApi, extraOptions: object) => {
     const defaultIsJsonContentType = (headers: Headers) =>
         /ion\/((vnd\.api\+)|(merge\-patch\+)|(ld\+))?json/.test(
-            headers.get("content-type") || "",
+            headers.get('content-type') || '',
         );
     const query = fetchBaseQuery({
         baseUrl: `${appUrl}/api`,
-        credentials: "include",
+        credentials: 'include',
         isJsonContentType: defaultIsJsonContentType,
     });
 
@@ -50,9 +43,9 @@ const baseQueryWithReauth: BaseQueryFn<
     let result = await baseQuery(args, api, extraOptions);
 
     if (
-        (result.error?.data as any)?.message === "JWT Token not found" ||
-        (result.error?.data as any)?.message === "Expired JWT Token" ||
-        (result.error?.data as any)?.message === "Invalid JWT Token"
+        (result.error?.data as any)?.message === 'JWT Token not found' ||
+        (result.error?.data as any)?.message === 'Expired JWT Token' ||
+        (result.error?.data as any)?.message === 'Invalid JWT Token'
     ) {
         if (!mutex.isLocked()) {
             const release = await mutex.acquire();
@@ -60,12 +53,12 @@ const baseQueryWithReauth: BaseQueryFn<
             try {
                 const refreshResult: any = await baseQuery(
                     {
-                        credentials: "include",
-                        url: "/token/refresh",
-                        method: "POST",
+                        credentials: 'include',
+                        url: '/token/refresh',
+                        method: 'POST',
                         headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
                         },
                     },
                     api,
@@ -75,7 +68,7 @@ const baseQueryWithReauth: BaseQueryFn<
                 if (refreshResult.data) {
                     saveToken({
                         token: refreshResult.data.user?.email,
-                        refresh_token: "refresh_token",
+                        refresh_token: 'refresh_token',
                     });
                     result = await baseQuery(args, api, extraOptions);
                 } else {

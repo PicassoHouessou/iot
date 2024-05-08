@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import React from "react";
+import { Link } from 'react-router-dom';
+import React from 'react';
 
 interface Props {
     numberOfPages: number;
@@ -9,25 +9,19 @@ interface Props {
     url: string;
 }
 
-const Pagination: React.FC<Props> = ({
-    numberOfPages,
-    actualPage,
-    className,
-    url,
-}) => {
+const Pagination: React.FC<Props> = ({ numberOfPages, actualPage, className, url }) => {
     const pagination = Array.from({ length: numberOfPages }, (v, k) => k + 1);
     const actualPageInt = parseInt(actualPage as unknown as string);
-    const nextPage =
-        actualPageInt < numberOfPages ? actualPageInt + 1 : actualPageInt;
+    const nextPage = actualPageInt < numberOfPages ? actualPageInt + 1 : actualPageInt;
     const prevPage = actualPageInt > 1 ? actualPageInt - 1 : actualPageInt;
     const firstPage = 1;
     let params = new URLSearchParams(window.location.search).toString();
-    params = params ? "?" + params : "";
+    params = params ? '?' + params : '';
     return (
-        <nav aria-label="Page navigation" className={" " + className}>
+        <nav aria-label="Page navigation" className={' ' + className}>
             <ul className="pagination justify-content-end">
                 <li
-                    className={`${actualPageInt === 1 ? "page-item disabled" : "page-item"}`}
+                    className={`${actualPageInt === 1 ? 'page-item disabled' : 'page-item'}`}
                     onClick={(e) => e.preventDefault()}
                 >
                     <Link
@@ -52,7 +46,7 @@ const Pagination: React.FC<Props> = ({
                             return (
                                 <li
                                     key={index}
-                                    className={`page-item ${page === actualPageInt ? "active" : ""}`}
+                                    className={`page-item ${page === actualPageInt ? 'active' : ''}`}
                                 >
                                     <Link
                                         className="page-link"
@@ -95,26 +89,23 @@ const Pagination: React.FC<Props> = ({
                     return (
                         <li
                             key={index}
-                            className={`page-item ${actualPageInt === page ? "active" : ""}`}
+                            className={`page-item ${actualPageInt === page ? 'active' : ''}`}
                             onClick={(e) => e.preventDefault()}
                         >
-                            <Link
-                                className="page-link"
-                                to={`${url}${page}${params}`}
-                            >
+                            <Link className="page-link" to={`${url}${page}${params}`}>
                                 {page}
                             </Link>
                         </li>
                     );
                 })}
                 <li
-                    className={`${actualPageInt === numberOfPages ? "page-item disabled" : "page-item"}`}
+                    className={`${actualPageInt === numberOfPages ? 'page-item disabled' : 'page-item'}`}
                     onClick={(e) => e.preventDefault()}
                 >
                     <Link
                         className="page-link"
                         to={`${url}${nextPage}${params}`}
-                        aria-disabled={`${actualPageInt === numberOfPages ? "true" : "false"}`}
+                        aria-disabled={`${actualPageInt === numberOfPages ? 'true' : 'false'}`}
                     >
                         Suivant
                     </Link>
