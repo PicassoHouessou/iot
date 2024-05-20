@@ -8,6 +8,8 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        types:
+            datetime: App\DBAL\Types\UTCDateTimeType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -24,6 +26,11 @@ doctrine:
                 alias: App
         controller_resolver:
             auto_mapping: true
+        dql:
+            datetime_functions:
+                year: DoctrineExtensions\Query\Mysql\Year
+                date: DoctrineExtensions\Query\Mysql\Date
+                month: DoctrineExtensions\Query\Mysql\Month
 
 when@test:
     doctrine:
