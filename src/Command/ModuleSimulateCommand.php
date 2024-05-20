@@ -53,6 +53,8 @@ class ModuleSimulateCommand extends Command
                 $moduleHistory->setModule($module);
                 $moduleHistory->setValue($value);
                 $moduleHistory->setStatus($status);
+                $moduleHistory->setStatus($status);
+                $moduleHistory->setCreatedAt($faker->dateTimeBetween('today', '+12 week'));
                 $this->entityManager->persist($moduleHistory);
                 $output->writeln("Ajout d'un historique ayant le statut : " . $status->getName());
             }
