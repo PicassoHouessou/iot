@@ -1,34 +1,40 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from '../layouts/Header';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {Button, Card, Modal, Nav} from 'react-bootstrap';
+import { Button, Card, Modal, Nav } from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
-import "../assets/css/react-datepicker.min.css";
+import '../assets/css/react-datepicker.min.css';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import {ModuleHistory} from '@Admin/models';
-import {useSkinMode} from '@Admin/hooks';
-import {useModuleHistoriesJsonLdQuery, useModuleStatusesQuery,} from '@Admin/services/modulesApi';
-import {Flex, Tag} from 'antd';
+import { ModuleHistory } from '@Admin/models';
+import { useSkinMode } from '@Admin/hooks';
+import {
+    useModuleHistoriesJsonLdQuery,
+    useModuleStatusesQuery,
+} from '@Admin/services/modulesApi';
+import { Flex, Tag } from 'antd';
 
-import {DatesSetArg, EventClickArg} from "@fullcalendar/core";
-import dayjs from "dayjs";
+import { DatesSetArg, EventClickArg } from '@fullcalendar/core';
+import dayjs from 'dayjs';
 
 export default function AppCalendar() {
     const [startDate, setStartDate] = useState(new Date());
 
     const calendarRef = useRef<FullCalendar>(null);
     const [currentView, setCurrentView] = useState('dayGridMonth');
-    const [visibleDateRange, setVisibleDateRange] = useState({start: startDate, end: new Date()});
+    const [visibleDateRange, setVisibleDateRange] = useState({
+        start: startDate,
+        end: new Date(),
+    });
     const [history, setHistory] = useState<ModuleHistory | null>(null);
     const [histories, setHistories] = useState<Array<ModuleHistory>>([]);
-    const {data} = useModuleHistoriesJsonLdQuery({
-        "createdAt[after]": dayjs(visibleDateRange.start).format('YYYY-MM-DD'),
-        itemsPerPage: 1000
+    const { data } = useModuleHistoriesJsonLdQuery({
+        'createdAt[after]': dayjs(visibleDateRange.start).format('YYYY-MM-DD'),
+        itemsPerPage: 1000,
     });
-    const {data: moduleStatuses} = useModuleStatusesQuery({pagination: false});
+    const { data: moduleStatuses } = useModuleStatusesQuery({ pagination: false });
 
     useEffect(() => {
         if (data) {
@@ -43,7 +49,6 @@ export default function AppCalendar() {
         };
     }, []);
 
-
     // toggle sidebar calendar
     const [isSidebarShow, setSidebarShow] = useState(false);
 
@@ -54,11 +59,11 @@ export default function AppCalendar() {
 
     const handleClick = (arg: EventClickArg) => {
         const id = arg.event.id;
-        const history = histories?.find(item => item?.id == id);
+        const history = histories?.find((item) => item?.id == id);
         setHistory(history ?? null);
         handleModalShow();
     };
-    
+
     const handleDateChange = (date: Date) => {
         setStartDate(date);
         if (calendarRef.current) {
@@ -83,13 +88,13 @@ export default function AppCalendar() {
     const updateVisibleDateRange = (calendarApi: any) => {
         const start = calendarApi.view.activeStart;
         const end = calendarApi.view.activeEnd;
-        setVisibleDateRange({start, end});
+        setVisibleDateRange({ start, end });
     };
 
     const [, setSkin] = useSkinMode();
     return (
         <React.Fragment>
-            <Header onSkin={setSkin}/>
+            <Header onSkin={setSkin} />
             <div className={'main main-calendar' + (isSidebarShow ? ' show' : '')}>
                 <div className="calendar-sidebar">
                     <PerfectScrollbar className="sidebar-body">
@@ -151,9 +156,7 @@ export default function AppCalendar() {
                             handleViewChange(arg.view.type);
                             updateVisibleDateRange(arg.view.calendar);
                         }}
-
                         eventClick={handleClick}
-
                     />
 
                     <Modal
@@ -169,26 +172,37 @@ export default function AppCalendar() {
                             <Card className="card">
                                 <Card.Body className="p-3 pb-1">
                                     <div className="d-flex gap-1">
-                                        <Tag color={history?.status?.color}>{history?.status?.name}</Tag>
+                                        <Tag color={history?.status?.color}>
+                                            {history?.status?.name}
+                                        </Tag>
                                     </div>
-                                    <div
-                                        className="d-flex flex-row-reverse align-items-center justify-content-between mt-2 mb-1">
-                                        <span className="card-date">{history?.module?.createdAtAgo}</span>
-                                        <Card.Title as="h6">{history?.module?.name}</Card.Title>
+                                    <div className="d-flex flex-row-reverse align-items-center justify-content-between mt-2 mb-1">
+                                        <span className="card-date">
+                                            {history?.module?.createdAtAgo}
+                                        </span>
+                                        <Card.Title as="h6">
+                                            {history?.module?.name}
+                                        </Card.Title>
                                     </div>
-                                    <p className="fs-sm-normal">Type : <span>{history?.module?.type?.name}</span></p>
-                                    {history?.module?.description &&
-                                        <p className="fs-sm">{history?.module?.description}</p>}
-                                    <div
-                                        className="d-flex align-items-center justify-content-between fs-xs text-secondary mb-1">
-                                        <span><strong className="fw-medium">Changement</strong></span>
+                                    <p className="fs-sm-normal">
+                                        Type : <span>{history?.module?.type?.name}</span>
+                                    </p>
+                                    {history?.module?.description && (
+                                        <p className="fs-sm">
+                                            {history?.module?.description}
+                                        </p>
+                                    )}
+                                    <div className="d-flex align-items-center justify-content-between fs-xs text-secondary mb-1">
+                                        <span>
+                                            <strong className="fw-medium">
+                                                Changement
+                                            </strong>
+                                        </span>
                                         <span>{history?.createdAtAgo}</span>
                                     </div>
                                     {/*<ProgressBar now={task.progress} className="mb-2"/>*/}
-
                                 </Card.Body>
                             </Card>
-
                         </Modal.Body>
                         <Modal.Footer>
                             <Button

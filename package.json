@@ -33,6 +33,7 @@
         "webpack-notifier": "^1.15.0"
     },
     "dependencies": {
+        "@fullcalendar/common": "^5.11.5",
         "@fullcalendar/core": "^6.1.4",
         "@fullcalendar/daygrid": "^6.1.4",
         "@fullcalendar/react": "^6.1.4",

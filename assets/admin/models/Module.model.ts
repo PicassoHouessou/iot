@@ -5,8 +5,6 @@ export interface Module {
     type: ModuleType;
     createdAt: string;
     createdAtAgo: string;
-
-
 }
 
 export interface ModuleEdit {
