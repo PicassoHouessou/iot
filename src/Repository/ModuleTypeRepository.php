@@ -21,5 +21,14 @@ class ModuleTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, ModuleType::class);
     }
 
+    public function findCreatedBetween(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate);
+
+        return $qb->getQuery()->getResult();
+    }
 
 }

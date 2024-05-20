@@ -93,9 +93,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity("email")]
-#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'email', 'pec', 'firstName', 'lastName', 'roles', 'dateInsert', 'dateUpdate'])]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'email', 'pec', 'firstName', 'lastName', 'roles', 'createdAt', 'updatedAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'firstName' => 'partial', 'lastName' => 'partial', 'email' => 'partial', 'pec' => 'partial', 'roles' => 'partial'])]
-#[ApiFilter(filterClass: DateFilter::class, properties: ['dateInsert', 'dateUpdate'])]
+#[ApiFilter(filterClass: DateFilter::class, properties: ['createdAt', 'updatedAt'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
@@ -143,6 +143,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(type: "datetime")]
+    #[Groups(["user:read"])]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: "datetime")]
+    #[Groups(["user:read"])]
+    private ?\DateTimeInterface $updatedAt = null;
 
     public static function createFromPayload($id, array $payload): JWTUserInterface
     {
@@ -284,5 +292,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         $this->avatar = $avatar;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updatedTimestamps(): void
+    {
+        $this->updatedAt = new \DateTime('now');
+        if ($this->getCreatedAt() === null) {
+            $this->createdAt = new \DateTime('now');
+        }
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
     }
 }

@@ -44,13 +44,13 @@ class ModuleType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["module_type:read", "module_type:write"])]
+    #[Groups(["module_type:read", "module_type:write", "module:read"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 250)]
-    #[Groups(["module_type:read", "module_type:write"])]
+    #[Groups(["module_type:read", "module_type:write", "module:read"])]
     private string $name;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -76,6 +76,9 @@ class ModuleType
     #[Groups(["module_type:read", "module_type:write"])]
     private ?float $maxValue = null;
 
+    #[ORM\Column(type: "datetime")]
+    #[Groups(["module_type:read"])]
+    private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
     {
@@ -144,6 +147,20 @@ class ModuleType
     public function setMaxValue(?float $maxValue): void
     {
         $this->maxValue = $maxValue;
+    }
+
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function updatedTimestamps(): void
+    {
+        if ($this->getCreatedAt() === null) {
+            $this->createdAt = new \DateTime('now');
+        }
     }
 
 }

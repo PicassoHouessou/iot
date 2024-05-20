@@ -25,9 +25,17 @@ import img12 from "../assets/img/img12.jpg";
 import img14 from "../assets/img/img14.jpg";
 import img15 from "../assets/img/img15.jpg";
 import {useSkinMode} from "@Admin/hooks";
+import {useModuleHistoriesJsonLdQuery} from "@Admin/services/modulesApi";
 
 export default function AppCalendar() {
+    const {data} = useModuleHistoriesJsonLdQuery()
+const [histories,setHistories] = useState([]);
+    useEffect(()=>{
+        if(data){
+            setHistories(data['hydra:member' as unknown as keyof typeof data])
 
+        }
+    },[data])
     useEffect(() => {
         document.body.classList.add('app-calendar');
         return () => {

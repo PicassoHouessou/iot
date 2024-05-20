@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {Button, Card, Col, Nav, ProgressBar, Row, Table} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Footer from "../layouts/Footer";
@@ -7,6 +7,7 @@ import {dp3} from "../data/DashboardData";
 import ReactApexChart from "react-apexcharts";
 import {Doughnut} from "react-chartjs-2";
 import {useSkinMode} from "@Admin/hooks";
+import {useStatisticsQuery} from "@Admin/services/statisticApi";
 
 export default function Dashboard() {
 
@@ -496,7 +497,12 @@ export default function Dashboard() {
     };
     const [, setSkin] = useSkinMode();
 
+    const {data} = useStatisticsQuery();
 
+    const statistic = useMemo(() => {
+        return Array.isArray(data) ? data[0] : null
+
+    }, [data]);
     return (
         <React.Fragment>
             <Header onSkin={setSkin}/>
@@ -532,8 +538,8 @@ export default function Dashboard() {
                                         <div className="d-block fs-40 lh-1 text-primary mb-1">
                                             <i className="ri-calendar-todo-line"></i>
                                         </div>
-                                        <h1 className="card-value mb-0 ls--1 fs-32">358</h1>
-                                        <label className="d-block mb-1 fw-medium text-dark">Scheduled Events</label>
+                                        <h1 className="card-value mb-0 ls--1 fs-32">{statistic?.totalModules}</h1>
+                                        <label className="d-block mb-1 fw-medium text-dark">Modules</label>
                                         <small>
                                             <span className="d-inline-flex text-danger">0.7% <i
                                                 className="ri-arrow-down-line"></i></span> than last week
@@ -547,8 +553,8 @@ export default function Dashboard() {
                                         <div className="d-block fs-40 lh-1 text-ui-02 mb-1">
                                             <i className="ri-calendar-check-line"></i>
                                         </div>
-                                        <h1 className="card-value mb-0 fs-32 ls--1">260</h1>
-                                        <label className="d-block mb-1 fw-medium text-dark">Attended Events</label>
+                                        <h1 className="card-value mb-0 fs-32 ls--1">{statistic?.totalModuleTypes}</h1>
+                                        <label className="d-block mb-1 fw-medium text-dark">Types</label>
                                         <small><span className="d-inline-flex text-success">1.2% <i
                                             className="ri-arrow-up-line"></i></span> than last week</small>
                                     </Card.Body>
@@ -560,8 +566,21 @@ export default function Dashboard() {
                                         <div className="d-block fs-40 lh-1 text-secondary mb-1">
                                             <i className="ri-calendar-2-line"></i>
                                         </div>
-                                        <h1 className="card-value mb-0 fs-32 ls--1">38</h1>
-                                        <label className="d-block mb-1 fw-medium text-dark">Cancelled Events</label>
+                                        <h1 className="card-value mb-0 fs-32 ls--1">{statistic?.totalModuleStatuses}</h1>
+                                        <label className="d-block mb-1 fw-medium text-dark">Statuts</label>
+                                        <small><span className="d-inline-flex text-success">0.6% <i
+                                            className="ri-arrow-up-line"></i></span> than last week</small>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                            <Col sm>
+                                <Card className="card-one">
+                                    <Card.Body className="p-3">
+                                        <div className="d-block fs-40 lh-1 text-secondary mb-1">
+                                            <i className="ri-calendar-2-line"></i>
+                                        </div>
+                                        <h1 className="card-value mb-0 fs-32 ls--1">{statistic?.totalUsers}</h1>
+                                        <label className="d-block mb-1 fw-medium text-dark">Utilisateurs</label>
                                         <small><span className="d-inline-flex text-success">0.6% <i
                                             className="ri-arrow-up-line"></i></span> than last week</small>
                                     </Card.Body>

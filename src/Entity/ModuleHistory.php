@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\ModuleHistoryRepository;
+use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -105,6 +106,14 @@ class ModuleHistory
         return $this->createdAt;
     }
 
+    #[Groups(["module_history:read"])]
+    public function getCreatedAtAgo(): string
+    {
+        if ($this->createdAt === null) {
+            return "";
+        }
+        return Carbon::instance($this->createdAt)->diffForHumans();
+    }
 
     #[ORM\PrePersist]
     public function updatedTimestamps(): void

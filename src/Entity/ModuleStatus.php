@@ -44,19 +44,28 @@ class ModuleStatus
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["module_status:read"])]
+    #[Groups(["module_status:read", "module_history:read"])]
     private ?int $id = null;
 
     #[ORM\Column(type: "string", length: 255, unique: true)]
     #[Assert\Length(max: 255)]
     #[Assert\NotNull()]
-    #[Groups(["module_status:read", "module_status:write"])]
+    #[Groups(["module_status:read", "module_status:write", "module_history:read"])]
     private string $name;
+
+    #[ORM\Column(type: "string", length: 255, unique: true)]
+    #[Assert\Length(max: 255)]
+    #[Groups(["module_status:read", "module_status:write", "module_history:read"])]
+    private string $color;
 
     #[ORM\Column(type: "string", length: 255, unique: true)]
     #[Assert\Length(max: 255)]
     #[Groups(["module_status:read", "module_status:write"])]
     private string $slug;
+
+    #[ORM\Column(type: "datetime")]
+    #[Groups(["module_status:read"])]
+    private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
     {
@@ -84,5 +93,29 @@ class ModuleStatus
         $this->slug = $slug;
         return $this;
 
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function updatedTimestamps(): void
+    {
+        if ($this->getCreatedAt() === null) {
+            $this->createdAt = new \DateTime('now');
+        }
+    }
+
+    public function getColor(): string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+        return $this;
     }
 }

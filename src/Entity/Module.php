@@ -48,13 +48,13 @@ class Module
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["module:read"])]
+    #[Groups(["module:read", "module_history:read"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\Length(max: 250)]
     #[Assert\NotBlank]
-    #[Groups(["module:read", "module:write"])]
+    #[Groups(["module:read", "module:write", "module_history:read"])]
     private string $name;
 
     #[ORM\Column(type: Types::TEXT, length: 5000, nullable: true)]

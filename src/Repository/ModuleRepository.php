@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Module;
+use App\Entity\ModuleType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,28 +22,99 @@ class ModuleRepository extends ServiceEntityRepository
         parent::__construct($registry, Module::class);
     }
 
-    //    /**
-    //     * @return Module[] Returns an array of Module objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findCreatedBetween(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate);
 
-    //    public function findOneBySomeField($value): ?Module
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return $qb->getQuery()->getResult();
+    }
+
+
+    public function findByType(ModuleType $type): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.type = :type')
+            ->setParameter('type', $type);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function total(): int
+    {
+        return $this->countForType();
+    }
+
+    public function countForType(?ModuleType $type = null): int
+    {
+        $query = $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)');
+        if ($type) {
+            $query->andWhere('u.type = :type')
+                ->setParameter('type', $type);
+        }
+        $result = $query->getQuery()
+            ->getSingleScalarResult();
+        return $result;
+    }
+
+    /*
+        public function countForStatus(?ModuleStatus $status = null): int
+        {
+            $query = $this->createQueryBuilder('u')
+                ->select('COUNT(u.id)');
+            if ($status) {
+                $query->andWhere('u.status = :status')
+                    ->setParameter('status', $status);
+            }
+            $result = $query->getQuery()
+                ->getSingleScalarResult();
+            return $result;
+        }
+    */
+    public function countForLast12Months(?ModuleType $type = null): array
+    {
+        $endDate = new \DateTime();
+        $startDate = (clone $endDate)->modify('-12 months');
+
+        $query = $this->createQueryBuilder('u')
+            ->select('YEAR(u.createdAt) as year, MONTH(u.createdAt) as month, COUNT(u.id) as count')
+            ->where('u.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->groupBy('year, month')
+            ->orderBy('year, month', 'ASC');
+
+        if ($type) {
+            $query->andWhere('u.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
+    public function countForLast7Days(?ModuleType $type = null): array
+    {
+        $endDate = new \DateTime();
+        $startDate = (clone $endDate)->modify('-7 days');
+
+        $query = $this->createQueryBuilder('u')
+            ->select('DATE(u.createdAt) as date, COUNT(u.id) as count')
+            ->where('u.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->groupBy('date')
+            ->orderBy('date', 'ASC');
+
+        if ($type) {
+            $query->andWhere('u.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
+
 }

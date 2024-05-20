@@ -6,8 +6,6 @@ namespace App\EventSubscriber;
 use App\Event\UserEvent;
 use App\Security\EmailVerifier;
 use Doctrine\Persistence\ManagerRegistry;
-use Kritek\EmailTemplateBundle\Entity\EmailTemplate;
-use Kritek\EmailTemplateBundle\Service\EmailTemplateService;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -51,7 +49,7 @@ class UserEmailSubscriber implements EventSubscriberInterface
                 ->from($this->noReplyEmail)
                 ->to($user->getEmail())
                 ->subject($content?->getSubject() ?? 'Your password')
-                ->htmlTemplate('@KritekAdmin/emails/plain_password.html.twig')
+                ->htmlTemplate('emails/plain_password.html.twig')
                 ->context([
                     'user' => $user,
                     "content" => $content,
@@ -79,7 +77,7 @@ class UserEmailSubscriber implements EventSubscriberInterface
                 ->from($this->noReplyEmail)
                 ->to($user->getEmail())
                 ->subject($content?->getSubject() ?? 'Confirm your email')
-                ->htmlTemplate('@KritekAdmin/emails/confirmation_email.html.twig')
+                ->htmlTemplate('emails/confirmation_email.html.twig')
                 ->context([
                     'user' => $user,
                     "content" => $content,
