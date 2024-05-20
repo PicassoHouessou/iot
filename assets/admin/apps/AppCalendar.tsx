@@ -1,30 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Header from '../layouts/Header';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Button, Col, Form, Modal, Nav, Row } from 'react-bootstrap';
+import {Button, Card, Modal, Nav} from 'react-bootstrap';
 import ReactDatePicker from 'react-datepicker';
+import "../assets/css/react-datepicker.min.css";
+
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { ModuleHistory } from '@Admin/models';
+import {ModuleHistory} from '@Admin/models';
+import {useSkinMode} from '@Admin/hooks';
+import {useModuleHistoriesJsonLdQuery, useModuleStatusesQuery,} from '@Admin/services/modulesApi';
+import {Flex, Tag} from 'antd';
 
-import { calendarEvents } from '../data/CalendarEvents';
-import { useSkinMode } from '@Admin/hooks';
-import {
-    useModuleHistoriesJsonLdQuery,
-    useModuleStatusesQuery,
-} from '@Admin/services/modulesApi';
-import { Flex, Tag } from 'antd';
+import {DatesSetArg, EventClickArg} from "@fullcalendar/core";
+import dayjs from "dayjs";
 
 export default function AppCalendar() {
-    const { data } = useModuleHistoriesJsonLdQuery();
-    const { data: moduleStatuses } = useModuleStatusesQuery();
+    const [startDate, setStartDate] = useState(new Date());
+
+    const calendarRef = useRef<FullCalendar>(null);
+    const [currentView, setCurrentView] = useState('dayGridMonth');
+    const [visibleDateRange, setVisibleDateRange] = useState({start: startDate, end: new Date()});
+    const [history, setHistory] = useState<ModuleHistory | null>(null);
     const [histories, setHistories] = useState<Array<ModuleHistory>>([]);
+    const {data} = useModuleHistoriesJsonLdQuery({
+        "createdAt[after]": dayjs(visibleDateRange.start).format('YYYY-MM-DD'),
+        itemsPerPage: 1000
+    });
+    const {data: moduleStatuses} = useModuleStatusesQuery({pagination: false});
+
     useEffect(() => {
         if (data) {
             setHistories(data['hydra:member' as unknown as keyof typeof data]);
         }
     }, [data]);
+
     useEffect(() => {
         document.body.classList.add('app-calendar');
         return () => {
@@ -32,7 +43,6 @@ export default function AppCalendar() {
         };
     }, []);
 
-    const [startDate, setStartDate] = useState(new Date());
 
     // toggle sidebar calendar
     const [isSidebarShow, setSidebarShow] = useState(false);
@@ -41,22 +51,59 @@ export default function AppCalendar() {
     const [modalShow, setModalShow] = useState(false);
     const handleModalClose = () => setModalShow(false);
     const handleModalShow = () => setModalShow(true);
+
+    const handleClick = (arg: EventClickArg) => {
+        const id = arg.event.id;
+        const history = histories?.find(item => item?.id == id);
+        setHistory(history ?? null);
+        handleModalShow();
+    };
+    
+    const handleDateChange = (date: Date) => {
+        setStartDate(date);
+        if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            if (date < visibleDateRange.start) {
+                calendarApi.gotoDate(date);
+                updateVisibleDateRange(calendarApi);
+            } else {
+                calendarApi.gotoDate(date);
+            }
+        }
+    };
+
+    const handleViewChange = (view: string) => {
+        setCurrentView(view);
+        if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            updateVisibleDateRange(calendarApi);
+        }
+    };
+
+    const updateVisibleDateRange = (calendarApi: any) => {
+        const start = calendarApi.view.activeStart;
+        const end = calendarApi.view.activeEnd;
+        setVisibleDateRange({start, end});
+    };
+
     const [, setSkin] = useSkinMode();
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className={'main main-calendar' + (isSidebarShow ? ' show' : '')}>
                 <div className="calendar-sidebar">
                     <PerfectScrollbar className="sidebar-body">
+                        {/*
                         <div className="d-grid mb-3">
                             <Button variant="primary" onClick={handleModalShow}>
                                 Create New Event
                             </Button>
                         </div>
+                        */}
 
                         <ReactDatePicker
                             selected={startDate}
-                            onChange={(date) => setStartDate(date)}
+                            onChange={(date) => handleDateChange(date!)}
                             inline
                         />
 
@@ -76,15 +123,15 @@ export default function AppCalendar() {
                 </div>
                 <div className="calendar-body">
                     <FullCalendar
+                        ref={calendarRef}
                         plugins={[dayGridPlugin, timeGridPlugin]}
-                        initialView="dayGridMonth"
+                        initialView={currentView}
                         headerToolbar={{
                             left: 'custom1 prev,next today',
                             center: 'title',
                             right: 'dayGridMonth,timeGridWeek,timeGridDay',
                         }}
                         eventSources={[
-                            calendarEvents,
                             histories?.map((item) => ({
                                 id: item.id,
                                 title: item?.module?.name,
@@ -100,6 +147,13 @@ export default function AppCalendar() {
                                 },
                             },
                         }}
+                        datesSet={(arg: DatesSetArg) => {
+                            handleViewChange(arg.view.type);
+                            updateVisibleDateRange(arg.view.calendar);
+                        }}
+
+                        eventClick={handleClick}
+
                     />
 
                     <Modal
@@ -109,72 +163,32 @@ export default function AppCalendar() {
                         centered
                     >
                         <Modal.Header closeButton>
-                            <Modal.Title>Create New Event</Modal.Title>
+                            <Modal.Title>Détails</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <div className="mb-3">
-                                <Form.Label>Event Title:</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter title of event"
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <Form.Check
-                                    type="radio"
-                                    name="etype"
-                                    inline
-                                    label="Event"
-                                    checked
-                                />
-                                <Form.Check
-                                    type="radio"
-                                    name="etype"
-                                    inline
-                                    label="Reminder"
-                                />
-                            </div>
-                            <Row className="g-3 mb-3">
-                                <Col xs="7" md="8">
-                                    <Form.Label>Start Date:</Form.Label>
-                                    <Form.Control type="text" placeholder="Choose date" />
-                                </Col>
-                                <Col>
-                                    <Form.Label>Start Time:</Form.Label>
-                                    <Form.Select>
-                                        <option value="">Choose time</option>
-                                        <option value="12:00AM">12:00AM</option>
-                                        <option value="12:15AM">12:15AM</option>
-                                        <option value="12:30AM">12:30AM</option>
-                                        <option value="12:45AM">12:45AM</option>
-                                    </Form.Select>
-                                </Col>
-                            </Row>
+                            <Card className="card">
+                                <Card.Body className="p-3 pb-1">
+                                    <div className="d-flex gap-1">
+                                        <Tag color={history?.status?.color}>{history?.status?.name}</Tag>
+                                    </div>
+                                    <div
+                                        className="d-flex flex-row-reverse align-items-center justify-content-between mt-2 mb-1">
+                                        <span className="card-date">{history?.module?.createdAtAgo}</span>
+                                        <Card.Title as="h6">{history?.module?.name}</Card.Title>
+                                    </div>
+                                    <p className="fs-sm-normal">Type : <span>{history?.module?.type?.name}</span></p>
+                                    {history?.module?.description &&
+                                        <p className="fs-sm">{history?.module?.description}</p>}
+                                    <div
+                                        className="d-flex align-items-center justify-content-between fs-xs text-secondary mb-1">
+                                        <span><strong className="fw-medium">Changement</strong></span>
+                                        <span>{history?.createdAtAgo}</span>
+                                    </div>
+                                    {/*<ProgressBar now={task.progress} className="mb-2"/>*/}
 
-                            <Row className="g-3 mb-3">
-                                <Col xs="7" md="8">
-                                    <Form.Label>End Date:</Form.Label>
-                                    <Form.Control type="text" placeholder="Choose date" />
-                                </Col>
-                                <Col>
-                                    <Form.Label>End Time:</Form.Label>
-                                    <Form.Select>
-                                        <option value="">Choose time</option>
-                                        <option value="12:00AM">12:00AM</option>
-                                        <option value="12:15AM">12:15AM</option>
-                                        <option value="12:30AM">12:30AM</option>
-                                        <option value="12:45AM">12:45AM</option>
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                            <div>
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    placeholder="Write some description (optional)"
-                                />
-                            </div>
+                                </Card.Body>
+                            </Card>
+
                         </Modal.Body>
                         <Modal.Footer>
                             <Button
@@ -182,10 +196,7 @@ export default function AppCalendar() {
                                 className="btn-white"
                                 onClick={handleModalClose}
                             >
-                                Close
-                            </Button>
-                            <Button variant="primary" onClick={handleModalClose}>
-                                Add Event
+                                Fermer
                             </Button>
                         </Modal.Footer>
                     </Modal>

@@ -3,6 +3,10 @@ export interface Module {
     name: string;
     description: string;
     type: ModuleType;
+    createdAt: string;
+    createdAtAgo: string;
+
+
 }
 
 export interface ModuleEdit {
@@ -35,4 +39,5 @@ export interface ModuleHistory {
     status: ModuleStatus;
     value: number;
     createdAt: string;
+    createdAtAgo: string;
 }
