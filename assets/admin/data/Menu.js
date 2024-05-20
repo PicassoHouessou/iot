@@ -34,36 +34,18 @@ const applicationsMenu = [
 
 const pagesMenu = [
     {
-        "label": "User Pages",
-        "icon": "ri-account-circle-line",
-        "submenu": [
-            {
-                "label": "User Profile",
-                "link": "/pages/profile"
-            },
-
-        ]
-    },
-    {
         "id": 27,
         "label": "Authentication",
         "icon": "ri-lock-2-line",
         "submenu": [
             {
                 "label": "Sign In Basic",
-                "link": "//signin"
+                "link": "/signin"
             },
-            {
-                "label": "Sign In Cover",
-                "link": "//signin2"
-            },
+
             {
                 "label": "Sign Up Basic",
-                "link": "//signup"
-            },
-            {
-                "label": "Sign Up Cover",
-                "link": "//signup2"
+                "link": "/signup"
             },
             {
                 "label": "Verify Account",
@@ -77,21 +59,6 @@ const pagesMenu = [
                 "label": "Lock Screen",
                 "link": "/lock"
             }
-        ]
-    },
-    {
-        "label": "Error Pages",
-        "icon": "ri-error-warning-line",
-        "submenu": [
-            {
-                "label": "Page Not Found",
-                "link": "/error-404"
-            },
-            {
-                "label": "Internal Server Error",
-                "link": "/error-500"
-            },
-
         ]
     },
 
