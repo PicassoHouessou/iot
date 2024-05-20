@@ -14,6 +14,7 @@ import './assets/css/remixicon.css';
 
 // import scss
 import './scss/style.scss';
+import InternalServerError from '@Admin/pages/InternalServerError';
 
 // set skin on load
 window.addEventListener('load', function () {
@@ -50,7 +51,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
     public render() {
         if (this.state.hasError) {
-            return <h1>Something went wrong.</h1>;
+            return <InternalServerError />;
         }
 
         return this.props.children;

@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 const initialState = {
     id: '',
     name: '',
+    color: '',
     description: '',
 };
 
@@ -154,6 +155,19 @@ export default function AddOrEdit() {
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors?.name}
+                                        </Form.Control.Feedback>
+                                    </div>
+                                    <div className="mb-3">
+                                        <Form.Label htmlFor="color">Couleur</Form.Label>
+                                        <Form.Control
+                                            id="name"
+                                            name="name"
+                                            value={formValue.color}
+                                            onChange={handleInputChange}
+                                            isInvalid={!!errors.color}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors?.color}
                                         </Form.Control.Feedback>
                                     </div>
                                     <div className="mb-3">

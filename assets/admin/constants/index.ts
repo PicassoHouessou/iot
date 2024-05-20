@@ -33,6 +33,7 @@ export enum ApiRoutesWithoutPrefix {
     MODULE_TYPES = '/module_types',
     MODULE_HISTORIES = '/module_histories',
     MODULE_STATUSES = '/module_statuses',
+    STATISTICS = '/statistics',
 }
 
 export enum AdminPages {
@@ -49,7 +50,7 @@ export enum AdminPages {
     MODULE_TYPES_SEE = '/modules/types/see',
     MODULE_TYPES_EDIT = '/modules/types/edit',
     DASHBOARD = '/dashboard',
-    MODULES_ADD = '/modules/add',
+    MODULES_ADD = '/modules/main/add',
     MODULE_TYPES_ADD = '/modules/types/add',
     MODULE_STATUSES_ADD = '/modules/statuses/add',
     PROFILES = '/profiles',
@@ -72,3 +73,11 @@ export type ApiFiltersType =
     | ModulesApiFilters
     | ModuleTypesApiFilters
     | ModuleStatusApiFilters;
+
+export enum StatisticEnum {
+    USER,
+    MODULE,
+    MODULE_TYPE,
+    MODULE_HISTORY,
+    MODULE_STATUS,
+}

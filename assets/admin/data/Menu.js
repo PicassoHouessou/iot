@@ -6,13 +6,6 @@ const dashboardMenu = [
         "link": "/dashboard",
         "icon": "ri-pie-chart-2-line"
     },
-    {
-        "label": "Storage Management",
-        "link": "/dashboard/storage",
-        "icon": "ri-hard-drive-2-line"
-    },
-
-
 ];
 
 const applicationsMenu = [
@@ -40,11 +33,6 @@ const applicationsMenu = [
 ];
 
 const pagesMenu = [
-    {
-        "label": "Calendar",
-        "link": "/logs",
-        "icon": "ri-calendar-line"
-    },
     {
         "label": "User Pages",
         "icon": "ri-account-circle-line",

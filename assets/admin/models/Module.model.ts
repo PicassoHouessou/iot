@@ -15,6 +15,7 @@ export interface ModuleEdit {
 export interface ModuleStatus {
     id: string;
     name: string;
+    color: string;
     description: string;
 }
 
@@ -31,7 +32,7 @@ export interface ModuleType {
 export interface ModuleHistory {
     id: string;
     module: Module;
-    $status: ModuleStatus;
+    status: ModuleStatus;
     value: number;
     createdAt: string;
 }

@@ -79,10 +79,13 @@ export default function Home() {
             width: '20%',
         },
         {
-            title: 'Description',
-            dataIndex: 'description',
+            title: 'Type',
+            dataIndex: 'type',
             width: '20%',
             sorter: true,
+            render: (type) => {
+                return type?.name;
+            },
         },
         {
             title: 'Date',
@@ -206,7 +209,7 @@ export default function Home() {
                         >
                             <i className="ri-printer-line fs-18 lh-1"></i>Print
                         </Button>
-                        <Link to="/modules/add">
+                        <Link to={AdminPages.MODULES_ADD}>
                             <Button
                                 variant="primary"
                                 className="d-flex align-items-center gap-2"
