@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Filter\ModuleSearchFilter;
 use App\Repository\ModuleRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -59,16 +60,16 @@ class Module
 
     #[ORM\Column(type: Types::TEXT, length: 5000, nullable: true)]
     #[Assert\Length(max: 5000)]
-    #[Groups(["module:read", "module:write"])]
+    #[Groups(["module:read", "module:write", "module_history:read"])]
     private ?string $description;
 
     #[ORM\ManyToOne(targetEntity: ModuleType::class)]
     #[Assert\NotBlank]
-    #[Groups(["module:read", "module:write"])]
+    #[Groups(["module:read", "module:write", "module_history:read"])]
     private ?ModuleType $type = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(["module:read"])]
+    #[Groups(["module:read", "module_history:read"])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -165,6 +166,15 @@ class Module
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    #[Groups(["module:read", "module_history:read"])]
+    public function getCreatedAtAgo(): string
+    {
+        if ($this->createdAt === null) {
+            return "";
+        }
+        return Carbon::instance($this->createdAt)->diffForHumans();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface

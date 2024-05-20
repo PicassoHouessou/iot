@@ -44,6 +44,7 @@ class ModuleHistory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["module_history:read"])]
     private ?int $id = null;
 
 
@@ -104,6 +105,12 @@ class ModuleHistory
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): ?self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
     }
 
     #[Groups(["module_history:read"])]
