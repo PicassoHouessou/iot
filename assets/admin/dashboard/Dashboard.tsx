@@ -207,7 +207,7 @@ export default function Dashboard() {
             page: prevState.page ? prevState.page + 1 : 2,
         }));
         setCanLoadMore(false);
-    }, [canLoadMore, query]);
+    }, [canLoadMore, setQuery]);
 
     useEffect(() => {
         if (isLoading) {
