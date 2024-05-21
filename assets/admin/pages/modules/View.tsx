@@ -1,60 +1,51 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Col, Row, Spinner } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Button, Col, Row, Spinner} from 'react-bootstrap';
+import {Link, useParams} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import { AdminPages } from '@Admin/constants';
-import {
-    useModuleHistoriesJsonLdQuery,
-    useModuleQuery,
-} from '@Admin/services/modulesApi';
-import { List, Tag } from 'antd';
-import { ModuleHistory } from '@Admin/models';
+import {useSkinMode} from '@Admin/hooks';
+import {AdminPages} from '@Admin/constants';
+import {useModuleHistoriesJsonLdQuery, useModuleQuery,} from '@Admin/services/modulesApi';
+import {List, Tag} from 'antd';
+import {ModuleHistory} from '@Admin/models';
 
 export default function View() {
-    const { id } = useParams();
+    const {id} = useParams();
     const loadMoreRef = useRef(null);
-    const { data: module } = useModuleQuery(id!, { skip: id ? false : true });
-    const [query, setQuery] = useState<any>({ module: id, itemsPerPage: 10 });
-    const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query, {
+    const {data: module} = useModuleQuery(id!, {skip: id ? false : true});
+    const [query, setQuery] = useState<any>({module: id, itemsPerPage: 10});
+    const {data: histories, isLoading} = useModuleHistoriesJsonLdQuery(query, {
         skip: id ? false : true,
     });
     const [, setSkin] = useSkinMode();
 
     const [canLoadMore, setCanLoadMore] = useState(false);
 
-    const [data, setData] = useState<ModuleHistory[]>([]);
     const [list, setList] = useState<ModuleHistory[]>([]);
 
     useEffect(() => {
-        if (data && data.length > 0) {
-            //const newData = list.concat(data);
-            setList((prevState) => [...prevState, ...data]);
-            setData([]);
-            //const data = histories["hydra:member" as unknown as keyof typeof histories];
-            // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-            // In real scene, you can using public method of react-virtualized:
-            // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-            window.dispatchEvent(new Event('resize'));
-        }
-    }, [data]);
-
-    useEffect(() => {
         if (histories) {
-            const newData =
-                histories['hydra:member' as unknown as keyof typeof histories];
-            setData(newData);
+
             if (
                 histories['hydra:view' as unknown as keyof typeof histories] &&
                 histories['hydra:view' as unknown as keyof typeof histories]['hydra:next']
             ) {
+                const data = histories['hydra:member' as unknown as keyof typeof histories];
+                setList((prevState) => [...prevState, ...data]);
+
+                // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
+                // In real scene, you can using public method of react-virtualized:
+                // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
+                window.dispatchEvent(new Event('resize'));
                 setCanLoadMore(true);
+
+
             } else {
                 setCanLoadMore(false);
             }
         }
-    }, [histories, data, setCanLoadMore]);
+    }, [histories, setList, setCanLoadMore]);
+
     const onLoadMore = useCallback(() => {
         if (!canLoadMore) {
             return;
@@ -65,6 +56,7 @@ export default function View() {
         }));
         setCanLoadMore(false);
     }, [canLoadMore, setQuery]);
+
 
     useEffect(() => {
         if (isLoading) {
@@ -78,7 +70,7 @@ export default function View() {
                     onLoadMore();
                 }
             },
-            { threshold: 1.0 },
+            {threshold: 1.0},
         );
 
         const currentRef = loadMoreRef.current;
@@ -100,7 +92,8 @@ export default function View() {
         return (
             <>
                 <li className="activity-date">{item?.module?.createdAt}</li>
-                <li className="activity-item search" ref={addRef ? loadMoreRef : null}>
+                <li className="activity-item " style={{backgroundColor: item?.module?.color}}
+                    ref={addRef ? loadMoreRef : null}>
                     <p className="d-sm-flex align-items-center mb-0">
                         <Tag color={item?.module?.color}>{item?.status?.name}</Tag>
                         <span className="fs-sm"></span>
@@ -115,7 +108,7 @@ export default function View() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -179,7 +172,7 @@ export default function View() {
                     </Row>
                 </div>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );
