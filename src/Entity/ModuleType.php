@@ -60,12 +60,12 @@ class ModuleType
 
     #[ORM\Column(type: Types::STRING, length: 50)]
     #[Assert\Length(max: 50)]
-    #[Groups(["module_type:read", "module_type:write"])]
+    #[Groups(["module_type:read", "module_type:write", "module_history:read"])]
     private string $unitOfMeasure;
 
     #[ORM\Column(type: Types::TEXT, length: 5000)]
     #[Assert\Length(max: 5000)]
-    #[Groups(["module_type:read", "module_type:write"])]
+    #[Groups(["module_type:read", "module_type:write", "module_history:read"])]
     private string $unitDescription;
 
     #[ORM\Column(type: Types::FLOAT, nullable: true)]

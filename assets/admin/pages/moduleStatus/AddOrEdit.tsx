@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Container, Form } from 'react-bootstrap';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Button, Card, Container, Form} from 'react-bootstrap';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
+import {useSkinMode} from '@Admin/hooks';
 import {
-    useAddModuleMutation,
+    useAddModuleStatusMutation,
     useModuleStatusQuery,
     useUpdateModuleStatusMutation,
 } from '@Admin/services/modulesApi';
-import { ModuleStatus } from '@Admin/models';
-import { generateIRI, getErrorMessage } from '@Admin/utils';
-import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
-import { toast } from 'react-toastify';
+import {ModuleStatus} from '@Admin/models';
+import {getErrorMessage} from '@Admin/utils';
+import {AdminPages} from '@Admin/constants';
+import {toast} from 'react-toastify';
 
 const initialState = {
     id: '',
@@ -24,20 +24,18 @@ const initialState = {
 export default function AddOrEdit() {
     const [, setSkin] = useSkinMode();
     const [formValue, setFormValue] = useState<ModuleStatus>(initialState);
-    const [selectedModuleType, setSelectedModuleType] = useState<any>(null);
     const [editMode, setEditMode] = useState(false);
-    const [addData] = useAddModuleMutation();
+    const [addData] = useAddModuleStatusMutation();
     const [updateData] = useUpdateModuleStatusMutation();
     const navigate = useNavigate();
     const idParam = useParams().id as unknown as number;
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const { data } = useModuleStatusQuery(idParam!, {
+    const {data} = useModuleStatusQuery(idParam!, {
         skip: idParam ? false : true,
     });
 
     useEffect(() => {
         if (data) {
-            // Set the current user to be the one who create or edit the post
             setFormValue({
                 ...data,
             });
@@ -53,20 +51,17 @@ export default function AddOrEdit() {
                 ...formValue,
                 [name]: value,
             });
-            setErrors((prevState) => ({ ...prevState, [name]: '' }));
+            setErrors((prevState) => ({...prevState, [name]: ''}));
         };
-
         if (typeof action === 'undefined') {
-            const { name, value } = e.target;
+            const {name, value} = e.target;
 
             handleRegularFieldChange(name, value);
         } else {
             switch (action.name) {
-                case 'type':
-                    setSelectedModuleType(e);
-                    break;
+
                 default:
-                    const { value } = e;
+                    const {value} = e;
                     setFormValue({
                         ...formValue,
                         [action.name]: value,
@@ -78,13 +73,9 @@ export default function AddOrEdit() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const { id, ...rest } = formValue;
+        const {id, ...rest} = formValue;
         const data = {
             ...rest,
-            type: generateIRI(
-                ApiRoutesWithoutPrefix.MODULE_TYPES,
-                selectedModuleType.id,
-            ) as string,
         };
 
         try {
@@ -92,7 +83,7 @@ export default function AddOrEdit() {
                 await addData(data).unwrap();
                 setErrors({});
                 navigate(-1);
-                toast.success('Status enregistré');
+                toast.success('Statut enregistré');
             } else {
                 setErrors({});
                 await updateData({
@@ -100,10 +91,10 @@ export default function AddOrEdit() {
                     id,
                 }).unwrap();
                 navigate(-1);
-                toast.success('Status enregistré');
+                toast.success('Statut enregistré');
             }
         } catch (err) {
-            const { detail, errors } = getErrorMessage(err);
+            const {detail, errors} = getErrorMessage(err);
             if (errors) {
                 setErrors(errors);
             }
@@ -112,13 +103,13 @@ export default function AddOrEdit() {
     };
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to="/modules">Modules</Link>
+                                <Link to={AdminPages.MODULES}>Modules</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
                                 Ajout
@@ -160,8 +151,8 @@ export default function AddOrEdit() {
                                     <div className="mb-3">
                                         <Form.Label htmlFor="color">Couleur</Form.Label>
                                         <Form.Control
-                                            id="name"
-                                            name="name"
+                                            id="color"
+                                            name="color"
                                             value={formValue.color}
                                             onChange={handleInputChange}
                                             isInvalid={!!errors.color}
@@ -196,13 +187,12 @@ export default function AddOrEdit() {
                             </Card.Body>
                         </Card>
 
-                        <br />
-                        <br />
-                        <br />
+                        <br/>
+                        <br/>
+                        <br/>
                     </Container>
                 </div>
-
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );

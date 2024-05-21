@@ -1,24 +1,37 @@
-import React, { useMemo } from 'react';
-import { Button, Card, Col, Nav, ProgressBar, Row, Table } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Button, Card, Col, Nav, ProgressBar, Row, Spinner, Table} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../layouts/Footer';
 import Header from '../layouts/Header';
 import ReactApexChart from 'react-apexcharts';
-import { useSkinMode } from '@Admin/hooks';
-import { useStatisticsQuery } from '@Admin/services/statisticApi';
+import {useSkinMode} from '@Admin/hooks';
+import {useStatisticsQuery} from '@Admin/services/statisticApi';
 import TotalStatistic from '@Admin/components/TotalStatistic';
-import { StatisticEnum } from '@Admin/constants';
-import { ApexOptions } from 'apexcharts';
-import { useModuleHistoriesQuery } from '@Admin/services/modulesApi';
+import {StatisticEnum} from '@Admin/constants';
+import {ApexOptions} from 'apexcharts';
+import {useModuleHistoriesJsonLdQuery} from '@Admin/services/modulesApi';
 import dayjs from 'dayjs';
+import {List, Tag} from "antd";
+import {ModuleHistory} from "@Admin/models";
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 
 export default function Dashboard() {
-    const { data } = useStatisticsQuery();
-    const { data: histories } = useModuleHistoriesQuery();
+    const {data: statisticsData} = useStatisticsQuery();
+    const loadMoreRef = useRef(null);
+    const [query, setQuery] = useState<any>({itemsPerPage: 10});
+    const {data: histories, isLoading} = useModuleHistoriesJsonLdQuery(query);
+    const [canLoadMore, setCanLoadMore] = useState(false);
+
+    const [data, setData] = useState<ModuleHistory[]>([]);
+    const [list, setList] = useState<ModuleHistory[]>([]);
+
+
     const seriesQuantityModuleType = useMemo(() => {
         let result: number[] = [];
-        if (Array.isArray(data)) {
-            const margin = data[0]?.charts?.['margin'];
+        if (Array.isArray(statisticsData)) {
+            const margin = statisticsData[0]?.charts?.['margin'];
             if (Array.isArray(margin)) {
                 result = margin.map((item: any) => {
                     return item.value ?? 0;
@@ -35,8 +48,8 @@ export default function Dashboard() {
 
     const optionQuantityModuleType: ApexOptions = useMemo(() => {
         let labels = [];
-        if (Array.isArray(data)) {
-            const margin = data[0]?.charts?.['margin'];
+        if (Array.isArray(statisticsData)) {
+            const margin = statisticsData[0]?.charts?.['margin'];
             if (Array.isArray(margin)) {
                 labels = margin.map((item: any) => {
                     return item.type;
@@ -48,7 +61,7 @@ export default function Dashboard() {
             chart: {
                 parentHeightOffset: 0,
                 stacked: true,
-                toolbar: { show: true },
+                toolbar: {show: true},
             },
             colors: ['#506fd9', '#85b6ff'],
             grid: {
@@ -92,11 +105,11 @@ export default function Dashboard() {
                         fontWeight: 'bold',
                     },
                 },
-                axisBorder: { show: false },
+                axisBorder: {show: false},
             },
-            dataLabels: { enabled: false },
-            fill: { opacity: 1 },
-            legend: { show: true },
+            dataLabels: {enabled: false},
+            fill: {opacity: 1},
+            legend: {show: true},
             tooltip: {
                 enabled: true,
             },
@@ -104,8 +117,8 @@ export default function Dashboard() {
     }, [data]);
 
     const seriesMargin = useMemo(() => {
-        if (Array.isArray(data)) {
-            const margin = data[0]?.charts?.['margin'];
+        if (Array.isArray(statisticsData)) {
+            const margin = statisticsData[0]?.charts?.['margin'];
             if (Array.isArray(margin)) {
                 const result = margin
                     .filter((item) => item.percentage > 0)
@@ -116,12 +129,12 @@ export default function Dashboard() {
             }
         }
         return null;
-    }, [data]);
+    }, [statisticsData]);
 
     const optionMargin = useMemo(() => {
         let labels = [];
-        if (Array.isArray(data)) {
-            const margin = data[0]?.charts?.['margin'];
+        if (Array.isArray(statisticsData)) {
+            const margin = statisticsData[0]?.charts?.['margin'];
             if (Array.isArray(margin)) {
                 labels = margin
                     .filter((item) => item.percentage > 0)
@@ -132,34 +145,132 @@ export default function Dashboard() {
         }
         return {
             labels: labels,
-            legend: { show: true },
+            legend: {show: true},
         };
     }, [data]);
 
-    const formattedData = histories?.map((item) => {
-        const createdAt = dayjs(item.createdAt);
-        return {
-            date: {
-                day: createdAt.format('ddd'),
-                num: createdAt.format('DD'),
-            },
-            events: [
-                {
-                    time: createdAt.format('hh:mm A'),
-                    title: item.module.name,
-                    text: `Statut: ${item.status.name}, Valeur: ${item.value}`,
-                },
-            ],
-        };
-    });
+    // const formattedData = histories?.map((item) => {
+    //     const createdAt = dayjs(item.createdAt);
+    //     return {
+    //         date: {
+    //             day: createdAt.format('ddd'),
+    //             num: createdAt.format('DD'),
+    //         },
+    //         events: [
+    //             {
+    //                 time: createdAt.format('hh:mm A'),
+    //                 title: item.module.name,
+    //                 text: `Statut: ${item.status.name}, Valeur: ${item.value}`,
+    //             },
+    //         ],
+    //     };
+    // });
     const [, setSkin] = useSkinMode();
 
     const statistic = useMemo(() => {
-        return Array.isArray(data) ? data[0] : null;
+        return Array.isArray(statisticsData) ? statisticsData[0] : null;
+    }, [statisticsData]);
+
+
+    useEffect(() => {
+        if (data && data.length > 0) {
+            //const newData = list.concat(data);
+            setList((prevState) => [...prevState, ...data]);
+            setData([]);
+            //const data = histories["hydra:member" as unknown as keyof typeof histories];
+            // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
+            // In real scene, you can using public method of react-virtualized:
+            // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
+            window.dispatchEvent(new Event('resize'));
+        }
     }, [data]);
+
+    useEffect(() => {
+        if (histories) {
+            const newData =
+                histories['hydra:member' as unknown as keyof typeof histories];
+            setData(newData);
+            if (
+                histories['hydra:view' as unknown as keyof typeof histories] &&
+                histories['hydra:view' as unknown as keyof typeof histories]['hydra:next']
+            ) {
+                setCanLoadMore(true);
+            } else {
+                setCanLoadMore(false);
+            }
+        }
+    }, [histories, data, setCanLoadMore]);
+    const onLoadMore = () => {
+        if (!canLoadMore) {
+            return;
+        }
+        setQuery((prevState: any) => ({
+            ...prevState,
+            page: prevState.page ? prevState.page + 1 : 2,
+        }));
+        setCanLoadMore(false)
+    }
+
+    useEffect(() => {
+        if (isLoading) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const first = entries[0];
+                if (first.isIntersecting) {
+                    onLoadMore();
+                }
+            },
+            {threshold: 1.0},
+        );
+
+        const currentRef = loadMoreRef.current;
+
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, [isLoading, loadMoreRef, onLoadMore]);
+
+
+    const renderItem = (item: ModuleHistory, index: number) => {
+        const addRef = list?.length > 1 && index === list?.length - 3 ? true : false;
+        const createdAt = dayjs(item.createdAt);
+        return (
+            <>
+                <li key={index} className={''} ref={addRef ? loadMoreRef : null}>
+                    <div className="event-date">
+                        <small>{createdAt.format('ddd')}</small>
+                        <h5>{createdAt.format('DD')}</h5>
+                    </div>
+                    <div className="events-body">
+                        <div key={item.id} className="ev-item">
+                            <small className="text-capitalize">{createdAt.fromNow()}</small>
+                            <h6>{item?.module?.name}</h6>
+                            <p className="mb-2"><strong>Valeur
+                                mesurée: {`${item.value} ${item?.module?.type?.unitOfMeasure}`}</strong><br/>
+                            </p>
+                            <Tag color={item?.status?.color}>{item?.status?.name}</Tag>
+
+                        </div>
+
+                    </div>
+                </li>
+
+            </>
+        );
+    };
+
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -359,67 +470,67 @@ export default function Dashboard() {
                                 </label>
 
                                 <ProgressBar className="progress-one ht-8 mt-2 mb-4">
-                                    <ProgressBar now={50} />
-                                    <ProgressBar now={25} variant="success" />
-                                    <ProgressBar now={5} variant="orange" />
-                                    <ProgressBar now={5} variant="pink" />
-                                    <ProgressBar now={10} variant="info" />
-                                    <ProgressBar now={5} variant="indigo" />
+                                    <ProgressBar now={50}/>
+                                    <ProgressBar now={25} variant="success"/>
+                                    <ProgressBar now={5} variant="orange"/>
+                                    <ProgressBar now={5} variant="pink"/>
+                                    <ProgressBar now={10} variant="info"/>
+                                    <ProgressBar now={5} variant="indigo"/>
                                 </ProgressBar>
 
                                 <Table className="table-three">
                                     <tbody>
-                                        {[
-                                            {
-                                                dot: 'primary',
-                                                label: 'Excellent',
-                                                count: '3,007',
-                                                percent: '50',
-                                            },
-                                            {
-                                                dot: 'success',
-                                                label: 'Very Good',
-                                                count: '1,674',
-                                                percent: '25',
-                                            },
-                                            {
-                                                dot: 'orange',
-                                                label: 'Good',
-                                                count: '125',
-                                                percent: '6',
-                                            },
-                                            {
-                                                dot: 'pink',
-                                                label: 'Fair',
-                                                count: '98',
-                                                percent: '5',
-                                            },
-                                            {
-                                                dot: 'info',
-                                                label: 'Poor',
-                                                count: '512',
-                                                percent: '10',
-                                            },
-                                            {
-                                                dot: 'indigo',
-                                                label: 'Very Poor',
-                                                count: '81',
-                                                percent: '4',
-                                            },
-                                        ].map((item, index) => (
-                                            <tr key={index}>
-                                                <td>
-                                                    <div
-                                                        className={
-                                                            'badge-dot bg-' + item.dot
-                                                        }
-                                                    ></div>
-                                                </td>
-                                                <td>{item.label}</td>
-                                                <td>{item.count}</td>
-                                                <td>{item.percent}%</td>
-                                            </tr>
-                                        ))}
+                                    {[
+                                        {
+                                            dot: 'primary',
+                                            label: 'Excellent',
+                                            count: '3,007',
+                                            percent: '50',
+                                        },
+                                        {
+                                            dot: 'success',
+                                            label: 'Very Good',
+                                            count: '1,674',
+                                            percent: '25',
+                                        },
+                                        {
+                                            dot: 'orange',
+                                            label: 'Good',
+                                            count: '125',
+                                            percent: '6',
+                                        },
+                                        {
+                                            dot: 'pink',
+                                            label: 'Fair',
+                                            count: '98',
+                                            percent: '5',
+                                        },
+                                        {
+                                            dot: 'info',
+                                            label: 'Poor',
+                                            count: '512',
+                                            percent: '10',
+                                        },
+                                        {
+                                            dot: 'indigo',
+                                            label: 'Very Poor',
+                                            count: '81',
+                                            percent: '4',
+                                        },
+                                    ].map((item, index) => (
+                                        <tr key={index}>
+                                            <td>
+                                                <div
+                                                    className={
+                                                        'badge-dot bg-' + item.dot
+                                                    }
+                                                ></div>
+                                            </td>
+                                            <td>{item.label}</td>
+                                            <td>{item.count}</td>
+                                            <td>{item.percent}%</td>
+                                        </tr>
+                                    ))}
                                     </tbody>
                                 </Table>
                             </Card.Body>
@@ -439,34 +550,32 @@ export default function Dashboard() {
                                     </Nav.Link>
                                 </Nav>
                             </Card.Header>
-                            <Card.Body className="p-3">
-                                <ul className="events-list">
-                                    {formattedData?.map((item, index) => (
-                                        <li key={index} className={''}>
-                                            <div className="event-date">
-                                                <small>{item.date.day}</small>
-                                                <h5>{item.date.num}</h5>
-                                            </div>
-                                            <div className="events-body">
-                                                {item.events.map((event, ind) => (
-                                                    <div key={ind} className="ev-item">
-                                                        <small>{event.time}</small>
-                                                        <h6>{event.title}</h6>
-                                                        {event.text && (
-                                                            <p>{event.text}</p>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </li>
-                                    ))}
+                            <Card.Body className="p-3 mt-3 mb-3 overflow-auto " style={{maxHeight: '350px'}}>
+                                <ul className="events-list mt-2 mb-2">
+                                    <List
+                                        className="mb-5"
+                                        loading={isLoading}
+                                        itemLayout="horizontal"
+                                        //loadMore={<div ref={loadMoreRef}></div>}
+                                        dataSource={list}
+                                        renderItem={(item, index) => renderItem(item, index)}
+                                        footer={
+                                            isLoading && (
+                                                <Spinner animation="border" role="status">
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                                </Spinner>
+                                            )
+                                        }
+                                    />
                                 </ul>
                             </Card.Body>
                         </Card>
                     </Col>
                 </Row>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );

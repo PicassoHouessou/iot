@@ -1,47 +1,28 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
+import React, {useEffect, useRef, useState} from 'react';
+import {Button, Col, Row, Spinner} from 'react-bootstrap';
+import {Link, useParams} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import { AdminPages } from '@Admin/constants';
-import img1 from '@Admin/assets/img/img1.jpg';
-import { useModuleQuery, useModulesJsonLdQuery } from '@Admin/services/modulesApi';
-
-import { List } from 'antd';
-
-interface DataType {
-    gender?: string;
-    name: {
-        title?: string;
-        first?: string;
-        last?: string;
-    };
-    email?: string;
-    picture: {
-        large?: string;
-        medium?: string;
-        thumbnail?: string;
-    };
-    nat?: string;
-    loading: boolean;
-}
+import {useSkinMode} from '@Admin/hooks';
+import {AdminPages} from '@Admin/constants';
+import {useModuleHistoriesJsonLdQuery, useModuleQuery} from '@Admin/services/modulesApi';
+import {List, Tag} from 'antd';
+import {ModuleHistory} from '@Admin/models';
 
 export default function View() {
-    const { id } = useParams();
+    const {id} = useParams();
     const loadMoreRef = useRef(null);
-    const { data: module } = useModuleQuery(id!, { skip: id ? false : true });
-    const [query, setQuery] = useState<any>({ itemsPerPage: 2 });
-    const { data: histories, isLoading } = useModulesJsonLdQuery(query, {
+    const {data: module} = useModuleQuery(id!, {skip: id ? false : true});
+    const [query, setQuery] = useState<any>({module: id, itemsPerPage: 10});
+    const {data: histories, isLoading} = useModuleHistoriesJsonLdQuery(query, {
         skip: id ? false : true,
     });
     const [, setSkin] = useSkinMode();
 
     const [canLoadMore, setCanLoadMore] = useState(false);
-    // const [loading, setLoading] = useState(false);
 
-    const [data, setData] = useState<DataType[]>([]);
-    const [list, setList] = useState<DataType[]>([]);
+    const [data, setData] = useState<ModuleHistory[]>([]);
+    const [list, setList] = useState<ModuleHistory[]>([]);
 
     useEffect(() => {
         if (data && data.length > 0) {
@@ -69,48 +50,32 @@ export default function View() {
             } else {
                 setCanLoadMore(false);
             }
-            /*
-
-            if (histories?.["hydra:view?.hydra:next" as unknown as keyof typeof histories]) {
-                setCanLoadMore(true)
-            } else {
-                setCanLoadMore(false)
-            }
-
-             */
-
-            //setList(prevState => ([...prevState, data]));
         }
     }, [histories, data, setCanLoadMore]);
-    const onLoadMore = useCallback(() => {
-        if (canLoadMore) {
-            setQuery((prevState: any) => ({
-                ...prevState,
-                page: prevState.page ? prevState.page + 1 : 2,
-            }));
-        }
-        //setCanLoadMore(false)
-    }, [canLoadMore, setQuery]);
-
-    useEffect(() => {
-        //console.log(isLoading);
-        if (isLoading) {
-            return;
-        }
-        /*
+    const onLoadMore = () => {
         if (!canLoadMore) {
             return;
         }
-        */
+        setQuery((prevState: any) => ({
+            ...prevState,
+            page: prevState.page ? prevState.page + 1 : 2,
+        }));
+        setCanLoadMore(false)
+    }
+
+    useEffect(() => {
+        if (isLoading) {
+            return;
+        }
+
         const observer = new IntersectionObserver(
             (entries) => {
                 const first = entries[0];
                 if (first.isIntersecting) {
                     onLoadMore();
-                    //
                 }
             },
-            { threshold: 1.0 },
+            {threshold: 1.0},
         );
 
         const currentRef = loadMoreRef.current;
@@ -124,49 +89,26 @@ export default function View() {
                 observer.unobserve(currentRef);
             }
         };
-    }, [isLoading, onLoadMore]);
-    /*
-        const loadMore =
-            canLoadMore ? (
-                <div
-                    style={{
-                        textAlign: 'center',
-                        marginTop: 12,
-                        height: 32,
-                        lineHeight: '32px',
-                    }}
-                >
-                    <Button onClick={onLoadMore}>loading more</Button>
-                </div>
-            ) : null;
-        */
+    }, [isLoading, loadMoreRef, onLoadMore]);
 
     const renderItem = (item: any, index: number) => {
-        // console.log(list?.length);
-        // console.log(index);
-        if (list?.length > 1 && index === list?.length - 1) {
-            //alert("dddd");
-        }
+        const addRef = list?.length > 1 && index === list?.length - 3 ? true : false;
+
         return (
             <>
-                <li className="activity-date">Aug 30, 2023</li>
+                <li className="activity-date">{item?.module?.createdAt}</li>
                 <li
                     className="activity-item search"
-                    ref={
-                        list?.length > 1 && index === list?.length - 1
-                            ? loadMoreRef
-                            : null
+                    ref={addRef ? loadMoreRef : null
                     }
                 >
                     <p className="d-sm-flex align-items-center mb-0">
-                        <Link to="" className="avatar avatar-xs me-2 d-none d-sm-inline">
-                            <img src={img1} alt="" />
-                        </Link>
+                        <Tag color={item?.module?.color}>
+                            {item?.status?.name}
+                        </Tag>
                         <span className="fs-sm">
-                            <strong>You</strong> searched using a keyword{' '}
-                            <strong>&quot;restaurant&quot;</strong>
                         </span>
-                        <span className="fs-xs text-secondary ms-auto">10:00am</span>
+                        <span className="fs-xs text-secondary ms-auto">{item?.createdAtAgo}</span>
                     </p>
                 </li>
             </>
@@ -175,7 +117,7 @@ export default function View() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -211,24 +153,19 @@ export default function View() {
                             <p className="text-secondary mb-5">{module?.description}</p>
 
                             <div className="d-flex align-items-center justify-content-between mb-4">
-                                <h5 className="section-title mb-0">Post And Comments</h5>
-                                <Form.Check
-                                    type="switch"
-                                    label="Show all activity"
-                                    className="fs-sm"
-                                />
+                                <h5 className="section-title mb-0"></h5>
+
                             </div>
 
                             <div className="d-flex align-items-center justify-content-between mb-4">
-                                <h5 className="section-title mb-0">Search History</h5>
-                                <Link to="">Clear Searches</Link>
+                                <h5 className="section-title mb-0">Historique</h5>
                             </div>
 
                             <List
                                 className="activity-group mb-5"
-                                //loading={isLoading}
+                                loading={isLoading}
                                 itemLayout="horizontal"
-                                loadMore={isLoading}
+                                //loadMore={<div ref={loadMoreRef}></div>}
                                 dataSource={list}
                                 renderItem={(item, index) => renderItem(item, index)}
                                 footer={
@@ -241,67 +178,11 @@ export default function View() {
                                     )
                                 }
                             />
-                            <ul className="activity-group mb-5">
-                                <li className="activity-date">Aug 30, 2023</li>
-                                <li className="activity-item search">
-                                    <p className="d-sm-flex align-items-center mb-0">
-                                        <Link
-                                            to=""
-                                            className="avatar avatar-xs me-2 d-none d-sm-inline"
-                                        >
-                                            <img src={img1} alt="" />
-                                        </Link>
-                                        <span className="fs-sm">
-                                            <strong>You</strong> searched using a keyword{' '}
-                                            <strong>&quot;restaurant&quot;</strong>
-                                        </span>
-                                        <span className="fs-xs text-secondary ms-auto">
-                                            10:00am
-                                        </span>
-                                    </p>
-                                </li>
-                                <li className="activity-date">Aug 28, 2023</li>
-                                <li className="activity-item search">
-                                    <p className="d-sm-flex align-items-center mb-0">
-                                        <Link
-                                            to=""
-                                            className="avatar avatar-xs me-2 d-none d-sm-inline"
-                                        >
-                                            <img src={img1} alt="" />
-                                        </Link>
-                                        <span className="fs-sm">
-                                            <strong>You</strong> searched using a keyword{' '}
-                                            <strong>&quots;oftware engineer&quot;</strong>
-                                        </span>
-                                        <span className="fs-xs text-secondary ms-auto">
-                                            02:23pm
-                                        </span>
-                                    </p>
-                                </li>
-                                <li className="activity-item search">
-                                    <p className="d-sm-flex align-items-center mb-0">
-                                        <Link
-                                            to=""
-                                            className="avatar avatar-xs me-2 d-none d-sm-inline"
-                                        >
-                                            <img src={img1} alt="" />
-                                        </Link>
-                                        <span className="fs-sm">
-                                            <strong>You</strong> searched using a keyword{' '}
-                                            <strong>&quot;ui developer&quot;</strong>
-                                        </span>
-                                        <span className="fs-xs text-secondary ms-auto">
-                                            02:15pm
-                                        </span>
-                                    </p>
-                                </li>
-                            </ul>
                         </Col>
                     </Row>
-                    <Footer />
                 </div>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );
