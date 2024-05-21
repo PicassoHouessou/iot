@@ -1,4 +1,3 @@
-# src/DataFixtures/module_types.yaml
 App\Entity\ModuleType:
     module_type_temperature:
         name: "Capteur de température"

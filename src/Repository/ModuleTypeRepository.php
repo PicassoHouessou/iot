@@ -21,28 +21,14 @@ class ModuleTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, ModuleType::class);
     }
 
-    //    /**
-    //     * @return ModuleType[] Returns an array of ModuleType objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findCreatedBetween(\DateTimeInterface $startDate, \DateTimeInterface $endDate): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate);
 
-    //    public function findOneBySomeField($value): ?ModuleType
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return $qb->getQuery()->getResult();
+    }
+
 }

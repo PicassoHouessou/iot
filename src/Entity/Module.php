@@ -2,12 +2,46 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Filter\ModuleSearchFilter;
 use App\Repository\ModuleRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Put(),
+        new Patch(),
+        new Delete(),
+        new GetCollection(),
+        new Post(),
+    ],
+    normalizationContext: ['groups' => ['module:read']],
+    denormalizationContext: ['groups' => ['module:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+)]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description'])]
+#[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'type' => 'exact'])]
+#[ApiFilter(DateFilter::class, properties: ['createdAt', 'updatedAt'])]
+#[ApiFilter(filterClass: ModuleSearchFilter::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module
@@ -15,21 +49,31 @@ class Module
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["module:read", "module_history:read"])]
     private ?int $id = null;
+
     #[ORM\Column(type: Types::STRING, length: 255)]
+    #[Assert\Length(max: 250)]
+    #[Assert\NotBlank]
+    #[Groups(["module:read", "module:write", "module_history:read"])]
     private string $name;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, length: 5000, nullable: true)]
+    #[Assert\Length(max: 5000)]
+    #[Groups(["module:read", "module:write", "module_history:read"])]
     private ?string $description;
 
-
     #[ORM\ManyToOne(targetEntity: ModuleType::class)]
+    #[Assert\NotBlank]
+    #[Groups(["module:read", "module:write", "module_history:read"])]
     private ?ModuleType $type = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(["module:read", "module_history:read"])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(["module:read"])]
     private ?\DateTimeInterface $updatedAt = null;
 
 
@@ -81,9 +125,10 @@ class Module
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(string $name): static
     {
         $this->name = $name;
+        return $this;
     }
 
     public function getDescription(): ?string
@@ -121,6 +166,15 @@ class Module
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    #[Groups(["module:read", "module_history:read"])]
+    public function getCreatedAtAgo(): string
+    {
+        if ($this->createdAt === null) {
+            return "";
+        }
+        return Carbon::instance($this->createdAt)->diffForHumans();
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface

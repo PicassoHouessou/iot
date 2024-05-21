@@ -2,42 +2,83 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ModuleTypeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Put(),
+        new Delete(),
+        new Patch,
+        new GetCollection(),
+        new Post(),
+    ],
+    normalizationContext: ['groups' => ['module_type:read']],
+    denormalizationContext: ['groups' => ['module_type:write']],
+    paginationClientEnabled: true,
+    paginationClientItemsPerPage: true,
+    paginationEnabled: true,
+)]
+#[ORM\HasLifecycleCallbacks]
+#[UniqueEntity("name")]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description', 'unitOfMeasure', 'unitDescription', 'minValue', 'maxValue'])]
+#[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'unitOfMeasure' => 'exact', 'unitDescription' => 'partial', 'minValue' => 'partial', 'maxValue' => 'partial'])]
 #[ORM\Entity(repositoryClass: ModuleTypeRepository::class)]
 class ModuleType
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["module_type:read", "module_type:write", "module:read", "module_history:read"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 250)]
+    #[Groups(["module_type:read", "module_type:write", "module:read", "module_history:read"])]
     private string $name;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\Length(max: 5000)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private string $description;
 
     #[ORM\Column(type: Types::STRING, length: 50)]
     #[Assert\Length(max: 50)]
+    #[Groups(["module_type:read", "module_type:write", "module_history:read"])]
     private string $unitOfMeasure;
 
     #[ORM\Column(type: Types::TEXT, length: 5000)]
     #[Assert\Length(max: 5000)]
+    #[Groups(["module_type:read", "module_type:write", "module_history:read"])]
     private string $unitDescription;
 
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private ?float $minValue = null;
 
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups(["module_type:read", "module_type:write"])]
     private ?float $maxValue = null;
 
-    private string $max;
+    #[ORM\Column(type: "datetime")]
+    #[Groups(["module_type:read"])]
+    private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
     {
@@ -106,6 +147,20 @@ class ModuleType
     public function setMaxValue(?float $maxValue): void
     {
         $this->maxValue = $maxValue;
+    }
+
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function updatedTimestamps(): void
+    {
+        if ($this->getCreatedAt() === null) {
+            $this->createdAt = new \DateTime('now');
+        }
     }
 
 }
