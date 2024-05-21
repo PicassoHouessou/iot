@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, Container, Form} from 'react-bootstrap';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
 import Select from 'react-select';
-import {useSkinMode} from '@Admin/hooks';
-import {ModuleEdit, ModuleType} from '@Admin/models';
+import { useSkinMode } from '@Admin/hooks';
+import { ModuleEdit, ModuleType } from '@Admin/models';
 import {
     useAddModuleMutation,
     useModuleQuery,
     useModuleTypesQuery,
     useUpdateModuleMutation,
 } from '@Admin/services/modulesApi';
-import {generateIRI, getErrorMessage} from '@Admin/utils';
-import {ApiRoutesWithoutPrefix} from '@Admin/constants';
-import {toast} from 'react-toastify';
+import { generateIRI, getErrorMessage } from '@Admin/utils';
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
+import { toast } from 'react-toastify';
 
 const initialState = {
     id: '',
@@ -28,7 +28,7 @@ export default function AddOrEdit() {
 
     const [formValue, setFormValue] = useState<ModuleEdit>(initialState);
 
-    const {data: moduleTypeOptions} = useModuleTypesQuery({
+    const { data: moduleTypeOptions } = useModuleTypesQuery({
         pagination: false,
     });
     const [selectedModuleType, setSelectedModuleType] = useState<any>(null);
@@ -40,7 +40,7 @@ export default function AddOrEdit() {
 
     const idParam = useParams().id as unknown as number;
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const {data} = useModuleQuery(idParam!, {skip: idParam ? false : true});
+    const { data } = useModuleQuery(idParam!, { skip: idParam ? false : true });
 
     React.useEffect(() => {
         if (Array.isArray(moduleTypeOptions) && moduleTypeOptions.length) {
@@ -70,11 +70,11 @@ export default function AddOrEdit() {
                 ...formValue,
                 [name]: value,
             });
-            setErrors((prevState) => ({...prevState, [name]: ''}));
+            setErrors((prevState) => ({ ...prevState, [name]: '' }));
         };
 
         if (typeof action === 'undefined') {
-            const {name, value} = e.target;
+            const { name, value } = e.target;
 
             handleRegularFieldChange(name, value);
         } else {
@@ -83,7 +83,7 @@ export default function AddOrEdit() {
                     setSelectedModuleType(e);
                     break;
                 default:
-                    const {value} = e;
+                    const { value } = e;
                     setFormValue({
                         ...formValue,
                         [action.name]: value,
@@ -95,7 +95,7 @@ export default function AddOrEdit() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const {id, ...rest} = formValue;
+        const { id, ...rest } = formValue;
         const data = {
             ...rest,
             type: generateIRI(
@@ -120,7 +120,7 @@ export default function AddOrEdit() {
                 toast.success('Module enregistré');
             }
         } catch (err) {
-            const {detail, errors} = getErrorMessage(err);
+            const { detail, errors } = getErrorMessage(err);
             if (errors) {
                 setErrors(errors);
             }
@@ -129,7 +129,7 @@ export default function AddOrEdit() {
     };
     return (
         <React.Fragment>
-            <Header onSkin={setSkin}/>
+            <Header onSkin={setSkin} />
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -233,12 +233,12 @@ export default function AddOrEdit() {
                             </Card.Body>
                         </Card>
 
-                        <br/>
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
+                        <br />
                     </Container>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         </React.Fragment>
     );

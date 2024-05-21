@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, Container, Form} from 'react-bootstrap';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import {useSkinMode} from '@Admin/hooks';
+import { useSkinMode } from '@Admin/hooks';
 import {
     useAddModuleStatusMutation,
     useModuleStatusQuery,
     useUpdateModuleStatusMutation,
 } from '@Admin/services/modulesApi';
-import {ModuleStatus} from '@Admin/models';
-import {getErrorMessage} from '@Admin/utils';
-import {AdminPages} from '@Admin/constants';
-import {toast} from 'react-toastify';
+import { ModuleStatus } from '@Admin/models';
+import { getErrorMessage } from '@Admin/utils';
+import { AdminPages } from '@Admin/constants';
+import { toast } from 'react-toastify';
 
 const initialState = {
     id: '',
@@ -30,7 +30,7 @@ export default function AddOrEdit() {
     const navigate = useNavigate();
     const idParam = useParams().id as unknown as number;
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const {data} = useModuleStatusQuery(idParam!, {
+    const { data } = useModuleStatusQuery(idParam!, {
         skip: idParam ? false : true,
     });
 
@@ -51,17 +51,16 @@ export default function AddOrEdit() {
                 ...formValue,
                 [name]: value,
             });
-            setErrors((prevState) => ({...prevState, [name]: ''}));
+            setErrors((prevState) => ({ ...prevState, [name]: '' }));
         };
         if (typeof action === 'undefined') {
-            const {name, value} = e.target;
+            const { name, value } = e.target;
 
             handleRegularFieldChange(name, value);
         } else {
             switch (action.name) {
-
                 default:
-                    const {value} = e;
+                    const { value } = e;
                     setFormValue({
                         ...formValue,
                         [action.name]: value,
@@ -73,7 +72,7 @@ export default function AddOrEdit() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const {id, ...rest} = formValue;
+        const { id, ...rest } = formValue;
         const data = {
             ...rest,
         };
@@ -94,7 +93,7 @@ export default function AddOrEdit() {
                 toast.success('Statut enregistré');
             }
         } catch (err) {
-            const {detail, errors} = getErrorMessage(err);
+            const { detail, errors } = getErrorMessage(err);
             if (errors) {
                 setErrors(errors);
             }
@@ -103,7 +102,7 @@ export default function AddOrEdit() {
     };
     return (
         <React.Fragment>
-            <Header onSkin={setSkin}/>
+            <Header onSkin={setSkin} />
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -187,12 +186,12 @@ export default function AddOrEdit() {
                             </Card.Body>
                         </Card>
 
-                        <br/>
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
+                        <br />
                     </Container>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         </React.Fragment>
     );

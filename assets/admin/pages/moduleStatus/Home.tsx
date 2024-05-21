@@ -1,16 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Row} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Button, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import {useSkinMode} from '@Admin/hooks';
-import {Dropdown, GetProp, MenuProps, Table, TableProps, Tag} from 'antd';
-import {useDeleteModuleMutation, useModuleStatusesJsonLdQuery,} from '@Admin/services/modulesApi';
-import {ModuleStatus} from '@Admin/models';
-import {getErrorMessage} from '@Admin/utils';
-import {AdminPages} from '@Admin/constants';
-import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
-import {toast} from 'react-toastify';
+import { useSkinMode } from '@Admin/hooks';
+import { Dropdown, GetProp, MenuProps, Table, TableProps, Tag } from 'antd';
+import {
+    useDeleteModuleMutation,
+    useModuleStatusesJsonLdQuery,
+} from '@Admin/services/modulesApi';
+import { ModuleStatus } from '@Admin/models';
+import { getErrorMessage } from '@Admin/utils';
+import { AdminPages } from '@Admin/constants';
+import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
+import { toast } from 'react-toastify';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -38,7 +41,7 @@ export default function Home() {
         handleSearch,
         setSearchFormValue,
     } = useFiltersQuery();
-    const {current: currentPage, itemsPerPage} = pagination;
+    const { current: currentPage, itemsPerPage } = pagination;
     const [tableParams, setTableParams] = useState<TableParams>({
         pagination: {
             current: currentPage,
@@ -66,7 +69,7 @@ export default function Home() {
                 await deleteItem(id).unwrap();
                 //toast.success(t("cms Deleted Successfully"));
             } catch (err) {
-                const {detail} = getErrorMessage(err);
+                const { detail } = getErrorMessage(err);
                 toast.error(detail);
             }
         }
@@ -87,8 +90,8 @@ export default function Home() {
             dataIndex: 'color',
             sorter: true,
             render: (color, record) => {
-                return <Tag color={color}>{record?.name}</Tag>
-            }
+                return <Tag color={color}>{record?.name}</Tag>;
+            },
         },
         {
             title: 'Action',
@@ -122,7 +125,7 @@ export default function Home() {
                 ];
 
                 return (
-                    <Dropdown className="" menu={{items}}>
+                    <Dropdown className="" menu={{ items }}>
                         <i className="ri-more-2-fill"></i>
                     </Dropdown>
                 );
@@ -171,7 +174,7 @@ export default function Home() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin}/>
+            <Header onSkin={setSkin} />
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -237,7 +240,7 @@ export default function Home() {
                     />
                 </Row>
 
-                <Footer/>
+                <Footer />
             </div>
         </React.Fragment>
     );
