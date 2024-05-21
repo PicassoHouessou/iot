@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Button, Card, Col, Nav, ProgressBar, Row, Spinner, Table,} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import Footer from '../layouts/Footer';
@@ -198,7 +198,7 @@ export default function Dashboard() {
             }
         }
     }, [histories, data, setCanLoadMore]);
-    const onLoadMore = () => {
+    const onLoadMore = useCallback(() => {
         if (!canLoadMore) {
             return;
         }
@@ -207,7 +207,7 @@ export default function Dashboard() {
             page: prevState.page ? prevState.page + 1 : 2,
         }));
         setCanLoadMore(false);
-    };
+    }, [canLoadMore, query]);
 
     useEffect(() => {
         if (isLoading) {
