@@ -1,46 +1,37 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-    Button,
-    Card,
-    Col,
-    Nav,
-    ProgressBar,
-    Row,
-    Spinner,
-    Table,
-} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Button, Card, Col, Nav, ProgressBar, Row, Spinner, Table,} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../layouts/Footer';
 import Header from '../layouts/Header';
 import ReactApexChart from 'react-apexcharts';
-import { useSkinMode } from '@Admin/hooks';
-import { useStatisticsQuery } from '@Admin/services/statisticApi';
+import {useSkinMode} from '@Admin/hooks';
+import {useStatisticsQuery} from '@Admin/services/statisticApi';
 import TotalStatistic from '@Admin/components/TotalStatistic';
-import { StatisticEnum } from '@Admin/constants';
-import { ApexOptions } from 'apexcharts';
-import { useModuleHistoriesJsonLdQuery } from '@Admin/services/modulesApi';
+import {StatisticEnum} from '@Admin/constants';
+import {ApexOptions} from 'apexcharts';
+import {useModuleHistoriesJsonLdQuery} from '@Admin/services/modulesApi';
 import dayjs from 'dayjs';
-import { List, Tag } from 'antd';
-import { ModuleHistory } from '@Admin/models';
+import {List, Tag} from 'antd';
+import {ModuleHistory} from '@Admin/models';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
 export default function Dashboard() {
-    const { data: statisticsData } = useStatisticsQuery();
+    const {data: statisticsData} = useStatisticsQuery();
     const loadMoreRef = useRef(null);
-    const [query, setQuery] = useState<any>({ itemsPerPage: 10 });
-    const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query);
+    const [query, setQuery] = useState<any>({itemsPerPage: 10});
+    const {data: histories, isLoading} = useModuleHistoriesJsonLdQuery(query);
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [list, setList] = useState<ModuleHistory[]>([]);
 
     const seriesQuantityModuleType = useMemo(() => {
         let result: number[] = [];
         if (Array.isArray(statisticsData)) {
-            const margin = statisticsData[0]?.charts?.['margin'];
+            const margin = statisticsData[0]?.charts?.['summaryType'];
             if (Array.isArray(margin)) {
                 result = margin.map((item: any) => {
-                    return item.value ?? 0;
+                    return item.count ?? 0;
                 });
             }
         }
@@ -55,7 +46,7 @@ export default function Dashboard() {
     const optionQuantityModuleType: ApexOptions = useMemo(() => {
         let labels = [];
         if (Array.isArray(statisticsData)) {
-            const margin = statisticsData[0]?.charts?.['margin'];
+            const margin = statisticsData[0]?.charts?.['summaryType'];
             if (Array.isArray(margin)) {
                 labels = margin.map((item: any) => {
                     return item.type;
@@ -67,7 +58,7 @@ export default function Dashboard() {
             chart: {
                 parentHeightOffset: 0,
                 stacked: true,
-                toolbar: { show: true },
+                toolbar: {show: true},
             },
             colors: ['#506fd9', '#85b6ff'],
             grid: {
@@ -111,20 +102,20 @@ export default function Dashboard() {
                         fontWeight: 'bold',
                     },
                 },
-                axisBorder: { show: false },
+                axisBorder: {show: false},
             },
-            dataLabels: { enabled: false },
-            fill: { opacity: 1 },
-            legend: { show: true },
+            dataLabels: {enabled: false},
+            fill: {opacity: 1},
+            legend: {show: true},
             tooltip: {
                 enabled: true,
             },
         };
     }, [statisticsData]);
 
-    const seriesMargin = useMemo(() => {
+    const seriesSummaryType = useMemo(() => {
         if (Array.isArray(statisticsData)) {
-            const margin = statisticsData[0]?.charts?.['margin'];
+            const margin = statisticsData[0]?.charts?.['summaryType'];
             if (Array.isArray(margin)) {
                 const result = margin
                     .filter((item) => item.percentage > 0)
@@ -137,10 +128,10 @@ export default function Dashboard() {
         return null;
     }, [statisticsData]);
 
-    const optionMargin = useMemo(() => {
+    const optionSummaryType = useMemo(() => {
         let labels = [];
         if (Array.isArray(statisticsData)) {
-            const margin = statisticsData[0]?.charts?.['margin'];
+            const margin = statisticsData[0]?.charts?.['summaryType'];
             if (Array.isArray(margin)) {
                 labels = margin
                     .filter((item) => item.percentage > 0)
@@ -151,26 +142,23 @@ export default function Dashboard() {
         }
         return {
             labels: labels,
-            legend: { show: true },
+            legend: {show: true},
         };
     }, [statisticsData]);
 
-    // const formattedData = histories?.map((item) => {
-    //     const createdAt = dayjs(item.createdAt);
-    //     return {
-    //         date: {
-    //             day: createdAt.format('ddd'),
-    //             num: createdAt.format('DD'),
-    //         },
-    //         events: [
-    //             {
-    //                 time: createdAt.format('hh:mm A'),
-    //                 title: item.module.name,
-    //                 text: `Statut: ${item.status.name}, Valeur: ${item.value}`,
-    //             },
-    //         ],
-    //     };
-    // });
+    const seriesSummaryStatus = useMemo(() => {
+        if (Array.isArray(statisticsData)) {
+            const summaryStatus = statisticsData[0]?.charts?.['summaryStatus'];
+            if (Array.isArray(summaryStatus)) {
+                const result = summaryStatus
+                    .filter((item) => item.percentage > 0)
+                ;
+                return result;
+            }
+        }
+        return null;
+    }, [statisticsData]);
+
     const [, setSkin] = useSkinMode();
 
     const statistic = useMemo(() => {
@@ -220,7 +208,7 @@ export default function Dashboard() {
                     onLoadMore();
                 }
             },
-            { threshold: 1.0 },
+            {threshold: 1.0},
         );
 
         const currentRef = loadMoreRef.current;
@@ -257,7 +245,7 @@ export default function Dashboard() {
                                     Valeur mesurée:{' '}
                                     {`${item.value} ${item?.module?.type?.unitOfMeasure}`}
                                 </strong>
-                                <br />
+                                <br/>
                             </p>
                             <Tag color={item?.status?.color}>{item?.status?.name}</Tag>
                         </div>
@@ -269,7 +257,7 @@ export default function Dashboard() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -277,11 +265,8 @@ export default function Dashboard() {
                             <li className="breadcrumb-item">
                                 <Link to="#">Dashboard</Link>
                             </li>
-                            <li className="breadcrumb-item active" aria-current="page">
-                                Finance Monitoring
-                            </li>
                         </ol>
-                        <h4 className="main-title mb-0">Welcome to Dashboard</h4>
+                        <h4 className="main-title mb-0">Bienvenue</h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
                         <Button
@@ -334,7 +319,7 @@ export default function Dashboard() {
                     <Col xl="7">
                         <Card className="card-one">
                             <Card.Header>
-                                <Card.Title as="h6">Nombre modules</Card.Title>
+                                <Card.Title as="h6">Quantité modules</Card.Title>
                                 <Nav className="nav-icon nav-icon-sm ms-auto">
                                     <Nav.Link href="">
                                         <i className="ri-refresh-line"></i>
@@ -367,10 +352,10 @@ export default function Dashboard() {
                                 </Nav>
                             </Card.Header>
                             <Card.Body className="">
-                                {seriesMargin && optionMargin && (
+                                {seriesSummaryType && optionSummaryType && (
                                     <ReactApexChart
-                                        series={seriesMargin}
-                                        options={optionMargin}
+                                        series={seriesSummaryType}
+                                        options={optionSummaryType}
                                         height="auto"
                                         type="polarArea"
                                     />
@@ -384,14 +369,14 @@ export default function Dashboard() {
                                 <Card.Title as="h6">Marge type de module (%)</Card.Title>
                             </Card.Header>
                             <Card.Body className="pt-0">
-                                {seriesMargin && optionMargin && (
+                                {seriesSummaryType && optionSummaryType && (
                                     <>
                                         <p className="fs-sm text-secondary mb-4">
                                             Vous avez la marge de chaque type de module.
                                         </p>
 
                                         <ProgressBar className="progress-finance mb-4">
-                                            {seriesMargin.map((item, key) => (
+                                            {seriesSummaryType.map((item, key) => (
                                                 <ProgressBar
                                                     key={key}
                                                     now={item}
@@ -400,13 +385,13 @@ export default function Dashboard() {
                                             ))}
                                         </ProgressBar>
                                         <Row className="g-3">
-                                            {optionMargin.labels.map((item, key) => (
+                                            {optionSummaryType.labels.map((item, key) => (
                                                 <Col key={key}>
                                                     <label className="card-label fs-sm fw-medium mb-1">
                                                         {item}
                                                     </label>
                                                     <h2 className="card-value mb-0">
-                                                        {seriesMargin[key]}%
+                                                        {seriesSummaryType[key]}%
                                                     </h2>
                                                 </Col>
                                             ))}
@@ -430,10 +415,10 @@ export default function Dashboard() {
                                 </Nav>
                             </Card.Header>
                             <Card.Body className="">
-                                {seriesMargin && optionMargin && (
+                                {seriesSummaryType && optionSummaryType && (
                                     <ReactApexChart
-                                        series={seriesMargin}
-                                        options={optionMargin}
+                                        series={seriesSummaryType}
+                                        options={optionSummaryType}
                                         height="auto"
                                         type="donut"
                                     />
@@ -446,7 +431,7 @@ export default function Dashboard() {
                     <Col xl="6">
                         <Card className="card-one">
                             <Card.Header>
-                                <Card.Title as="h6">Analytics Performance</Card.Title>
+                                <Card.Title as="h6">Analyse statut</Card.Title>
                                 <Nav className="nav-icon nav-icon-sm ms-auto">
                                     <Nav.Link href="">
                                         <i className="ri-refresh-line"></i>
@@ -457,77 +442,36 @@ export default function Dashboard() {
                                 </Nav>
                             </Card.Header>
                             <Card.Body className="p-3">
-                                <h2 className="performance-value mb-0">
-                                    9.8{' '}
-                                    <small className="text-success d-flex align-items-center">
-                                        <i className="ri-arrow-up-line"></i> 2.8%
-                                    </small>
-                                </h2>
-
                                 <label className="card-title fs-sm fw-medium">
-                                    Performance Score
+                                    Un résumé des modules en fonction de leur dernier état
                                 </label>
 
-                                <ProgressBar className="progress-one ht-8 mt-2 mb-4">
-                                    <ProgressBar now={50} />
-                                    <ProgressBar now={25} variant="success" />
-                                    <ProgressBar now={5} variant="orange" />
-                                    <ProgressBar now={5} variant="pink" />
-                                    <ProgressBar now={10} variant="info" />
-                                    <ProgressBar now={5} variant="indigo" />
+                                <ProgressBar className="progress-one ht-12 mt-2 mb-4">
+                                    {
+                                        seriesSummaryStatus?.map((item, index) => (
+                                            <ProgressBar key={index} now={item.percentage}
+                                                         label={item.percentage + "%"}
+                                                         variant={item.color}
+                                                         style={{backgroundColor: item.color}}/>
+                                        ))}
+
                                 </ProgressBar>
 
                                 <Table className="table-three">
                                     <tbody>
-                                        {[
-                                            {
-                                                dot: 'primary',
-                                                label: 'Excellent',
-                                                count: '3,007',
-                                                percent: '50',
-                                            },
-                                            {
-                                                dot: 'success',
-                                                label: 'Very Good',
-                                                count: '1,674',
-                                                percent: '25',
-                                            },
-                                            {
-                                                dot: 'orange',
-                                                label: 'Good',
-                                                count: '125',
-                                                percent: '6',
-                                            },
-                                            {
-                                                dot: 'pink',
-                                                label: 'Fair',
-                                                count: '98',
-                                                percent: '5',
-                                            },
-                                            {
-                                                dot: 'info',
-                                                label: 'Poor',
-                                                count: '512',
-                                                percent: '10',
-                                            },
-                                            {
-                                                dot: 'indigo',
-                                                label: 'Very Poor',
-                                                count: '81',
-                                                percent: '4',
-                                            },
-                                        ].map((item, index) => (
+                                    {
+                                        seriesSummaryStatus?.map((item, index) => (
                                             <tr key={index}>
                                                 <td>
                                                     <div
                                                         className={
-                                                            'badge-dot bg-' + item.dot
-                                                        }
+                                                            'badge-dot '
+                                                        } style={{backgroundColor: item.color}}
                                                     ></div>
                                                 </td>
-                                                <td>{item.label}</td>
+                                                <td>{item.name}</td>
                                                 <td>{item.count}</td>
-                                                <td>{item.percent}%</td>
+                                                <td>{item.percentage}%</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -551,7 +495,7 @@ export default function Dashboard() {
                             </Card.Header>
                             <Card.Body
                                 className="p-3 mt-3 mb-3 overflow-auto "
-                                style={{ maxHeight: '350px' }}
+                                style={{maxHeight: '350px'}}
                             >
                                 <ul className="events-list mt-2 mb-2">
                                     <List
@@ -579,7 +523,7 @@ export default function Dashboard() {
                     </Col>
                 </Row>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );
