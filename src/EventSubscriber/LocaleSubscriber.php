@@ -5,7 +5,6 @@ namespace App\EventSubscriber;
 use App\Repository\LocaleRepository;
 use Carbon\Carbon;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -88,11 +87,12 @@ class LocaleSubscriber implements EventSubscriberInterface
 
         //Init Carbon locale
         Carbon::setLocale($preferredLanguage);
-
-        if ($preferredLanguage !== $this->defaultLocale) {
-            $response = new RedirectResponse($this->urlGenerator->generate('/', ['_locale' => $preferredLanguage]));
-            $event->setResponse($response);
-        }
+        /*
+                if ($preferredLanguage !== $this->defaultLocale) {
+                    $response = new RedirectResponse($this->urlGenerator->generate('/', ['_locale' => $preferredLanguage]));
+                    $event->setResponse($response);
+                }
+        */
 
     }
 
