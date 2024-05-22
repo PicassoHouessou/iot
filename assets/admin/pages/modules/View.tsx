@@ -16,7 +16,11 @@ export default function View() {
     const { id } = useParams();
     const loadMoreRef = useRef(null);
     const { data: module } = useModuleQuery(id!, { skip: id ? false : true });
-    const [query, setQuery] = useState<any>({ module: id, itemsPerPage: 10 });
+    const [query, setQuery] = useState<any>({
+        module: id,
+        'order[createdAt]': 'desc',
+        itemsPerPage: 10,
+    });
     const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query, {
         skip: id ? false : true,
     });

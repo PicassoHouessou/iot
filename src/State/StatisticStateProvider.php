@@ -39,7 +39,6 @@ class StatisticStateProvider implements ProviderInterface
             $statistic->moduleHistory = array_merge(['total' => $statisticService->total(ModuleHistory::class)], $statisticService->getModuleHistoryIncreaseForThisWeek());
             $statistic->module = array_merge(['total' => $statisticService->total(Module::class)], $statisticService->getModuleIncreaseForThisWeek());
             $statistic->charts = $charts;
-            dump($charts);
             return array($statistic);
         }
         return null;

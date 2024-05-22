@@ -82,6 +82,7 @@ class StatisticService
     public function getChartsData(): array
     {
         $moduleTypeRepository = $this->entityManager->getRepository(ModuleType::class);
+        $moduleHistoryRepository = $this->entityManager->getRepository(ModuleHistory::class);
         $moduleRepository = $this->entityManager->getRepository(Module::class);
         $moduleStatusRepository = $this->entityManager->getRepository(ModuleStatus::class);
         $moduleTypes = $moduleTypeRepository->findAll();
@@ -92,29 +93,29 @@ class StatisticService
         $charts = [];
 
         foreach ($moduleTypes as $moduleType) {
-            $margin = array();
+            $summary = array();
             $type = $moduleType->getName();
-            $margin["type"] = $type;
+            $summary["type"] = $type;
             $countModulesForType = $moduleRepository->countForType($moduleType);
-            dump($moduleRepository->countForLast12Months($moduleType));
-            dump($moduleRepository->countForLast7Days($moduleType));
-            $margin["value"] = $countModulesForType;
-            $margin["percentage"] = round(($countModulesForType * 100) / $countModules, 2);
-            $charts["margin"][] = $margin;
-            $charts["pie12Months"][] = array_merge(["type" => $type], $moduleRepository->countForLast12Months($moduleType));
-            $charts["pie7days"][] = array_merge(["type" => $type], $moduleRepository->countForLast7Days($moduleType));
+            $summary["count"] = $countModulesForType;
+            $summary["percentage"] = round(($countModulesForType * 100) / $countModules, 2);
+            $charts["summaryType"][] = $summary;
+            $charts["summaryModule12Months"][] = array_merge(["type" => $type], $moduleRepository->countForLast12Months($moduleType));
+            $charts["summaryModule7days"][] = array_merge(["type" => $type], $moduleRepository->countForLast7Days($moduleType));
 
         }
-        /*
+
+
         foreach ($moduleStatuses as $moduleStatus) {
-            $margin = array();
+            $summary = array();
             $name = $moduleStatus->getName();
-            $margin["status"] = $name;
-            $countModulesForStatus = $moduleRepository->countForStatus($moduleStatus);
-            $margin["value"] = $countModulesForStatus;
-            $margin["percentage"] = round(($countModulesForStatus * 100) / $countModules, 2);
-            $charts["status"][] = $margin;
-        }*/
+            $summary["name"] = $name;
+            $summary["color"] = $moduleStatus->getColor();
+            $countModulesForStatus = $moduleHistoryRepository->countLatestHistoryForEachModuleNativeSQL($moduleStatus);
+            $summary["count"] = $countModulesForStatus;
+            $summary["percentage"] = round(($countModulesForStatus * 100) / $countModules, 2);
+            $charts["summaryStatus"][] = $summary;
+        }
         return ($charts);
 
     }

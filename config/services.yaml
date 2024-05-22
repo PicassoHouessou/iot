@@ -8,6 +8,10 @@ parameters:
     app.noReply.email: "noreply@iot.picassohouessou.com"
     uploads.directory: "%public.directory%/uploads"
     app.timezone: '%env(APP_TIMEZONE)%'
+    app.locale: "fr"
+    app.locales:
+        - en
+        - fr
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -15,6 +19,8 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $timezone: '%app.timezone%'
+            $enabledLocales: "%app.locales%"
+            $defaultLocale: "%app.locale%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
