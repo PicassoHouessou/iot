@@ -1,36 +1,27 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-    Button,
-    Card,
-    Col,
-    Nav,
-    ProgressBar,
-    Row,
-    Spinner,
-    Table,
-} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Button, Card, Col, Nav, ProgressBar, Row, Spinner, Table,} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../layouts/Footer';
 import Header from '../layouts/Header';
 import ReactApexChart from 'react-apexcharts';
-import { useSkinMode } from '@Admin/hooks';
-import { useStatisticsQuery } from '@Admin/services/statisticApi';
+import {useSkinMode} from '@Admin/hooks';
+import {useStatisticsQuery} from '@Admin/services/statisticApi';
 import TotalStatistic from '@Admin/components/TotalStatistic';
-import { StatisticEnum } from '@Admin/constants';
-import { ApexOptions } from 'apexcharts';
-import { useModuleHistoriesJsonLdQuery } from '@Admin/services/modulesApi';
+import {StatisticEnum} from '@Admin/constants';
+import {ApexOptions} from 'apexcharts';
+import {useModuleHistoriesJsonLdQuery} from '@Admin/services/modulesApi';
 import dayjs from 'dayjs';
-import { List, Tag } from 'antd';
-import { ModuleHistory } from '@Admin/models';
+import {List, Tag} from 'antd';
+import {ModuleHistory} from '@Admin/models';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(relativeTime);
 
 export default function Dashboard() {
-    const { data: statisticsData } = useStatisticsQuery();
+    const {data: statisticsData} = useStatisticsQuery();
     const loadMoreRef = useRef(null);
-    const [query, setQuery] = useState<any>({ itemsPerPage: 10 });
-    const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query);
+    const [query, setQuery] = useState<any>({"order[createdAt]": "desc", itemsPerPage: 10});
+    const {data: histories, isLoading} = useModuleHistoriesJsonLdQuery(query);
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [list, setList] = useState<ModuleHistory[]>([]);
 
@@ -67,7 +58,7 @@ export default function Dashboard() {
             chart: {
                 parentHeightOffset: 0,
                 stacked: true,
-                toolbar: { show: true },
+                toolbar: {show: true},
             },
             colors: ['#506fd9', '#85b6ff'],
             grid: {
@@ -111,11 +102,11 @@ export default function Dashboard() {
                         fontWeight: 'bold',
                     },
                 },
-                axisBorder: { show: false },
+                axisBorder: {show: false},
             },
-            dataLabels: { enabled: false },
-            fill: { opacity: 1 },
-            legend: { show: true },
+            dataLabels: {enabled: false},
+            fill: {opacity: 1},
+            legend: {show: true},
             tooltip: {
                 enabled: true,
             },
@@ -151,7 +142,7 @@ export default function Dashboard() {
         }
         return {
             labels: labels,
-            legend: { show: true },
+            legend: {show: true},
         };
     }, [statisticsData]);
 
@@ -215,7 +206,7 @@ export default function Dashboard() {
                     onLoadMore();
                 }
             },
-            { threshold: 1.0 },
+            {threshold: 1.0},
         );
 
         const currentRef = loadMoreRef.current;
@@ -252,7 +243,7 @@ export default function Dashboard() {
                                     Valeur mesurée:{' '}
                                     {`${item.value} ${item?.module?.type?.unitOfMeasure}`}
                                 </strong>
-                                <br />
+                                <br/>
                             </p>
                             <Tag color={item?.status?.color}>{item?.status?.name}</Tag>
                         </div>
@@ -264,7 +255,7 @@ export default function Dashboard() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -460,28 +451,28 @@ export default function Dashboard() {
                                             now={item.percentage}
                                             label={item.percentage + '%'}
                                             variant={item.color}
-                                            style={{ backgroundColor: item.color }}
+                                            style={{backgroundColor: item.color}}
                                         />
                                     ))}
                                 </ProgressBar>
 
                                 <Table className="table-three">
                                     <tbody>
-                                        {seriesSummaryStatus?.map((item, index) => (
-                                            <tr key={index}>
-                                                <td>
-                                                    <div
-                                                        className={'badge-dot '}
-                                                        style={{
-                                                            backgroundColor: item.color,
-                                                        }}
-                                                    ></div>
-                                                </td>
-                                                <td>{item.name}</td>
-                                                <td>{item.count}</td>
-                                                <td>{item.percentage}%</td>
-                                            </tr>
-                                        ))}
+                                    {seriesSummaryStatus?.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>
+                                                <div
+                                                    className={'badge-dot '}
+                                                    style={{
+                                                        backgroundColor: item.color,
+                                                    }}
+                                                ></div>
+                                            </td>
+                                            <td>{item.name}</td>
+                                            <td>{item.count}</td>
+                                            <td>{item.percentage}%</td>
+                                        </tr>
+                                    ))}
                                     </tbody>
                                 </Table>
                             </Card.Body>
@@ -503,7 +494,7 @@ export default function Dashboard() {
                             </Card.Header>
                             <Card.Body
                                 className="p-3 mt-3 mb-3 overflow-auto "
-                                style={{ maxHeight: '350px' }}
+                                style={{maxHeight: '350px'}}
                             >
                                 <ul className="events-list mt-2 mb-2">
                                     <List
@@ -531,7 +522,7 @@ export default function Dashboard() {
                     </Col>
                 </Row>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );

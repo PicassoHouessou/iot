@@ -34,7 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
 )]
-#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug'])]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'value' => 'partial', 'module' => 'exact', 'status' => 'exact'])]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
 #[ORM\HasLifecycleCallbacks]

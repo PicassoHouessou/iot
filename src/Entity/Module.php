@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
 )]
-#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description'])]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'type' => 'exact'])]
 #[ApiFilter(DateFilter::class, properties: ['createdAt', 'updatedAt'])]
 #[ApiFilter(filterClass: ModuleSearchFilter::class)]

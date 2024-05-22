@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationEnabled: true,
 )]
 #[ORM\HasLifecycleCallbacks]
-#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug'])]
+#[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'slug' => 'partial'])]
 #[ORM\Entity(repositoryClass: ModuleStatusRepository::class)]
 #[UniqueEntity("name")]
