@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {defaultLocale, Language, lngs, Locale} from '@Admin/constants/language';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { defaultLocale, Language, lngs, Locale } from '@Admin/constants/language';
 import Dropdown from 'react-bootstrap/Dropdown';
-import {Link} from 'react-router-dom';
-import {setLocale} from "@Admin/features/localeSlice";
-import {useAppDispatch} from "@Admin/store/store";
+import { Link } from 'react-router-dom';
+import { setLocale } from '@Admin/features/localeSlice';
+import { useAppDispatch } from '@Admin/store/store';
 
 type Props = Record<string, never>;
 
 export default function LanguageSwitcher({}: Props) {
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useAppDispatch();
 
     const [currentLanguage, setCurrentLanguage] = useState<Language>({
@@ -19,13 +19,12 @@ export default function LanguageSwitcher({}: Props) {
 
     React.useEffect(() => {
         if (!(currentLanguage.nativeName || currentLanguage.image)) {
-            const current = i18n.language ?? defaultLocale
+            const current = i18n.language ?? defaultLocale;
             setCurrentLanguage({
                 nativeName: lngs[current as keyof typeof lngs]?.nativeName,
                 image: lngs[current as keyof typeof lngs]?.image,
             });
             dispatch(setLocale(current as Locale));
-
         }
     }, []);
 
@@ -40,7 +39,6 @@ export default function LanguageSwitcher({}: Props) {
             image: lngs[lng as keyof typeof lngs]?.image,
         });
         dispatch(setLocale(lng as Locale));
-
 
         document.documentElement.setAttribute(
             'lang',

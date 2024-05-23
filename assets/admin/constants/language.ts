@@ -15,6 +15,6 @@ export const lngs = {
         image: French,
     },
 };
-export const defaultLocale = "fr"
-export type Locale = "fr" | "en";
+export const defaultLocale = 'fr';
+export type Locale = 'fr' | 'en';
 export const availableLocales = ['en', 'fr'];
