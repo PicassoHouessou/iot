@@ -14,6 +14,7 @@ import { getErrorMessage } from '@Admin/utils';
 import { AdminPages } from '@Admin/constants';
 import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -26,6 +27,7 @@ interface TableParams {
 }
 
 export default function Home() {
+    const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
     const [data, setData] = useState<ModuleStatus[]>();
@@ -64,7 +66,7 @@ export default function Home() {
     } = useModuleStatusesJsonLdQuery(query);
 
     const handleDelete = async (id: any) => {
-        if (window.confirm('Etes-vous sûr')) {
+        if (window.confirm(t('Etes-vous sûr'))) {
             try {
                 await deleteItem(id).unwrap();
                 //toast.success(t("cms Deleted Successfully"));
@@ -76,17 +78,17 @@ export default function Home() {
     };
     const columns: ColumnsType<ModuleStatus> = [
         {
-            title: 'Nom',
+            title: t('Nom'),
             dataIndex: 'name',
             sorter: true,
         },
         {
-            title: 'Slug',
+            title: t('Slug'),
             dataIndex: 'slug',
             sorter: true,
         },
         {
-            title: 'Couleur',
+            title: t('Couleur'),
             dataIndex: 'color',
             sorter: true,
             render: (color, record) => {
@@ -94,7 +96,7 @@ export default function Home() {
             },
         },
         {
-            title: 'Action',
+            title: t('Action'),
             key: 'operation',
             fixed: 'right',
             width: 100,
@@ -106,7 +108,7 @@ export default function Home() {
                                 className="details"
                                 to={`${AdminPages.MODULE_STATUSES_EDIT}/${record.id}`}
                             >
-                                <i className="ri-edit-line"></i> Modifier
+                                <i className="ri-edit-line"></i> {t('Modifier')}
                             </Link>
                         ),
                         key: '0',
@@ -117,7 +119,7 @@ export default function Home() {
                                 className="details"
                                 onClick={() => handleDelete(record.id)}
                             >
-                                <i className="ri-delete-bin-line"></i> Delete
+                                <i className="ri-delete-bin-line"></i> {'Supprimer'}
                             </span>
                         ),
                         key: '1',
@@ -180,10 +182,10 @@ export default function Home() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.DASHBOARD}>Dashboard</Link>
+                                <Link to={AdminPages.DASHBOARD}>{t('Dashboard')}</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
-                                Etats de module
+                                {t('Etats de module')}
                             </li>
                         </ol>
                         <h4 className="main-title mb-0">Les états de module</h4>
@@ -195,7 +197,7 @@ export default function Home() {
                                 className="d-flex align-items-center gap-2"
                             >
                                 <i className="ri-add-line fs-18 lh-1"></i>
-                                Ajouter
+                                {t('Ajouter')}
                             </Button>
                         </Link>
                     </div>
@@ -212,7 +214,7 @@ export default function Home() {
                                 }}
                             >
                                 <i className="ri-delete-bin-line fs-18 lh-1"></i>
-                                Effacer
+                                {t('Effacer')}
                             </Button>
                         ) : null}
                         <input
@@ -239,7 +241,6 @@ export default function Home() {
                         onChange={handleTableChange}
                     />
                 </Row>
-
                 <Footer />
             </div>
         </React.Fragment>

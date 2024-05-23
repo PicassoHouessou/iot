@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+    Alert,
     Button,
     Card,
     Col,
@@ -20,19 +21,32 @@ import { StatisticEnum } from '@Admin/constants';
 import { ApexOptions } from 'apexcharts';
 import { useModuleHistoriesJsonLdQuery } from '@Admin/services/modulesApi';
 import dayjs from 'dayjs';
-import { List, Tag } from 'antd';
+import { List, Tag, Tour, TourProps } from 'antd';
 import { ModuleHistory } from '@Admin/models';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useTranslation } from 'react-i18next';
+import { useSimulateMutation } from '@Admin/services/commandApi';
+import { toast } from 'react-toastify';
 
 dayjs.extend(relativeTime);
 
 export default function Dashboard() {
+    const { t } = useTranslation();
+    const tourStep1 = useRef(null);
+    const tourStep2 = useRef(null);
+    const tourStep3 = useRef(null);
+    const tourStep4 = useRef(null);
+    const tourStep5 = useRef(null);
+    const tourStep6 = useRef(null);
+    const tourStep7 = useRef(null);
     const { data: statisticsData } = useStatisticsQuery();
     const loadMoreRef = useRef(null);
+    const [openTour, setOpenTour] = useState<boolean>(false);
     const [query, setQuery] = useState<any>({
         'order[createdAt]': 'desc',
         itemsPerPage: 10,
     });
+    const [simulateModule] = useSimulateMutation();
     const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query);
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [list, setList] = useState<ModuleHistory[]>([]);
@@ -49,7 +63,7 @@ export default function Dashboard() {
         }
         return [
             {
-                name: 'Quantité',
+                name: t('Quantité'),
                 data: result,
             },
         ];
@@ -234,6 +248,58 @@ export default function Dashboard() {
         };
     }, [isLoading, loadMoreRef, onLoadMore]);
 
+    const steps: TourProps['steps'] = [
+        {
+            title: t('Simuler les modules'),
+            description: t(
+                'Cliquer sur ce bouton pour lancer la simulation des modules. Cela va conduire au changement des états des modules',
+            ),
+            target: () => tourStep1.current,
+        },
+        {
+            title: t('Diagramme des quantités des modules'),
+            description: t(
+                "Ce diagramme affiche une vue d'ensemble du nombre de modules par type",
+            ),
+            target: () => tourStep2.current,
+        },
+        {
+            title: t('Diagramme circulaire simple'),
+            description: t(
+                "Ce diagramme affiche une vue d'ensemble du nombre de modules par type",
+            ),
+            target: () => tourStep3.current,
+        },
+        {
+            title: t('Marge module par type'),
+            description: t(
+                "Ce diagramme affiche une vue d'ensemble de la marge des modules par type",
+            ),
+            target: () => tourStep4.current,
+        },
+        {
+            title: t('Diagramme polaire'),
+            description: t(
+                "Ce diagramme affiche une vue d'ensemble du nombre de modules par type",
+            ),
+            target: () => tourStep5.current,
+        },
+        {
+            title: t('Statistique état'),
+            description: t(
+                "Ce diagramme affiche une vue d'ensemble du nombre de modules par état",
+            ),
+            target: () => tourStep6.current,
+        },
+        {
+            title: t('Historique'),
+            description: t(
+                'Vous pouvez consulté les changements des modules rapidement ici',
+            ),
+            target: () => tourStep7.current,
+        },
+    ];
+
     const renderItem = (item: ModuleHistory, index: number) => {
         const addRef = list?.length > 1 && index === list?.length - 3 ? true : false;
         const createdAt = dayjs(item.createdAt);
@@ -252,7 +318,7 @@ export default function Dashboard() {
                             <h6>{item?.module?.name}</h6>
                             <p className="mb-2">
                                 <strong>
-                                    Valeur mesurée:{' '}
+                                    {t('Valeur mesurée')}:{' '}
                                     {`${item.value} ${item?.module?.type?.unitOfMeasure}`}
                                 </strong>
                                 <br />
@@ -268,35 +334,48 @@ export default function Dashboard() {
     return (
         <React.Fragment>
             <Header onSkin={setSkin} />
+            <div className="position-fixed" style={{ zIndex: 9999 }}>
+                <Alert
+                    variant="info"
+                    show={!openTour}
+                    onClose={() => setOpenTour(false)}
+                    dismissible
+                    className="top-0 start-50 d-flex align-items-center mb-2"
+                >
+                    <i className="ri-information-line"></i>{' '}
+                    {t("Bienvenue dans l'application de simulation des module IOT.")}
+                    <span onClick={() => setOpenTour(true)}>
+                        {t('Cliquez ici pour voir le guide de démarrage')}
+                    </span>
+                </Alert>
+            </div>
+
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to="#">Dashboard</Link>
+                                <Link to="#">{t('Dashboard')}</Link>
                             </li>
                         </ol>
-                        <h4 className="main-title mb-0">Bienvenue</h4>
+                        <h4 className="main-title mb-0">{t('Bienvenue')}</h4>
                     </div>
-                    <div className="d-flex gap-2 mt-3 mt-md-0">
+                    <div className="d-flex gap-2 mt-3 mt-md-0" ref={tourStep1}>
                         <Button
-                            variant=""
-                            className="btn-white d-flex align-items-center gap-2"
-                        >
-                            <i className="ri-share-line fs-18 lh-1"></i>Share
-                        </Button>
-                        <Button
-                            variant=""
-                            className="btn-white d-flex align-items-center gap-2"
-                        >
-                            <i className="ri-printer-line fs-18 lh-1"></i>Print
-                        </Button>
-                        <Button
+                            onClick={async (e) => {
+                                e.preventDefault();
+                                try {
+                                    await simulateModule();
+                                } catch (e) {
+                                    toast.error(t('Une erreur est survenue'));
+                                }
+                            }}
                             variant="primary"
                             className="d-flex align-items-center gap-2"
                         >
-                            <i className="ri-bar-chart-2-line fs-18 lh-1"></i>Generate
-                            <span className="d-none d-sm-inline"> Report</span>
+                            <i className="ri-bar-chart-2-line fs-18 lh-1"></i>
+                            {t('Simuler')}
+                            <span className="d-none d-sm-inline">{t('Module')}</span>
                         </Button>
                     </div>
                 </div>
@@ -327,9 +406,9 @@ export default function Dashboard() {
                         </Row>
                     </Col>
                     <Col xl="7">
-                        <Card className="card-one">
+                        <Card className="card-one" ref={tourStep2}>
                             <Card.Header>
-                                <Card.Title as="h6">Quantité modules</Card.Title>
+                                <Card.Title as="h6">{t('Quantité modules')}</Card.Title>
                                 <Nav className="nav-icon nav-icon-sm ms-auto">
                                     <Nav.Link href="">
                                         <i className="ri-refresh-line"></i>
@@ -349,9 +428,9 @@ export default function Dashboard() {
                         </Card>
                     </Col>
                     <Col xl="5">
-                        <Card className="card-one">
+                        <Card className="card-one" ref={tourStep3}>
                             <Card.Header>
-                                <Card.Title as="h6">Modules par type</Card.Title>
+                                <Card.Title as="h6">{t('Modules par type')}</Card.Title>
                                 <Nav className="nav-icon nav-icon-sm ms-auto">
                                     <Nav.Link href="">
                                         <i className="ri-refresh-line"></i>
@@ -374,7 +453,7 @@ export default function Dashboard() {
                         </Card>
                     </Col>
                     <Col xl="7">
-                        <Card className="card-one">
+                        <Card className="card-one" ref={tourStep4}>
                             <Card.Header className="border-0 pb-2">
                                 <Card.Title as="h6">Marge type de module (%)</Card.Title>
                             </Card.Header>
@@ -382,7 +461,9 @@ export default function Dashboard() {
                                 {seriesSummaryType && optionSummaryType && (
                                     <>
                                         <p className="fs-sm text-secondary mb-4">
-                                            Vous avez la marge de chaque type de module.
+                                            {t(
+                                                'Vous avez la marge de chaque type de module.',
+                                            )}
                                         </p>
 
                                         <ProgressBar className="progress-finance mb-4">
@@ -412,9 +493,9 @@ export default function Dashboard() {
                         </Card>
                     </Col>
                     <Col xl="5">
-                        <Card className="card-one">
+                        <Card className="card-one" ref={tourStep5}>
                             <Card.Header>
-                                <Card.Title as="h6">Modules par type</Card.Title>
+                                <Card.Title as="h6">{t('Modules par type')}</Card.Title>
                                 <Nav className="nav-icon nav-icon-sm ms-auto">
                                     <Nav.Link href="">
                                         <i className="ri-refresh-line"></i>
@@ -439,9 +520,9 @@ export default function Dashboard() {
                 </Row>
                 <Row className="g-3 mt-3 justify-content-center">
                     <Col xl="6">
-                        <Card className="card-one">
+                        <Card className="card-one" ref={tourStep6}>
                             <Card.Header>
-                                <Card.Title as="h6">Analyse statut</Card.Title>
+                                <Card.Title as="h6">{t('Analyse statut')}</Card.Title>
                                 <Nav className="nav-icon nav-icon-sm ms-auto">
                                     <Nav.Link href="">
                                         <i className="ri-refresh-line"></i>
@@ -453,7 +534,9 @@ export default function Dashboard() {
                             </Card.Header>
                             <Card.Body className="p-3">
                                 <label className="card-title fs-sm fw-medium">
-                                    Un résumé des modules en fonction de leur dernier état
+                                    {t(
+                                        'Un résumé des modules en fonction de leur dernier état',
+                                    )}
                                 </label>
 
                                 <ProgressBar className="progress-one ht-12 mt-2 mb-4">
@@ -492,9 +575,11 @@ export default function Dashboard() {
                     </Col>
 
                     <Col xl="6">
-                        <Card className="card-one">
+                        <Card className="card-one" ref={tourStep7}>
                             <Card.Header>
-                                <Card.Title as="h6">Dernières activités</Card.Title>
+                                <Card.Title as="h6">
+                                    {t('Dernières activités')}
+                                </Card.Title>
                                 <Nav className="nav-icon nav-icon-sm ms-auto">
                                     <Nav.Link href="">
                                         <i className="ri-refresh-line"></i>
@@ -513,7 +598,6 @@ export default function Dashboard() {
                                         className="mb-5"
                                         loading={isLoading}
                                         itemLayout="horizontal"
-                                        //loadMore={<div ref={loadMoreRef}></div>}
                                         dataSource={list}
                                         renderItem={(item, index) =>
                                             renderItem(item, index)
@@ -522,7 +606,7 @@ export default function Dashboard() {
                                             isLoading && (
                                                 <Spinner animation="border" role="status">
                                                     <span className="visually-hidden">
-                                                        Loading...
+                                                        {t('Chargement...')}
                                                     </span>
                                                 </Spinner>
                                             )
@@ -533,7 +617,7 @@ export default function Dashboard() {
                         </Card>
                     </Col>
                 </Row>
-
+                <Tour open={openTour} onClose={() => setOpenTour(false)} steps={steps} />
                 <Footer />
             </div>
         </React.Fragment>

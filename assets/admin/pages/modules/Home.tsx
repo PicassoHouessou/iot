@@ -15,6 +15,7 @@ import { getErrorMessage } from '@Admin/utils';
 import { AdminPages } from '@Admin/constants';
 import { toast } from 'react-toastify';
 import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
+import { useTranslation } from 'react-i18next';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -27,6 +28,7 @@ interface TableParams {
 }
 
 export default function Home() {
+    const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
     const {
@@ -61,7 +63,7 @@ export default function Home() {
     });
 
     const handleDelete = async (id: any) => {
-        if (window.confirm('Etes-vous sûr')) {
+        if (window.confirm(t('Etes-vous sûr'))) {
             try {
                 await deleteItem(id).unwrap();
                 //toast.success(t("cms Deleted Successfully"));
@@ -73,13 +75,13 @@ export default function Home() {
     };
     const columns: ColumnsType<Module> = [
         {
-            title: 'Nom',
+            title: t('Nom'),
             dataIndex: 'name',
             sorter: true,
             width: '20%',
         },
         {
-            title: 'Type',
+            title: t('Type'),
             dataIndex: 'type',
             width: '20%',
             sorter: true,
@@ -88,12 +90,12 @@ export default function Home() {
             },
         },
         {
-            title: 'Date',
+            title: t('Date'),
             dataIndex: 'createdAt',
             sorter: true,
         },
         {
-            title: 'Action',
+            title: t('Action'),
             key: 'operation',
             fixed: 'right',
             width: 100,
@@ -186,13 +188,13 @@ export default function Home() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.DASHBOARD}>Dashboard</Link>
+                                <Link to={AdminPages.DASHBOARD}>{t('Dashboard')}</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
-                                Modules
+                                {t('Modules')}
                             </li>
                         </ol>
-                        <h4 className="main-title mb-0">Les modules</h4>
+                        <h4 className="main-title mb-0">{t('Les modules')}</h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
                         <Button
@@ -200,8 +202,8 @@ export default function Home() {
                             className="btn-white d-flex align-items-center gap-2"
                         >
                             <i className="ri-bar-chart-2-line fs-18 lh-1"></i>
-                            Export
-                            <span className="d-none d-sm-inline"> Rapport</span>
+                            {t('Exporter')}
+                            <span className="d-none d-sm-inline"> {t('Rapport')}</span>
                         </Button>
                         <Button
                             variant=""
@@ -215,7 +217,7 @@ export default function Home() {
                                 className="d-flex align-items-center gap-2"
                             >
                                 <i className="ri-add-line fs-18 lh-1"></i>
-                                Ajouter
+                                {t('Ajouter')}
                             </Button>
                         </Link>
                     </div>

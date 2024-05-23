@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import userAvatar from '../assets/img/img1.jpg';
 import notification from '../data/Notification';
+import LanguageSwitcher from '@Admin/components/LanguagueSwitcher';
+import { useTranslation } from 'react-i18next';
 
 export default function Header({
     onSkin,
 }: {
     onSkin: React.Dispatch<React.SetStateAction<string>>;
 }) {
+    const { t } = useTranslation();
     const CustomToggle = React.forwardRef(
         (
             {
@@ -44,6 +47,48 @@ export default function Header({
                 document.body.classList.toggle('sidebar-show');
             } else {
                 document.body.classList.toggle('sidebar-hide');
+            }
+        }
+    };
+    const toggleFullscreen = (): void => {
+        const doc = document as Document & {
+            mozFullScreenElement?: Element;
+            msFullscreenElement?: Element;
+            webkitFullscreenElement?: Element;
+            mozCancelFullScreen?: () => Promise<void>;
+            msExitFullscreen?: () => Promise<void>;
+            webkitExitFullscreen?: () => Promise<void>;
+        };
+        const docEl = document.documentElement as HTMLElement & {
+            mozRequestFullScreen?: () => Promise<void>;
+            msRequestFullscreen?: () => Promise<void>;
+            webkitRequestFullscreen?: () => Promise<void>;
+        };
+
+        if (
+            !doc.fullscreenElement &&
+            !doc.mozFullScreenElement &&
+            !doc.webkitFullscreenElement &&
+            !doc.msFullscreenElement
+        ) {
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.mozRequestFullScreen) {
+                docEl.mozRequestFullScreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
+        } else {
+            if (doc.exitFullscreen) {
+                doc.exitFullscreen();
+            } else if (doc.mozCancelFullScreen) {
+                doc.mozCancelFullScreen();
+            } else if (doc.webkitExitFullscreen) {
+                doc.webkitExitFullscreen();
+            } else if (doc.msExitFullscreen) {
+                doc.msExitFullscreen();
             }
         }
     };
@@ -125,12 +170,13 @@ export default function Header({
                 <i className="ri-menu-2-fill"></i>
             </Link>
 
-            <div className="form-search me-auto">
-                <input type="text" className="form-control" placeholder="Search" />
-                <i className="ri-search-line"></i>
-            </div>
-
-            <Dropdown className="dropdown-skin" align="end">
+            <div className="me-auto"></div>
+            {/*<div className="form-search me-auto">*/}
+            {/*    <input type="text" className="form-control" placeholder="Search"/>*/}
+            {/*    <i className="ri-search-line"></i>*/}
+            {/*</div>*/}
+            <LanguageSwitcher />
+            <Dropdown className="dropdown-skin ms-3 ms-xl-4" align="end">
                 <Dropdown.Toggle as={CustomToggle}>
                     <i className="ri-settings-3-line"></i>
                 </Dropdown.Toggle>
@@ -202,16 +248,29 @@ export default function Header({
 
             <Dropdown className="dropdown-notification ms-3 ms-xl-4" align="end">
                 <Dropdown.Toggle as={CustomToggle}>
+                    <span
+                        color="none"
+                        onClick={toggleFullscreen}
+                        className="header-item noti-icon waves-effect"
+                        data-toggle="fullscreen"
+                    >
+                        <i className="ri-fullscreen-line"></i>
+                    </span>
+                </Dropdown.Toggle>
+            </Dropdown>
+
+            <Dropdown className="dropdown-notification ms-3 ms-xl-4" align="end">
+                <Dropdown.Toggle as={CustomToggle}>
                     <small>3</small>
                     <i className="ri-notification-3-line"></i>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="mt-10-f me--10-f">
                     <div className="dropdown-menu-header">
-                        <h6 className="dropdown-menu-title">Notifications</h6>
+                        <h6 className="dropdown-menu-title">{t('Notifications')}</h6>
                     </div>
                     {NotificationList()}
                     <div className="dropdown-menu-footer">
-                        <Link to="#">Show all Notifications</Link>
+                        <Link to="#">{t('Voir toutes les notifications')}</Link>
                     </div>
                 </Dropdown.Menu>
             </Dropdown>
@@ -227,30 +286,10 @@ export default function Header({
                         <div className="avatar avatar-xl online mb-3">
                             <img src={userAvatar} alt="" />
                         </div>
-                        <h5 className="mb-1 text-dark fw-semibold">Shaira Diaz</h5>
-                        <p className="fs-sm text-secondary">Premium Member</p>
-
                         <nav className="nav">
-                            <Link to="">
-                                <i className="ri-edit-2-line"></i> Edit Profile
-                            </Link>
-                            <Link to="">
-                                <i className="ri-profile-line"></i> View Profile
-                            </Link>
-                        </nav>
-                        <hr />
-                        <nav className="nav">
-                            <Link to="">
-                                <i className="ri-question-line"></i> Help Center
-                            </Link>
-                            <Link to="">
-                                <i className="ri-lock-line"></i> Privacy Settings
-                            </Link>
-                            <Link to="">
-                                <i className="ri-user-settings-line"></i> Account Settings
-                            </Link>
-                            <Link to="//signin">
-                                <i className="ri-logout-box-r-line"></i> Log Out
+                            <Link to={'/signin'}>
+                                <i className="ri-logout-box-r-line"></i>{' '}
+                                {t('Se Déconnecter')}
                             </Link>
                         </nav>
                     </div>

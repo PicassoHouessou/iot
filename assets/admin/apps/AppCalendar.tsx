@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
+import '../assets/css/react-datepicker.min.css';
 import Header from '../layouts/Header';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Button, Card, Modal, Nav } from 'react-bootstrap';
-import ReactDatePicker from 'react-datepicker';
-import '../assets/css/react-datepicker.min.css';
+import ReactDatePicker, { registerLocale } from 'react-datepicker';
 
+import allLocales from '@fullcalendar/core/locales-all';
+import { fr } from 'date-fns/locale'; // Import locales from date-fns
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -15,11 +17,14 @@ import {
     useModuleStatusesQuery,
 } from '@Admin/services/modulesApi';
 import { Flex, Tag } from 'antd';
-
 import { DatesSetArg, EventClickArg } from '@fullcalendar/core';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+
+registerLocale('fr', fr);
 
 export default function AppCalendar() {
+    const { t, i18n } = useTranslation();
     const [startDate, setStartDate] = useState(new Date());
 
     const calendarRef = useRef<FullCalendar>(null);
@@ -107,6 +112,7 @@ export default function AppCalendar() {
                         */}
 
                         <ReactDatePicker
+                            locale={i18n.language}
                             selected={startDate}
                             onChange={(date) => handleDateChange(date!)}
                             inline
@@ -129,6 +135,8 @@ export default function AppCalendar() {
                 <div className="calendar-body">
                     <FullCalendar
                         ref={calendarRef}
+                        locales={allLocales} // Add all locales you may need
+                        locale={i18n.language} // Set the locale you want to use
                         plugins={[dayGridPlugin, timeGridPlugin]}
                         initialView={currentView}
                         headerToolbar={{
@@ -167,7 +175,7 @@ export default function AppCalendar() {
                         centered
                     >
                         <Modal.Header closeButton>
-                            <Modal.Title>Détails</Modal.Title>
+                            <Modal.Title>{t('Détails')}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Card className="card">
@@ -211,7 +219,7 @@ export default function AppCalendar() {
                                 className="btn-white"
                                 onClick={handleModalClose}
                             >
-                                Fermer
+                                {t('Fermer')}
                             </Button>
                         </Modal.Footer>
                     </Modal>

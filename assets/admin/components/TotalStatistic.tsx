@@ -2,12 +2,14 @@ import { Card, Col } from 'react-bootstrap';
 import React from 'react';
 import { StatisticsDetail } from '@Admin/models';
 import { StatisticEnum } from '@Admin/constants';
+import { useTranslation } from 'react-i18next';
 
 type TotalStatisticProps = {
     data: StatisticsDetail;
     type: StatisticEnum;
 };
 const TotalStatistic = (props: TotalStatisticProps) => {
+    const { t } = useTranslation();
     const getIcon = (type: StatisticEnum) => {
         switch (type) {
             case StatisticEnum.USER: {
@@ -42,19 +44,19 @@ const TotalStatistic = (props: TotalStatisticProps) => {
         let label = '';
         switch (type) {
             case StatisticEnum.USER:
-                label = 'Utilisateurs';
+                label = t('Utilisateurs');
                 break;
             case StatisticEnum.MODULE_TYPE:
-                label = 'Types de Module';
+                label = t('Types de Module');
                 break;
             case StatisticEnum.MODULE_HISTORY:
-                label = 'Historiques';
+                label = t('Historiques');
                 break;
             case StatisticEnum.MODULE:
-                label = 'Modules';
+                label = t('Modules');
                 break;
             case StatisticEnum.MODULE_STATUS:
-                label = 'Statut modules';
+                label = t('Statut modules');
                 break;
             default:
                 label = '';
@@ -81,7 +83,7 @@ const TotalStatistic = (props: TotalStatisticProps) => {
                         >
                             {data?.percentageIncrease}% <i className={getArrow()}></i>
                         </span>{' '}
-                        que la semaine passée
+                        {t('que la semaine passée')}
                     </small>
                 </Card.Body>
             </Card>
