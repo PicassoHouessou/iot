@@ -1,13 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import {configureStore} from '@reduxjs/toolkit';
+import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import authReducer from '@Admin/features/authSlice';
+import localeReducer from '@Admin/features/localeSlice';
 
-import { adminModuleApi } from '@Admin/services/adminModuleApi';
+import {adminModuleApi} from '@Admin/services/adminModuleApi';
 
 export const store = configureStore({
     reducer: {
         [adminModuleApi.reducerPath]: adminModuleApi.reducer,
         auth: authReducer,
+        locale: localeReducer,
     },
     middleware: (getDefaultMiddleware) => {
         const middleware = getDefaultMiddleware();

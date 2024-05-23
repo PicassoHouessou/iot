@@ -1,8 +1,8 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
-import { Codes } from '@Admin/constants/language';
+import {availableLocales, defaultLocale} from '@Admin/constants/language';
 
 i18n
     // i18next-http-backend
@@ -17,12 +17,17 @@ i18n
     // init i18next
     // for all options read: https://www.i18next.com/overview/configuration-options
     .init({
+        detection: {
+            convertDetectedLanguage: (lng) => {
+                return lng.slice(0, 2);
+            }
+        },
         // See the public folder locales to find tranlatioon files
         load: 'languageOnly',
         debug: false,
-        // lng: "it", Should be disable when use LanguageDetector
-        fallbackLng: 'fr',
-        supportedLngs: Codes || ['en', 'fr'],
+        // lng: defaultLocale, Should be disable when use LanguageDetector
+        fallbackLng: defaultLocale,
+        supportedLngs: availableLocales,
         // allow keys to be phrases having `:`, `.`
         nsSeparator: false,
         keySeparator: false,
