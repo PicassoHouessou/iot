@@ -43,4 +43,6 @@ services:
     App\Service\FileUploader:
         arguments:
             $uploadPath: "%uploads.directory%"
-
+    App\DataPersister\CommandPersister: ~
+    # Uncomment only if autoconfiguration is disabled
+    #tags: [ 'api_platform.data_persister' ]

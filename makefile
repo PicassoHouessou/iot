@@ -20,17 +20,22 @@ DOCKER_COMPOSE_STOP = $(DOCKER_COMPOSE) stop
 #------------#
 
 #---SYMFONY--#
-SYMFONY = symfony
-SYMFONY_SERVER_START = $(SYMFONY) serve -d
-SYMFONY_SERVER_STOP = $(SYMFONY) server:stop
-SYMFONY_CONSOLE = $(SYMFONY) console
-SYMFONY_LINT = $(SYMFONY_CONSOLE) lint:
-#------------#
+# Determine if the Symfony binary exists
+ifeq (, $(shell which symfony))
+    SYMFONY_BIN = php bin/console
+    SYMFONY_SERVER_START = php -S localhost:8000 -t public > var/log/server.log 2>&1 &
+    SYMFONY_SERVER_STOP = kill `lsof -t -i:8000`
+    SYMFONY = $(SYMFONY_BIN)
+    SYMFONY_CONSOLE = $(SYMFONY_BIN)
+else
+    SYMFONY_BIN = symfony
+    SYMFONY_SERVER_START = $(SYMFONY_BIN) serve -d
+    SYMFONY_SERVER_STOP = $(SYMFONY_BIN) server:stop
+    SYMFONY = $(SYMFONY_BIN)
+    SYMFONY_CONSOLE = $(SYMFONY) console
+endif
 
-#---PHP--#
-PHP = php
-PHP_CONSOLE = $(PHP) bin/console
-PHP_LINT = $(PHP_CONSOLE) lint:
+SYMFONY_LINT = $(SYMFONY_CONSOLE) lint:
 #------------#
 
 #---COMPOSER-#
@@ -128,7 +133,8 @@ sf-dc: ## Create symfony database.
 .PHONY: sf-dc
 
 sf-dd: ## Drop symfony database.
-	$(SYMFONY_CONSOLE) doctrine:database:drop --if-exists --force
+	$(SYMFONY_CONSOLE) doctrine:database:drop --if-exists --force > /dev/null 2>&1 || true
+	$(SYMFONY_CONSOLE) doctrine:database:drop --force > /dev/null 2>&1 || true # A hack to support both mysql and sqlite
 .PHONY: sf-dd
 
 sf-su: ## Update symfony schema database.
@@ -191,69 +197,6 @@ sf-open-email: ## Open Email catcher.
 sf-check-requirements: ## Check requirements.
 	$(SYMFONY) check:requirements
 .PHONY: sf-check-requirements
-#---------------------------------------------#
-
-## === 🎛️  PHP ===============================================
-php: ## List and Use All Symfony commands (make sf command="commande-name").
-	$(PHP_CONSOLE) $(command)
-.PHONY: php
-
-php-cc: ## Clear symfony cache.
-	$(PHP_CONSOLE) cache:clear
-.PHONY: php-cc
-
-php-assets: ## Install bundle's web assets under a public directory.
-	$(PHP_CONSOLE) assets:install
-.PHONY: php-assets
-
-php-dc: ## Create symfony database.
-	$(PHP_CONSOLE) doctrine:database:create --if-not-exists
-.PHONY: php-dc
-
-php-dd: ## Drop symfony database.
-	$(PHP_CONSOLE) doctrine:database:drop --if-exists --force
-.PHONY: php-dd
-
-php-su: ## Update symfony schema database.
-	$(PHP_CONSOLE) doctrine:schema:update --force
-.PHONY: php-su
-
-php-mm: ## Make migrations.
-	$(PHP_CONSOLE) make:migration
-.PHONY: php-mm
-
-php-dmm: ## Migrate.
-	$(PHP_CONSOLE) doctrine:migrations:migrate --no-interaction
-.PHONY: php-dmm
-
-php-fixtures: ## Load fixtures.
-	$(PHP_CONSOLE) hautelook:fixtures:load --no-interaction
-	#$(PHP_CONSOLE) doctrine:fixtures:load --no-interaction --apend
-.PHONY: php-fixtures
-
-php-me: ## Make symfony entity
-	$(PHP_CONSOLE) make:entity
-.PHONY: php-me
-
-php-mc: ## Make symfony controller
-	$(PHP_CONSOLE) make:controller
-.PHONY: php-mc
-
-php-mf: ## Make symfony Form
-	$(PHP_CONSOLE) make:form
-.PHONY: php-mf
-
-php-perm: ## Fix permissions.
-	chmod -R 777 var
-.PHONY: php-perm
-
-php-sudo-perm: ## Fix permissions with sudo.
-	sudo chmod -R 777 var
-.PHONY: php-sudo-perm
-
-php-dump-env: ## Dump env.
-	$(PHP_CONSOLE) debug:dotenv
-.PHONY: php-dump-env
 #---------------------------------------------#
 
 ## === 📦  COMPOSER ==============================================
@@ -430,14 +373,7 @@ data: ## Generate fixtures for the project.
 	$(MAKE) sf-fixtures
 .PHONY: data
 
-php-data: ## Generate fixtures for the project.
-	$(MAKE) php-dd
-	$(MAKE) php-dc
-	$(MAKE) php-su
-	$(MAKE) php-fixtures
-.PHONY: php-data
-
-checkout: ## Pull all modules for the specified branch. Eg: make checkout dev_VER_1.1
+checkout: ## Pull all modules for the specified branch. Eg: make checkout dev
 	$(GIT) pull
 	$(GIT_SUBMODULE_UPDATE)
 	$(GIT_SUBMODULE_FOREACH) git fetch origin
@@ -452,13 +388,6 @@ checkout-dev:  ## Pull all modules for branch dev.
 	$(GIT_SUBMODULE_FOREACH) git checkout dev
 	$(GIT_SUBMODULE_FOREACH) git pull
 .PHONY: checkout-dev
-
-checkout-dev_VER_1_1:  ## Pull all modules for branch dev_VER_1.1.
-	$(GIT) pull
-	$(GIT_SUBMODULE_UPDATE)
-	$(GIT_SUBMODULE_FOREACH) git checkout dev_VER_1.1
-	$(GIT_SUBMODULE_FOREACH) git pull
-.PHONY: checkout-dev_VER_1_1
 #---------------------------------------------#
 
 ## === ⭐  OTHERS =================================================
@@ -469,7 +398,6 @@ dev: docker-up yarn-build sf-perm data sf-start sf-open ## First install.
 .PHONY: dev
 
 first-install:  ## First install.
-	$(MAKE) docker-up
 	$(MAKE) composer-install
 	$(MAKE) pnpm-install
 	$(MAKE) pnpm-build || true

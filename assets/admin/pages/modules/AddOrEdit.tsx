@@ -13,8 +13,9 @@ import {
     useUpdateModuleMutation,
 } from '@Admin/services/modulesApi';
 import { generateIRI, getErrorMessage } from '@Admin/utils';
-import { ApiRoutesWithoutPrefix } from '@Admin/constants';
+import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const initialState = {
     id: '',
@@ -24,6 +25,7 @@ const initialState = {
 };
 
 export default function AddOrEdit() {
+    const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
 
     const [formValue, setFormValue] = useState<ModuleEdit>(initialState);
@@ -117,7 +119,7 @@ export default function AddOrEdit() {
                     id,
                 }).unwrap();
                 navigate(-1);
-                toast.success('Module enregistré');
+                toast.success(t('Module enregistré'));
             }
         } catch (err) {
             const { detail, errors } = getErrorMessage(err);
@@ -135,16 +137,16 @@ export default function AddOrEdit() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to="/modules">Modules</Link>
+                                <Link to="/modules">{t('Modules')}</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
-                                Ajout
+                                {t('Ajout')}
                             </li>
                         </ol>
-                        <h4 className="main-title mb-0">Ajouter un module</h4>
+                        <h4 className="main-title mb-0">{t('Ajouter un module')}</h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
-                        <Link to="/modules">
+                        <Link to={AdminPages.MODULES}>
                             <Button
                                 variant=""
                                 className="btn-white d-flex align-items-center gap-2"
@@ -169,7 +171,7 @@ export default function AddOrEdit() {
                             <Card.Body>
                                 <Form onSubmit={handleSubmit}>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="name">Nom</Form.Label>
+                                        <Form.Label htmlFor="name">{t('Nom')}</Form.Label>
                                         <Form.Control
                                             id="name"
                                             name="name"
@@ -183,7 +185,7 @@ export default function AddOrEdit() {
                                     </div>
                                     <div className="mb-3">
                                         <Form.Label htmlFor="description">
-                                            Description
+                                            {t('Description')}
                                         </Form.Label>
                                         <Form.Control
                                             as="textarea"
@@ -199,7 +201,9 @@ export default function AddOrEdit() {
                                         </Form.Control.Feedback>
                                     </div>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="type">Type</Form.Label>
+                                        <Form.Label htmlFor="type">
+                                            {t('Type')}
+                                        </Form.Label>
                                         <Select
                                             name="type"
                                             options={moduleTypeOptions}
@@ -226,7 +230,7 @@ export default function AddOrEdit() {
                                     </div>
                                     <div>
                                         <Button variant="primary" type="submit">
-                                            Enregistrer
+                                            {t('Enregistrer')}
                                         </Button>
                                     </div>
                                 </Form>

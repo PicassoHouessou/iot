@@ -8,6 +8,9 @@ import {
 import { Mutex } from 'async-mutex';
 import { appUrl } from '@Admin/constants';
 import { logOut } from '@Admin/features/authSlice';
+import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import { RootState } from '@Admin/store/store';
+import { defaultLocale } from '@Admin/constants/language';
 
 /**
  * Save token and Refresh_token in localStorage
@@ -25,10 +28,16 @@ const baseQuery = (args: string | FetchArgs, api: BaseQueryApi, extraOptions: ob
         /ion\/((vnd\.api\+)|(merge\-patch\+)|(ld\+))?json/.test(
             headers.get('content-type') || '',
         );
+    const currentLocale = selectCurrentLocale(api.getState() as RootState);
+
     const query = fetchBaseQuery({
         baseUrl: `${appUrl}/api`,
         credentials: 'include',
         isJsonContentType: defaultIsJsonContentType,
+        prepareHeaders: (headers) => {
+            headers.set('X-LOCALE', currentLocale ?? defaultLocale);
+            return headers;
+        },
     });
 
     return query(args, api, extraOptions);

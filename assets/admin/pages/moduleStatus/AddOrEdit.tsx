@@ -13,6 +13,7 @@ import { ModuleStatus } from '@Admin/models';
 import { getErrorMessage } from '@Admin/utils';
 import { AdminPages } from '@Admin/constants';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const initialState = {
     id: '',
@@ -22,6 +23,8 @@ const initialState = {
 };
 
 export default function AddOrEdit() {
+    const { t } = useTranslation();
+
     const [, setSkin] = useSkinMode();
     const [formValue, setFormValue] = useState<ModuleStatus>(initialState);
     const [editMode, setEditMode] = useState(false);
@@ -82,7 +85,7 @@ export default function AddOrEdit() {
                 await addData(data).unwrap();
                 setErrors({});
                 navigate(-1);
-                toast.success('Statut enregistré');
+                toast.success(t('Statut enregistré'));
             } else {
                 setErrors({});
                 await updateData({
@@ -90,7 +93,7 @@ export default function AddOrEdit() {
                     id,
                 }).unwrap();
                 navigate(-1);
-                toast.success('Statut enregistré');
+                toast.success(t('Statut enregistré'));
             }
         } catch (err) {
             const { detail, errors } = getErrorMessage(err);
@@ -108,13 +111,15 @@ export default function AddOrEdit() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.MODULES}>Modules</Link>
+                                <Link to={AdminPages.MODULES}>{t('Modules')}</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
-                                Ajout
+                                {t('Ajout')}
                             </li>
                         </ol>
-                        <h4 className="main-title mb-0">Ajouter un status de module</h4>
+                        <h4 className="main-title mb-0">
+                            {t('Ajouter un status de module')}
+                        </h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
                         <Link to={AdminPages.MODULE_STATUSES}>
@@ -123,7 +128,7 @@ export default function AddOrEdit() {
                                 className="btn-white d-flex align-items-center gap-2"
                             >
                                 <i className="ri-arrow-go-back-line fs-18 lh-1"></i>
-                                Retour
+                                {t('Retour')}
                             </Button>
                         </Link>
                     </div>
@@ -135,7 +140,7 @@ export default function AddOrEdit() {
                             <Card.Body>
                                 <Form onSubmit={handleSubmit}>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="name">Nom</Form.Label>
+                                        <Form.Label htmlFor="name">{t('Nom')}</Form.Label>
                                         <Form.Control
                                             id="name"
                                             name="name"
@@ -148,7 +153,9 @@ export default function AddOrEdit() {
                                         </Form.Control.Feedback>
                                     </div>
                                     <div className="mb-3">
-                                        <Form.Label htmlFor="color">Couleur</Form.Label>
+                                        <Form.Label htmlFor="color">
+                                            {t('Couleur')}
+                                        </Form.Label>
                                         <Form.Control
                                             id="color"
                                             name="color"
@@ -162,7 +169,7 @@ export default function AddOrEdit() {
                                     </div>
                                     <div className="mb-3">
                                         <Form.Label htmlFor="description">
-                                            Description
+                                            {t('Description')}
                                         </Form.Label>
                                         <Form.Control
                                             as="textarea"
@@ -179,7 +186,7 @@ export default function AddOrEdit() {
                                     </div>
                                     <div>
                                         <Button variant="primary" type="submit">
-                                            Enregistrer
+                                            {t('Enregistrer')}
                                         </Button>
                                     </div>
                                 </Form>

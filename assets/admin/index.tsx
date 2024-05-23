@@ -4,6 +4,8 @@ import reportWebVitals from './reportWebVitals';
 import App from './App';
 import { Provider } from 'react-redux';
 import { store } from '@Admin/store/store';
+//For internationalisation
+import '@Admin/utils/i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
