@@ -1,5 +1,5 @@
-import { adminModuleApi } from './adminModuleApi';
-import { ApiFormat, ApiRoutesWithoutPrefix, HttpMethod } from '@Admin/constants';
+import {adminModuleApi} from './adminModuleApi';
+import {ApiFormat, ApiRoutesWithoutPrefix, HttpMethod} from '@Admin/constants';
 
 export const commandApi = adminModuleApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -11,11 +11,12 @@ export const commandApi = adminModuleApi.injectEndpoints({
                     Accept: ApiFormat.JSON,
                     'Content-Type': ApiFormat.JSON,
                 },
-                data: { date: null },
+                body: {},
             }),
             invalidatesTags: ['Module'],
         }),
+
     }),
 });
 
-export const { useSimulateMutation } = commandApi;
+export const {useSimulateMutation} = commandApi;
