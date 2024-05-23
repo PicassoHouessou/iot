@@ -19,13 +19,13 @@ import ModuleTypes from "@Admin/pages/moduleTypes";
 import {AdminPages} from "@Admin/constants";
 
 const protectedRoutes = [
-    {path: "dashboard", element: <Dashboard/>},
+    {path: AdminPages.DASHBOARD, element: <Dashboard/>},
     {path: `${AdminPages.MODULE_STATUSES}/*`, element: <ModuleStatuses/>},
     {path: `${AdminPages.MODULE_TYPES}/*`, element: <ModuleTypes/>},
     {path: `${AdminPages.MODULES}/*`, element: <Modules/>},
     {path: `${AdminPages.LOGS}/*`, element: <Logs/>},
     {path: `${AdminPages.PROFILES}/*`, element: <Profile/>},
-    {path: "apps/calendar", element: <AppCalendar/>},
+    {path: AdminPages.CALENDAR, element: <AppCalendar/>},
     {path: "docs/layout/grid", element: <LayoutGrid/>},
     {path: "docs/layout/columns", element: <LayoutColumns/>},
     {path: "docs/layout/gutters", element: <LayoutGutters/>},

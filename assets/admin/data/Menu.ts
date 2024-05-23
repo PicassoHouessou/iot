@@ -3,7 +3,7 @@ import { AdminPages } from '@Admin/constants';
 const dashboardMenu = [
     {
         label: 'Tableau de bord',
-        link: '/dashboard',
+        link: AdminPages.DASHBOARD,
         icon: 'ri-pie-chart-2-line',
     },
 ];
@@ -20,13 +20,13 @@ const applicationsMenu = [
         icon: 'ri-pie-chart-2-line',
     },
     {
-        label: 'Etats',
+        label: 'États',
         link: AdminPages.MODULE_STATUSES,
         icon: 'ri-pie-chart-2-line',
     },
     {
-        label: 'Calendar',
-        link: '/apps/calendar',
+        label: 'Calendrier',
+        link: AdminPages.CALENDAR,
         icon: 'ri-calendar-line',
     },
 ];

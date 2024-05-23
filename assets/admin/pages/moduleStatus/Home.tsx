@@ -185,7 +185,7 @@ export default function Home() {
                                 <Link to={AdminPages.DASHBOARD}>{t('Dashboard')}</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
-                                {t('Etats de module')}
+                                {t('États de module')}
                             </li>
                         </ol>
                         <h4 className="main-title mb-0">Les états de module</h4>

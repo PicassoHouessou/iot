@@ -5,6 +5,7 @@ import { setCredentials, setTokenCredentials } from '@Admin/features/authSlice';
 import { getErrorMessage } from '@Admin/utils/getErrorMessage';
 import { useLoginMutation } from '@Admin/services/usersApi';
 import { useAppDispatch } from '@Admin/store/store';
+import { AdminPages } from '@Admin/constants';
 
 const form = {
     email: 'admin@otp.picassohouessou.com',
@@ -42,7 +43,7 @@ export default function Signin() {
                         refresh_token: res?.refresh_token,
                     }),
                 );
-                navigate('/dashboard');
+                navigate(AdminPages.DASHBOARD);
             } else {
                 setErrorMessage("Vous n'êtes pas autorisé à accéder à cette page");
             }
