@@ -38,6 +38,10 @@ endif
 SYMFONY_LINT = $(SYMFONY_CONSOLE) lint:
 #------------#
 
+#---MODULE-#
+SIMULATE = $(SYMFONY_CONSOLE) app:module:simulate
+#------------#
+
 #---COMPOSER-#
 COMPOSER = composer
 COMPOSER_INSTALL = $(COMPOSER) install
@@ -388,6 +392,12 @@ checkout-dev:  ## Pull all modules for branch dev.
 	$(GIT_SUBMODULE_FOREACH) git checkout dev
 	$(GIT_SUBMODULE_FOREACH) git pull
 .PHONY: checkout-dev
+#---------------------------------------------#
+
+## === MODULE SIMULATION =================================================
+simulate: ## Run simulation.
+	$(SIMULATE)
+.PHONY: simulate
 #---------------------------------------------#
 
 ## === ⭐  OTHERS =================================================

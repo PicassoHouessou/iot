@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Module;
 use App\Entity\ModuleHistory;
 use App\Entity\ModuleStatus;
+use App\Entity\ModuleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -30,7 +31,9 @@ class ModuleSimulateCommand extends Command
     {
         $this
             ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
+            ->addOption('type', null, InputOption::VALUE_REQUIRED, 'Module type')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit the number of modules')
+            ->addOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset to pass to findBy');
     }
 
 
@@ -38,8 +41,20 @@ class ModuleSimulateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $faker = Factory::create();
+        $limit = $input->getOption('limit') ?? null;
+        $offset = $input->getOption('offset') ?? null;
 
-        $modules = $this->entityManager->getRepository(Module::class)->findAll();
+        $moduleTypeRepository = $this->entityManager->getRepository(ModuleType::class);
+        if ($type = $input->getOption('type')) {
+            $moduleType = $moduleTypeRepository->findOneBy(['name' => $type]);
+            if (!$moduleType) {
+                $output->writeln("<error>Le type " . $type . " est introuvable</error>");
+                return Command::FAILURE;
+            }
+            $modules = $this->entityManager->getRepository(Module::class)->findBy(['type' => $moduleType], [], $limit, $offset);
+        } else {
+            $modules = $this->entityManager->getRepository(Module::class)->findBy([], [], $limit, $offset);
+        }
 
         $statuses = $this->entityManager->getRepository(ModuleStatus::class)->findAll();
         foreach ($modules as $module) {
@@ -59,7 +74,7 @@ class ModuleSimulateCommand extends Command
                 $output->writeln("Ajout d'un historique ayant le statut : " . $status->getName());
             }
             $this->entityManager->flush();
-            $output->writeln('<info>Fin de simulation du module :' . $module->getName() . '</info>');
+            $output->writeln('<info>Fin de simulation du module : ' . $module->getName() . '</info>');
         }
 
 

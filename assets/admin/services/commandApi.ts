@@ -11,7 +11,7 @@ export const commandApi = adminModuleApi.injectEndpoints({
                     Accept: ApiFormat.JSON,
                     'Content-Type': ApiFormat.JSON,
                 },
-                data: { date: null },
+                body: {},
             }),
             invalidatesTags: ['Module'],
         }),

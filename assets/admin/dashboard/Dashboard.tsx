@@ -128,7 +128,8 @@ export default function Dashboard() {
                             onClick={async (e) => {
                                 e.preventDefault();
                                 try {
-                                    await simulateModule();
+                                    await simulateModule().unwrap();
+                                    toast.error(t('Simulation réussie'));
                                 } catch (e) {
                                     toast.error(t('Une erreur est survenue'));
                                 }
