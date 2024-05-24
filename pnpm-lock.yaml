@@ -68,9 +68,6 @@ dependencies:
   dompurify:
     specifier: ^2.4.3
     version: 2.5.1
-  dotenv-webpack:
-    specifier: ^8.1.0
-    version: 8.1.0(webpack@5.91.0)
   eslint-plugin-react-hooks:
     specifier: 5.1.0-beta-4508873393-20240430
     version: 5.1.0-beta-4508873393-20240430(eslint@8.57.0)
@@ -211,6 +208,9 @@ devDependencies:
   core-js:
     specifier: ^3.23.0
     version: 3.37.0
+  dotenv-flow-webpack:
+    specifier: ^2.0.0
+    version: 2.0.0(webpack@5.91.0)
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
@@ -5923,35 +5923,36 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /dotenv-defaults@2.0.2:
-    resolution: {integrity: sha512-iOIzovWfsUHU91L5i8bJce3NYK5JXeAwH50Jh6+ARUdLiiGlYWfGw6UkzsYqaXZH/hjE/eCd/PlfM/qqyK0AMg==}
-    dependencies:
-      dotenv: 8.6.0
-    dev: false
-
   /dotenv-expand@5.1.0:
     resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
     dev: false
 
-  /dotenv-webpack@8.1.0(webpack@5.91.0):
-    resolution: {integrity: sha512-owK1JcsPkIobeqjVrk6h7jPED/W6ZpdFsMPR+5ursB7/SdgDyO+VzAU+szK8C8u3qUhtENyYnj8eyXMR5kkGag==}
-    engines: {node: '>=10'}
+  /dotenv-flow-webpack@2.0.0(webpack@5.91.0):
+    resolution: {integrity: sha512-SLzisMB0pzrYiTOv/qb2lLjBdmeZYXHajleNJnRX1/93QaKNqgiWzT238KvxfRFbiCna5nta48KzetSKfH1jQQ==}
+    engines: {node: '>= 12.0.0'}
     peerDependencies:
-      webpack: ^4 || ^5
+      webpack: ^1 || ^2 || ^3 || ^4 || ^5
     dependencies:
-      dotenv-defaults: 2.0.2
+      dotenv-flow: 4.1.0
       webpack: 5.91.0(webpack-cli@4.10.0)
-    dev: false
+    dev: true
+
+  /dotenv-flow@4.1.0:
+    resolution: {integrity: sha512-0cwP9jpQBQfyHwvE0cRhraZMkdV45TQedA8AAUZMsFzvmLcQyc1HPv+oX0OOYwLFjIlvgVepQ+WuQHbqDaHJZg==}
+    engines: {node: '>= 12.0.0'}
+    dependencies:
+      dotenv: 16.4.5
+    dev: true
 
   /dotenv@10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
     dev: false
 
-  /dotenv@8.6.0:
-    resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
-    engines: {node: '>=10'}
-    dev: false
+  /dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
+    dev: true
 
   /duplexer@0.1.2:
     resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
