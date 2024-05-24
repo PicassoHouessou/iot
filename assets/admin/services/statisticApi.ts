@@ -1,6 +1,6 @@
-import {Statistic} from '../models';
-import {adminModuleApi} from './adminModuleApi';
-import {ApiRoutesWithoutPrefix} from '@Admin/constants';
+import { Statistic } from '../models';
+import { adminModuleApi } from './adminModuleApi';
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
 
 export const statisticApi = adminModuleApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -15,4 +15,4 @@ export const statisticApi = adminModuleApi.injectEndpoints({
     }),
 });
 
-export const {useStatisticQuery, useStatisticsQuery} = statisticApi;
+export const { useStatisticQuery, useStatisticsQuery } = statisticApi;
