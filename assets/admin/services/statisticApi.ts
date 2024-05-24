@@ -6,11 +6,11 @@ export const statisticApi = adminModuleApi.injectEndpoints({
     endpoints: (builder) => ({
         statistics: builder.query<Statistic[], void>({
             query: () => ApiRoutesWithoutPrefix.STATISTICS,
-            providesTags: ['Log'],
+            providesTags: ['Module'],
         }),
         statistic: builder.query<Statistic, string>({
             query: (id) => `${ApiRoutesWithoutPrefix.STATISTICS}/${id}`,
-            providesTags: ['Log'],
+            providesTags: ['Module'],
         }),
     }),
 });
