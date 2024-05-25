@@ -87,13 +87,14 @@
         "sass-loader": "13.0",
         "web-vitals": "^2.1.4"
     },
-    "license": "UNLICENSED",
+    "license": "NPOSL-3.0",
+    "author": "Picasso Houessou <houessoupicasso@yahoo.fr> (https://picassohouessou.com)",
     "private": true,
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "lint": "eslint 'assets/**/*.{ts,tsx}' --fix",
-        "prettier:write": "prettier --loglevel warn --write 'assets/**/*.{ts,tsx}'",
+        "prettier:write": "prettier --log-level warn --write 'assets/**/*.{ts,tsx}'",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
         "prepare": "husky"

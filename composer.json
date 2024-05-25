@@ -1,6 +1,14 @@
 {
     "type": "project",
-    "license": "proprietary",
+    "license": "NPOSL-3.0",
+    "authors": [
+        {
+            "name": "Picasso Houessou",
+            "email": "houessoupicasso@yahoo.fr",
+            "homepage": "https://picassohouessou.com",
+            "role": "Developer"
+        }
+    ]
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
