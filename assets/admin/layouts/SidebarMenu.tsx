@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {NavLink} from "react-router-dom";
-import {applicationsMenu, dashboardMenu} from "@Admin/data/Menu";
-import {withTranslation, WithTranslation} from "react-i18next";
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+import { applicationsMenu, dashboardMenu } from '@Admin/data/Menu';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 interface SidebarMenuProps extends WithTranslation {
     onUpdateSize: () => void;
@@ -71,18 +71,18 @@ class SidebarMenu extends Component<SidebarMenuProps> {
     };
 
     render() {
-        const {t} = this.props;
+        const { t } = this.props;
         return (
             <React.Fragment>
                 <div className="nav-group show">
                     <div className="nav-label" onClick={this.toggleMenu}>
-                        {t("Tableau de bord")}
+                        {t('Tableau de bord')}
                     </div>
                     {this.populateMenu(dashboardMenu)}
                 </div>
                 <div className="nav-group show">
                     <div className="nav-label" onClick={this.toggleMenu}>
-                        {t("Modules")}
+                        {t('Modules')}
                     </div>
                     {this.populateMenu(applicationsMenu)}
                 </div>

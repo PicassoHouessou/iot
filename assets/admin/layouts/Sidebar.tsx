@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import {AdminPages} from '@Admin/constants';
-import {WithTranslation, withTranslation} from "react-i18next";
-import SidebarMenu from "@Admin/layouts/SidebarMenu";
+import { AdminPages } from '@Admin/constants';
+import { WithTranslation, withTranslation } from 'react-i18next';
+import SidebarMenu from '@Admin/layouts/SidebarMenu';
 
 interface SidebarProps extends WithTranslation {
     onUpdateSize?: () => void;
@@ -45,7 +45,6 @@ class Sidebar extends Component<SidebarProps> {
         );
     }
 }
-
 
 window.addEventListener('click', function (e) {
     // Close sidebar footer menu when clicked outside of it

@@ -1,4 +1,4 @@
-import {AdminPages} from '@Admin/constants';
+import { AdminPages } from '@Admin/constants';
 
 const dashboardMenu = [
     {
@@ -31,5 +31,4 @@ const applicationsMenu = [
     },
 ];
 
-
-export {dashboardMenu, applicationsMenu};
+export { dashboardMenu, applicationsMenu };

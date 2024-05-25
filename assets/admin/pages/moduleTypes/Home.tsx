@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useMemo, useState} from 'react';
+import {Button, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import type { GetProp, MenuProps, TableProps } from 'antd';
-import { Dropdown, Table } from 'antd';
-import {
-    useDeleteModuleMutation,
-    useModuleTypesJsonLdQuery,
-} from '@Admin/services/modulesApi';
-import { ModuleType } from '@Admin/models';
-import { getErrorMessage } from '@Admin/utils';
-import { AdminPages } from '@Admin/constants';
-import { toast } from 'react-toastify';
-import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
+import {useSkinMode} from '@Admin/hooks';
+import type {GetProp, MenuProps, TableProps} from 'antd';
+import {Dropdown, Table} from 'antd';
+import {useDeleteModuleMutation, useModuleTypesJsonLdQuery,} from '@Admin/services/modulesApi';
+import {ModuleType} from '@Admin/models';
+import {formatDate, getErrorMessage} from '@Admin/utils';
+import {AdminPages} from '@Admin/constants';
+import {toast} from 'react-toastify';
+import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
+import {useAppSelector} from "@Admin/store/store";
+import {selectCurrentLocale} from "@Admin/features/localeSlice";
+import {useTranslation} from "react-i18next";
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -27,6 +27,8 @@ interface TableParams {
 }
 
 export default function Home() {
+    const currentLocale = useAppSelector(selectCurrentLocale);
+    const {t} = useTranslation();
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
     const [data, setData] = useState<ModuleType[]>();
@@ -42,7 +44,7 @@ export default function Home() {
         handleSearch,
         setSearchFormValue,
     } = useFiltersQuery();
-    const { current: currentPage, itemsPerPage } = pagination;
+    const {current: currentPage, itemsPerPage} = pagination;
     const [tableParams, setTableParams] = useState<TableParams>({
         pagination: {
             current: currentPage,
@@ -58,7 +60,7 @@ export default function Home() {
         setData,
     });
 
-    const { isLoading: loading, data: dataApis } = useModuleTypesJsonLdQuery(query);
+    const {isLoading: loading, data: dataApis} = useModuleTypesJsonLdQuery(query);
 
     const handleDelete = async (id: any) => {
         if (window.confirm('Etes-vous sûr')) {
@@ -66,30 +68,38 @@ export default function Home() {
                 await deleteItem(id).unwrap();
                 toast.success('Element supprimé');
             } catch (err) {
-                const { detail } = getErrorMessage(err);
+                const {detail} = getErrorMessage(err);
                 toast.error(detail);
             }
         }
     };
-    const columns: ColumnsType<ModuleType> = [
+    const columns: ColumnsType<ModuleType> = useMemo(() => [
         {
-            title: 'Nom',
+            title: t('Nom'),
             dataIndex: 'name',
             sorter: true,
         },
         {
-            title: 'Unité',
+            title: t('Unité'),
             dataIndex: 'unitOfMeasure',
             sorter: true,
         },
         {
-            title: 'Minimum',
+            title: t('Minimum'),
             dataIndex: 'minValue',
             sorter: true,
         },
         {
-            title: 'Maximum',
+            title: t('Maximum'),
             dataIndex: 'maxValue',
+            sorter: true,
+        },
+        {
+            title: t('Date de création'),
+            dataIndex: 'createdAt',
+            render: (date: string) => {
+                return formatDate(date, currentLocale)
+            },
             sorter: true,
         },
         {
@@ -99,17 +109,6 @@ export default function Home() {
             width: 100,
             render: (text, record) => {
                 const items: MenuProps['items'] = [
-                    {
-                        label: (
-                            <Link
-                                className="details"
-                                to={`${AdminPages.MODULE_TYPES_SEE}/${record.id}`}
-                            >
-                                <i className="ri-information-line"></i> Voir Détails
-                            </Link>
-                        ),
-                        key: '0',
-                    },
                     {
                         label: (
                             <Link
@@ -135,13 +134,13 @@ export default function Home() {
                 ];
 
                 return (
-                    <Dropdown className="" menu={{ items }}>
+                    <Dropdown className="" menu={{items}}>
                         <i className="ri-more-2-fill"></i>
                     </Dropdown>
                 );
             },
         },
-    ];
+    ], [currentLocale]);
 
     useEffect(() => {
         if (dataApis) {
@@ -183,7 +182,7 @@ export default function Home() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -257,7 +256,7 @@ export default function Home() {
                     />
                 </Row>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );

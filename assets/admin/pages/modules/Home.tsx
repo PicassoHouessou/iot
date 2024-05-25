@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useMemo, useState} from 'react';
+import {Button, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import type { GetProp, MenuProps, TableProps } from 'antd';
-import { Dropdown, Table } from 'antd';
-import {
-    useDeleteModuleMutation,
-    useModulesJsonLdQuery,
-} from '@Admin/services/modulesApi';
-import { Module } from '@Admin/models';
-import { getErrorMessage } from '@Admin/utils';
-import { AdminPages } from '@Admin/constants';
-import { toast } from 'react-toastify';
-import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
-import { useTranslation } from 'react-i18next';
+import {useSkinMode} from '@Admin/hooks';
+import type {GetProp, MenuProps, TableProps} from 'antd';
+import {Dropdown, Table} from 'antd';
+import {useDeleteModuleMutation, useModulesJsonLdQuery,} from '@Admin/services/modulesApi';
+import {Module} from '@Admin/models';
+import {formatDate, getErrorMessage} from '@Admin/utils';
+import {AdminPages} from '@Admin/constants';
+import {toast} from 'react-toastify';
+import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
+import {useTranslation} from 'react-i18next';
+import {useAppSelector} from "@Admin/store/store";
+import {selectCurrentLocale} from "@Admin/features/localeSlice";
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -28,7 +27,9 @@ interface TableParams {
 }
 
 export default function Home() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
+    const currentLocale = useAppSelector(selectCurrentLocale);
+
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
     const {
@@ -43,8 +44,8 @@ export default function Home() {
         handleSearch,
         setSearchFormValue,
     } = useFiltersQuery();
-    const { current: currentPage, itemsPerPage } = pagination;
-    const { isLoading: loading, error, data: dataApis } = useModulesJsonLdQuery(query);
+    const {current: currentPage, itemsPerPage} = pagination;
+    const {isLoading: loading, error, data: dataApis} = useModulesJsonLdQuery(query);
     const [data, setData] = useState<Module[]>();
 
     const [tableParams, setTableParams] = useState<TableParams>({
@@ -68,12 +69,13 @@ export default function Home() {
                 await deleteItem(id).unwrap();
                 //toast.success(t("cms Deleted Successfully"));
             } catch (err) {
-                const { detail } = getErrorMessage(err);
+                const {detail} = getErrorMessage(err);
                 toast.error(detail);
             }
         }
     };
-    const columns: ColumnsType<Module> = [
+
+    const columns: ColumnsType<Module> = useMemo(() => [
         {
             title: t('Nom'),
             dataIndex: 'name',
@@ -90,8 +92,11 @@ export default function Home() {
             },
         },
         {
-            title: t('Date'),
+            title: t('Date de création'),
             dataIndex: 'createdAt',
+            render: (date: string) => {
+                return formatDate(date, currentLocale)
+            },
             sorter: true,
         },
         {
@@ -137,13 +142,13 @@ export default function Home() {
                 ];
 
                 return (
-                    <Dropdown className="" menu={{ items }}>
+                    <Dropdown className="" menu={{items}}>
                         <i className="ri-more-2-fill"></i>
                     </Dropdown>
                 );
             },
         },
-    ];
+    ], [currentLocale]);
 
     useEffect(() => {
         if (dataApis) {
@@ -182,7 +187,7 @@ export default function Home() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -204,12 +209,6 @@ export default function Home() {
                             <i className="ri-bar-chart-2-line fs-18 lh-1"></i>
                             {t('Exporter')}
                             <span className="d-none d-sm-inline"> {t('Rapport')}</span>
-                        </Button>
-                        <Button
-                            variant=""
-                            className="btn-white d-flex align-items-center gap-2"
-                        >
-                            <i className="ri-printer-line fs-18 lh-1"></i>Print
                         </Button>
                         <Link to={AdminPages.MODULES_ADD}>
                             <Button
@@ -262,7 +261,7 @@ export default function Home() {
                     />
                 </Row>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );
