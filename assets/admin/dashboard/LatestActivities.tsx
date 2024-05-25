@@ -1,22 +1,22 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Card, Nav, Spinner} from 'react-bootstrap';
-import {ModuleHistory} from '@Admin/models';
-import {useTranslation} from 'react-i18next';
-import {List, Tag} from 'antd';
-import {useModuleHistoriesJsonLdQuery} from '@Admin/services/modulesApi';
-import {parseDate} from "@Admin/utils";
-import {useAppSelector} from "@Admin/store/store";
-import {selectCurrentLocale} from "@Admin/features/localeSlice";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Card, Nav, Spinner } from 'react-bootstrap';
+import { ModuleHistory } from '@Admin/models';
+import { useTranslation } from 'react-i18next';
+import { List, Tag } from 'antd';
+import { useModuleHistoriesJsonLdQuery } from '@Admin/services/modulesApi';
+import { parseDate } from '@Admin/utils';
+import { useAppSelector } from '@Admin/store/store';
+import { selectCurrentLocale } from '@Admin/features/localeSlice';
 
 const LatestActivities = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const currentLocale = useAppSelector(selectCurrentLocale);
 
     const [query, setQuery] = useState<any>({
         'order[createdAt]': 'desc',
         itemsPerPage: 10,
     });
-    const {data: histories, isLoading} = useModuleHistoriesJsonLdQuery(query);
+    const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query);
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [list, setList] = useState<ModuleHistory[]>([]);
     const loadMoreRef = useRef(null);
@@ -64,7 +64,7 @@ const LatestActivities = () => {
                     onLoadMore();
                 }
             },
-            {threshold: 1.0},
+            { threshold: 1.0 },
         );
 
         const currentRef = loadMoreRef.current;
@@ -101,7 +101,7 @@ const LatestActivities = () => {
                                     {t('Valeur mesurée')}:{' '}
                                     {`${item.value} ${item?.module?.type?.unitOfMeasure}`}
                                 </strong>
-                                <br/>
+                                <br />
                             </p>
                             <Tag color={item?.status?.color}>{item?.status?.name}</Tag>
                         </div>
@@ -126,7 +126,7 @@ const LatestActivities = () => {
             </Card.Header>
             <Card.Body
                 className="p-3 mt-3 mb-3 overflow-auto "
-                style={{maxHeight: '350px'}}
+                style={{ maxHeight: '350px' }}
             >
                 <ul className="events-list mt-2 mb-2">
                     <List

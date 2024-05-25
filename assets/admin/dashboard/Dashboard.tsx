@@ -1,16 +1,16 @@
-import React, {useMemo, useRef, useState} from 'react';
-import {Button, Col, Row} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import React, { useMemo, useRef, useState } from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Footer from '../layouts/Footer';
 import Header from '../layouts/Header';
-import {useSkinMode} from '@Admin/hooks';
-import {useStatisticsQuery} from '@Admin/services/statisticApi';
+import { useSkinMode } from '@Admin/hooks';
+import { useStatisticsQuery } from '@Admin/services/statisticApi';
 import TotalStatistic from '@Admin/components/TotalStatistic';
-import {StatisticEnum} from '@Admin/constants';
-import {Tour, TourProps} from 'antd';
-import {useTranslation} from 'react-i18next';
-import {useSimulateMutation} from '@Admin/services/commandApi';
-import {toast} from 'react-toastify';
+import { StatisticEnum } from '@Admin/constants';
+import { Tour, TourProps } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { useSimulateMutation } from '@Admin/services/commandApi';
+import { toast } from 'react-toastify';
 import ChartBarModuleType from '@Admin/dashboard/ChartBarModuleType';
 import ChartPolarAreaSummaryType from '@Admin/dashboard/ChartPolarAreaSummaryType';
 import ChartProgressBarSummaryType from '@Admin/dashboard/ChartProgressBarSummaryType';
@@ -18,9 +18,8 @@ import ChartDonutSummaryType from '@Admin/dashboard/ChartDonutSummaryType';
 import ChartSummaryStatus from '@Admin/dashboard/CharSummaryStatus';
 import LatestActivities from '@Admin/dashboard/LatestActivities';
 
-
 export default function Dashboard() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const tourStep1 = useRef(null);
     const tourStep2 = useRef(null);
     const tourStep3 = useRef(null);
@@ -28,7 +27,7 @@ export default function Dashboard() {
     const tourStep5 = useRef(null);
     const tourStep6 = useRef(null);
     const tourStep7 = useRef(null);
-    const {data: statisticsData} = useStatisticsQuery();
+    const { data: statisticsData } = useStatisticsQuery();
     const [openTour, setOpenTour] = useState<boolean>(false);
 
     const [isSimulating, setIsSimulating] = useState<boolean>(false);
@@ -94,8 +93,8 @@ export default function Dashboard() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin}/>
-            <div className="position-fixed" style={{zIndex: 9999}}>
+            <Header onSkin={setSkin} />
+            <div className="position-fixed" style={{ zIndex: 9999 }}>
                 {/*<Alert*/}
                 {/*    variant="info"*/}
                 {/*    show={!openTour}*/}
@@ -172,28 +171,28 @@ export default function Dashboard() {
                         </Row>
                     </Col>
                     <Col xl="7" ref={tourStep2}>
-                        <ChartBarModuleType data={statisticsData}/>
+                        <ChartBarModuleType data={statisticsData} />
                     </Col>
                     <Col xl="5" ref={tourStep3}>
-                        <ChartPolarAreaSummaryType data={statisticsData}/>
+                        <ChartPolarAreaSummaryType data={statisticsData} />
                     </Col>
                     <Col xl="7" ref={tourStep4}>
-                        <ChartProgressBarSummaryType data={statisticsData}/>
+                        <ChartProgressBarSummaryType data={statisticsData} />
                     </Col>
                     <Col xl="5" ref={tourStep5}>
-                        <ChartDonutSummaryType data={statisticsData}/>
+                        <ChartDonutSummaryType data={statisticsData} />
                     </Col>
                 </Row>
                 <Row className="g-3 mt-3 justify-content-center">
                     <Col xl="6" ref={tourStep6}>
-                        <ChartSummaryStatus data={statisticsData}/>
+                        <ChartSummaryStatus data={statisticsData} />
                     </Col>
                     <Col xl="6" ref={tourStep7}>
-                        <LatestActivities/>
+                        <LatestActivities />
                     </Col>
                 </Row>
-                <Tour open={openTour} onClose={() => setOpenTour(false)} steps={steps}/>
-                <Footer/>
+                <Tour open={openTour} onClose={() => setOpenTour(false)} steps={steps} />
+                <Footer />
             </div>
         </React.Fragment>
     );

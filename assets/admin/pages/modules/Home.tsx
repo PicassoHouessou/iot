@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Button, Row} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
@@ -13,8 +13,8 @@ import {AdminPages} from '@Admin/constants';
 import {toast} from 'react-toastify';
 import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
 import {useTranslation} from 'react-i18next';
-import {useAppSelector} from "@Admin/store/store";
-import {selectCurrentLocale} from "@Admin/features/localeSlice";
+import {useAppSelector} from '@Admin/store/store';
+import {selectCurrentLocale} from '@Admin/features/localeSlice';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -63,92 +63,95 @@ export default function Home() {
         setData,
     });
 
-    const handleDelete = async (id: any) => {
+    const handleDelete = useCallback(async (id: any) => {
         if (window.confirm(t('Etes-vous sûr'))) {
             try {
                 await deleteItem(id).unwrap();
-                //toast.success(t("cms Deleted Successfully"));
+                toast.success(t("Elément supprimé"));
             } catch (err) {
                 const {detail} = getErrorMessage(err);
                 toast.error(detail);
             }
         }
-    };
+    }, [deleteItem, t]);
 
-    const columns: ColumnsType<Module> = useMemo(() => [
-        {
-            title: t('Nom'),
-            dataIndex: 'name',
-            sorter: true,
-            width: '20%',
-        },
-        {
-            title: t('Type'),
-            dataIndex: 'type',
-            width: '20%',
-            sorter: true,
-            render: (type) => {
-                return type?.name;
+    const columns: ColumnsType<Module> = useMemo(
+        () => [
+            {
+                title: t('Nom'),
+                dataIndex: 'name',
+                sorter: true,
+                width: '20%',
             },
-        },
-        {
-            title: t('Date de création'),
-            dataIndex: 'createdAt',
-            render: (date: string) => {
-                return formatDate(date, currentLocale)
+            {
+                title: t('Type'),
+                dataIndex: 'type',
+                width: '20%',
+                sorter: true,
+                render: (type) => {
+                    return type?.name;
+                },
             },
-            sorter: true,
-        },
-        {
-            title: t('Action'),
-            key: 'operation',
-            fixed: 'right',
-            width: 100,
-            render: (text, record) => {
-                const items: MenuProps['items'] = [
-                    {
-                        label: (
-                            <Link
-                                className="details"
-                                to={`${AdminPages.MODULES_SEE}/${record.id}`}
-                            >
-                                <i className="ri-information-line"></i> Voir Détails
-                            </Link>
-                        ),
-                        key: '0',
-                    },
-                    {
-                        label: (
-                            <Link
-                                className="details"
-                                to={`${AdminPages.MODULES_EDIT}/${record.id}`}
-                            >
-                                <i className="ri-edit-line"></i> Modifier
-                            </Link>
-                        ),
-                        key: '1',
-                    },
-                    {
-                        label: (
-                            <span
-                                className="details"
-                                onClick={() => handleDelete(record.id)}
-                            >
-                                <i className="ri-delete-bin-line"></i> Delete
-                            </span>
-                        ),
-                        key: '2',
-                    },
-                ];
+            {
+                title: t('Date de création'),
+                dataIndex: 'createdAt',
+                render: (date: string) => {
+                    return formatDate(date, currentLocale);
+                },
+                sorter: true,
+            },
+            {
+                title: t('Action'),
+                key: 'operation',
+                fixed: 'right',
+                width: 100,
+                render: (text, record) => {
+                    const items: MenuProps['items'] = [
+                        {
+                            label: (
+                                <Link
+                                    className="details"
+                                    to={`${AdminPages.MODULES_SEE}/${record.id}`}
+                                >
+                                    <i className="ri-information-line"></i> Voir Détails
+                                </Link>
+                            ),
+                            key: '0',
+                        },
+                        {
+                            label: (
+                                <Link
+                                    className="details"
+                                    to={`${AdminPages.MODULES_EDIT}/${record.id}`}
+                                >
+                                    <i className="ri-edit-line"></i> Modifier
+                                </Link>
+                            ),
+                            key: '1',
+                        },
+                        {
+                            label: (
+                                <span
+                                    className="details"
+                                    onClick={() => handleDelete(record.id)}
+                                >
+                                    <i className="ri-delete-bin-line"></i> Delete
+                                </span>
+                            ),
+                            key: '2',
+                        },
+                    ];
 
-                return (
-                    <Dropdown className="" menu={{items}}>
-                        <i className="ri-more-2-fill"></i>
-                    </Dropdown>
-                );
+                    return (
+                        <Dropdown className="" menu={{items}}>
+                            <i className="ri-more-2-fill"></i>
+                        </Dropdown>
+                    );
+                },
             },
-        },
-    ], [currentLocale]);
+        ],
+        [currentLocale, handleDelete, t],
+    );
 
     useEffect(() => {
         if (dataApis) {
