@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Filter\ModuleStatusSearchFilter;
 use App\Repository\ModuleStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -36,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'slug' => 'partial'])]
+#[ApiFilter(filterClass: ModuleStatusSearchFilter::class)]
 #[ORM\Entity(repositoryClass: ModuleStatusRepository::class)]
 #[UniqueEntity("name")]
 #[UniqueEntity("slug")]

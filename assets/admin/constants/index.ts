@@ -56,6 +56,7 @@ export enum AdminPages {
     MODULE_STATUSES_ADD = '/modules/statuses/add',
     PROFILES = '/profiles',
     CALENDAR = '/calendar',
+    SIGN_IN = '/signin',
 }
 
 type BaseApiFilters = 'search' | 'page';
@@ -82,4 +83,11 @@ export enum StatisticEnum {
     MODULE_TYPE,
     MODULE_HISTORY,
     MODULE_STATUS,
+}
+
+export enum DATE_FORMAT {
+    LT = 'LT',
+    LTS = 'LTS',
+    DATE = 'LL',
+    DATETIME = 'LLLL',
 }

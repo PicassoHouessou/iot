@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Filter\ModuleTypeSearchFilter;
 use App\Repository\ModuleTypeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,6 +39,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity("name")]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description', 'unitOfMeasure', 'unitDescription', 'minValue', 'maxValue'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'unitOfMeasure' => 'exact', 'unitDescription' => 'partial', 'minValue' => 'partial', 'maxValue' => 'partial'])]
+#[ApiFilter(filterClass: ModuleTypeSearchFilter::class)]
 #[ORM\Entity(repositoryClass: ModuleTypeRepository::class)]
 class ModuleType
 {

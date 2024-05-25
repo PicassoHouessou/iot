@@ -34,12 +34,6 @@ export default function Logs() {
                             Generate
                             <span className="d-none d-sm-inline"> Report</span>
                         </Button>
-                        <Button
-                            variant=""
-                            className="btn-white d-flex align-items-center gap-2"
-                        >
-                            <i className="ri-printer-line fs-18 lh-1"></i>Print
-                        </Button>
                         <Link to="/modules/add">
                             <Button
                                 variant="primary"

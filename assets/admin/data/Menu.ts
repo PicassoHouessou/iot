@@ -31,35 +31,4 @@ const applicationsMenu = [
     },
 ];
 
-const pagesMenu = [
-    {
-        id: 27,
-        label: 'Authentication',
-        icon: 'ri-lock-2-line',
-        submenu: [
-            {
-                label: 'Sign In Basic',
-                link: '/signin',
-            },
-
-            {
-                label: 'Sign Up Basic',
-                link: '/signup',
-            },
-            {
-                label: 'Verify Account',
-                link: '/verify',
-            },
-            {
-                label: 'Forgot Password',
-                link: '/forgot',
-            },
-            {
-                label: 'Lock Screen',
-                link: '/lock',
-            },
-        ],
-    },
-];
-
-export { dashboardMenu, applicationsMenu, pagesMenu };
+export { dashboardMenu, applicationsMenu };

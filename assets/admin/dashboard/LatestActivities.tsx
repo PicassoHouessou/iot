@@ -3,11 +3,15 @@ import { Card, Nav, Spinner } from 'react-bootstrap';
 import { ModuleHistory } from '@Admin/models';
 import { useTranslation } from 'react-i18next';
 import { List, Tag } from 'antd';
-import dayjs from 'dayjs';
 import { useModuleHistoriesJsonLdQuery } from '@Admin/services/modulesApi';
+import { parseDate } from '@Admin/utils';
+import { useAppSelector } from '@Admin/store/store';
+import { selectCurrentLocale } from '@Admin/features/localeSlice';
 
 const LatestActivities = () => {
     const { t } = useTranslation();
+    const currentLocale = useAppSelector(selectCurrentLocale);
+
     const [query, setQuery] = useState<any>({
         'order[createdAt]': 'desc',
         itemsPerPage: 10,
@@ -78,7 +82,7 @@ const LatestActivities = () => {
 
     const renderItem = (item: ModuleHistory, index: number) => {
         const addRef = list?.length > 1 && index === list?.length - 3 ? true : false;
-        const createdAt = dayjs(item.createdAt);
+        const createdAt = parseDate(item.createdAt, currentLocale);
         return (
             <>
                 <li key={index} className={''} ref={addRef ? loadMoreRef : null}>

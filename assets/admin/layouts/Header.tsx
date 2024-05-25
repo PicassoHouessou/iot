@@ -5,6 +5,7 @@ import userAvatar from '../assets/img/img1.jpg';
 import notification from '../data/Notification';
 import LanguageSwitcher from '@Admin/components/LanguagueSwitcher';
 import { useTranslation } from 'react-i18next';
+import { AdminPages } from '@Admin/constants';
 
 export default function Header({
     onSkin,
@@ -287,7 +288,7 @@ export default function Header({
                             <img src={userAvatar} alt="" />
                         </div>
                         <nav className="nav">
-                            <Link to={'/signin'}>
+                            <Link to={AdminPages.SIGN_IN}>
                                 <i className="ri-logout-box-r-line"></i>{' '}
                                 {t('Se Déconnecter')}
                             </Link>

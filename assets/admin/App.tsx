@@ -20,6 +20,7 @@ import './scss/style.scss';
 import InternalServerError from '@Admin/pages/InternalServerError';
 import { useTranslation } from 'react-i18next';
 import { defaultLocale } from '@Admin/constants/language';
+import { AdminPages } from '@Admin/constants';
 
 // set skin on load
 window.addEventListener('load', function () {
@@ -103,7 +104,10 @@ export default function App() {
                                 ))}
                             </Route>
                         ) : (
-                            <Route path="/" element={<Navigate to="/signin" replace />} />
+                            <Route
+                                path="/"
+                                element={<Navigate to={AdminPages.SIGN_IN} replace />}
+                            />
                         )}
                         {publicRoutes.map((route, index) => (
                             <Route

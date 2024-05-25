@@ -6,12 +6,14 @@ import { getErrorMessage } from '@Admin/utils/getErrorMessage';
 import { useLoginMutation } from '@Admin/services/usersApi';
 import { useAppDispatch } from '@Admin/store/store';
 import { AdminPages } from '@Admin/constants';
+import { useTranslation } from 'react-i18next';
 
 const form = {
     email: 'admin@otp.picassohouessou.com',
     password: 'admin',
 };
 export default function Signin() {
+    const { t } = useTranslation();
     const [formValue, setFormValue] = useState(form);
     const { email, password } = formValue;
     //eslint-disable-next-line
@@ -61,12 +63,14 @@ export default function Signin() {
                     <Link to="/" className="header-logo mb-4">
                         IoTAdmin
                     </Link>
-                    <Card.Title>Sign In</Card.Title>
+                    <Card.Title>{t('Se Connecter')}</Card.Title>
                     <Card.Text>
-                        Welcome back! Please signin to continue. You can use
+                        {t(
+                            'Bienvenue ! Veuillez vous connecter pour continuer. Vous pouvez utiliser',
+                        )}
                         <ul>
-                            <li>Email: admin@otp.picassohouessou.com</li>
-                            <li>Password : admin</li>
+                            <li>{'Email:'} admin@otp.picassohouessou.com</li>
+                            <li>{t('Mot de passe :')} admin</li>
                         </ul>
                     </Card.Text>
                 </Card.Header>
@@ -76,7 +80,7 @@ export default function Signin() {
                             <Form.Label>Adresse email</Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Enter your email address"
+                                placeholder={t('Entrer votre adresse email')}
                                 value={email}
                                 onChange={setFormChange}
                             />
@@ -87,13 +91,13 @@ export default function Signin() {
                             </Form.Label>
                             <Form.Control
                                 type="password"
-                                placeholder="Enter your password"
+                                placeholder={t('Entrer votre mot de passe')}
                                 value={password}
                                 onChange={setFormChange}
                             />
                         </div>
                         <Button type="submit" variant="primary" className="btn-sign">
-                            Sign In
+                            {t('Se Connecter')}
                         </Button>
 
                         <div className="divider">

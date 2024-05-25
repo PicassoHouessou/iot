@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Alert, Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Footer from '../layouts/Footer';
 import Header from '../layouts/Header';
@@ -7,9 +7,7 @@ import { useSkinMode } from '@Admin/hooks';
 import { useStatisticsQuery } from '@Admin/services/statisticApi';
 import TotalStatistic from '@Admin/components/TotalStatistic';
 import { StatisticEnum } from '@Admin/constants';
-import dayjs from 'dayjs';
 import { Tour, TourProps } from 'antd';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import { useTranslation } from 'react-i18next';
 import { useSimulateMutation } from '@Admin/services/commandApi';
 import { toast } from 'react-toastify';
@@ -19,8 +17,6 @@ import ChartProgressBarSummaryType from '@Admin/dashboard/ChartProgressBarSummar
 import ChartDonutSummaryType from '@Admin/dashboard/ChartDonutSummaryType';
 import ChartSummaryStatus from '@Admin/dashboard/CharSummaryStatus';
 import LatestActivities from '@Admin/dashboard/LatestActivities';
-
-dayjs.extend(relativeTime);
 
 export default function Dashboard() {
     const { t } = useTranslation();
@@ -34,6 +30,7 @@ export default function Dashboard() {
     const { data: statisticsData } = useStatisticsQuery();
     const [openTour, setOpenTour] = useState<boolean>(false);
 
+    const [isSimulating, setIsSimulating] = useState<boolean>(false);
     const [simulateModule] = useSimulateMutation();
 
     const [, setSkin] = useSkinMode();
@@ -98,19 +95,19 @@ export default function Dashboard() {
         <React.Fragment>
             <Header onSkin={setSkin} />
             <div className="position-fixed" style={{ zIndex: 9999 }}>
-                <Alert
-                    variant="info"
-                    show={!openTour}
-                    onClose={() => setOpenTour(false)}
-                    dismissible
-                    className="top-0 start-50 d-flex align-items-center mb-2"
-                >
-                    <i className="ri-information-line"></i>{' '}
-                    {t("Bienvenue dans l'application de simulation des module IOT.")}
-                    <span onClick={() => setOpenTour(true)}>
-                        {t('Cliquez ici pour voir le guide de démarrage')}
-                    </span>
-                </Alert>
+                {/*<Alert*/}
+                {/*    variant="info"*/}
+                {/*    show={!openTour}*/}
+                {/*    onClose={() => setOpenTour(false)}*/}
+                {/*    dismissible*/}
+                {/*    className="top-0 start-50 d-flex align-items-center mb-2"*/}
+                {/*>*/}
+                {/*    <i className="ri-information-line"></i>{' '}*/}
+                {/*    {t("Bienvenue dans l'application de simulation des module IOT.")}*/}
+                {/*    <span onClick={() => setOpenTour(true)}>*/}
+                {/*        {t('Cliquez ici pour voir le guide de démarrage')}*/}
+                {/*    </span>*/}
+                {/*</Alert>*/}
             </div>
 
             <div className="main main-app p-3 p-lg-4">
@@ -125,13 +122,17 @@ export default function Dashboard() {
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0" ref={tourStep1}>
                         <Button
+                            disabled={isSimulating}
                             onClick={async (e) => {
                                 e.preventDefault();
                                 try {
+                                    setIsSimulating(true);
                                     await simulateModule().unwrap();
-                                    toast.error(t('Simulation réussie'));
+                                    toast.success(t('Simulation réussie'));
                                 } catch (e) {
                                     toast.error(t('Une erreur est survenue'));
+                                } finally {
+                                    setIsSimulating(false);
                                 }
                             }}
                             variant="primary"
