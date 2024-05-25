@@ -56,6 +56,7 @@ export enum AdminPages {
     MODULE_STATUSES_ADD = '/modules/statuses/add',
     PROFILES = '/profiles',
     CALENDAR = '/calendar',
+    SIGN_IN = "/signin",
 }
 
 type BaseApiFilters = 'search' | 'page';

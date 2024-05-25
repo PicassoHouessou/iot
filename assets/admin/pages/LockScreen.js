@@ -3,6 +3,7 @@ import {Button, Card, Form} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
 import img1 from "../assets/img/img1.jpg";
+import {AdminPages} from "@Admin/constants";
 
 export default function LockScreen() {
     return (
@@ -23,7 +24,7 @@ export default function LockScreen() {
                     <Button variant="primary" className="btn-sign">Unlock</Button>
                 </Card.Body>
                 <Card.Footer>
-                    Not you? <Link to="//signin">Sign in with different account</Link>
+                    Not you? <Link to={AdminPages.SIGN_IN}>Sign in with different account</Link>
                 </Card.Footer>
             </Card>
         </div>

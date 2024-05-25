@@ -1,13 +1,13 @@
-import React, { ErrorInfo, ReactNode } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import React, {ErrorInfo, ReactNode} from 'react';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
+import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Main from './layouts/Main';
 import NotFound from './pages/NotFound';
-import { useAuth } from './hooks';
+import {useAuth} from './hooks';
 import frFR from 'antd/locale/fr_FR';
 import enUS from 'antd/locale/en_US';
-import { ConfigProvider } from 'antd';
+import {ConfigProvider} from 'antd';
 
 import publicRoutes from './routes/PublicRoutes';
 import protectedRoutes from './routes/ProtectedRoutes';
@@ -18,8 +18,9 @@ import './assets/css/remixicon.css';
 // import scss
 import './scss/style.scss';
 import InternalServerError from '@Admin/pages/InternalServerError';
-import { useTranslation } from 'react-i18next';
-import { defaultLocale } from '@Admin/constants/language';
+import {useTranslation} from 'react-i18next';
+import {defaultLocale} from '@Admin/constants/language';
+import {AdminPages} from "@Admin/constants";
 
 // set skin on load
 window.addEventListener('load', function () {
@@ -46,7 +47,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
     public static getDerivedStateFromError(): State {
         // Update state so the next render will show the fallback UI.
-        return { hasError: true };
+        return {hasError: true};
     }
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -56,7 +57,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
     public render() {
         if (this.state.hasError) {
-            return <InternalServerError />;
+            return <InternalServerError/>;
         }
 
         return this.props.children;
@@ -64,8 +65,8 @@ class ErrorBoundary extends React.Component<Props, State> {
 }
 
 export default function App() {
-    const { user } = useAuth();
-    const { i18n } = useTranslation();
+    const {user} = useAuth();
+    const {i18n} = useTranslation();
 
     const isAuthorized = (user: any) => {
         if (user == null) {
@@ -93,7 +94,7 @@ export default function App() {
                     />
                     <Routes>
                         {isAuthorized(user) ? (
-                            <Route path="/" element={<Main />}>
+                            <Route path="/" element={<Main/>}>
                                 {protectedRoutes.map((route, index) => (
                                     <Route
                                         path={route.path}
@@ -103,7 +104,7 @@ export default function App() {
                                 ))}
                             </Route>
                         ) : (
-                            <Route path="/" element={<Navigate to="/signin" replace />} />
+                            <Route path="/" element={<Navigate to={AdminPages.SIGN_IN} replace/>}/>
                         )}
                         {publicRoutes.map((route, index) => (
                             <Route
@@ -112,7 +113,7 @@ export default function App() {
                                 key={index}
                             />
                         ))}
-                        <Route path="*" element={<NotFound />} />
+                        <Route path="*" element={<NotFound/>}/>
                     </Routes>
                 </BrowserRouter>
             </ErrorBoundary>

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import {Button, Card, Col, Form, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
+import {AdminPages} from "@Admin/constants";
 
 export default function Signup() {
     return (
@@ -23,11 +24,11 @@ export default function Signup() {
                     </div>
                     <div className="mb-3">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Enter your password" />
+                        <Form.Control type="password" placeholder="Enter your password"/>
                     </div>
                     <div className="mb-3">
                         <Form.Label>Full name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter your full name" />
+                        <Form.Control type="text" placeholder="Enter your full name"/>
                     </div>
                     <div className="mb-4">
                         <small>
@@ -57,7 +58,7 @@ export default function Signup() {
                     </Row>
                 </Card.Body>
                 <Card.Footer>
-                    Already have an account? <Link to="//signin">Sign In</Link>
+                    Already have an account? <Link to={AdminPages.SIGN_IN}>Sign In</Link>
                 </Card.Footer>
             </Card>
         </div>
