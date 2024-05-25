@@ -8,7 +8,13 @@ module.exports = {
     defaultNamespace: 'translation',
     // Default namespace used in your i18next config
 
-    defaultValue: '',
+    defaultValue: (locale, namespace, key) => {
+        // Use the key as the default value for the default locale
+        if (locale === 'fr') {
+            return key;
+        }
+        return '';
+    },
     // Default value to give to keys with no value
     // You may also specify a function accepting the locale, namespace, key, and value as arguments
 
@@ -109,7 +115,7 @@ module.exports = {
     //   "paths": ["/path/to/your/file.js"]
     // }
 
-    resetDefaultValueLocale: null,
+    resetDefaultValueLocale: 'fr',
     // The locale to compare with default values to determine whether a default value has been changed.
     // If this is set and a default value differs from a translation in the specified locale, all entries
     // for that key across locales are reset to the default value, and existing translations are moved to
