@@ -1,20 +1,23 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Button, Row} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import {useSkinMode} from '@Admin/hooks';
-import type {GetProp, MenuProps, TableProps} from 'antd';
-import {Dropdown, Table} from 'antd';
-import {useDeleteModuleMutation, useModuleTypesJsonLdQuery,} from '@Admin/services/modulesApi';
-import {ModuleType} from '@Admin/models';
-import {formatDate, getErrorMessage} from '@Admin/utils';
-import {AdminPages} from '@Admin/constants';
-import {toast} from 'react-toastify';
-import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
-import {useAppSelector} from '@Admin/store/store';
-import {selectCurrentLocale} from '@Admin/features/localeSlice';
-import {useTranslation} from 'react-i18next';
+import { useSkinMode } from '@Admin/hooks';
+import type { GetProp, MenuProps, TableProps } from 'antd';
+import { Dropdown, Table } from 'antd';
+import {
+    useDeleteModuleMutation,
+    useModuleTypesJsonLdQuery,
+} from '@Admin/services/modulesApi';
+import { ModuleType } from '@Admin/models';
+import { formatDate, getErrorMessage } from '@Admin/utils';
+import { AdminPages } from '@Admin/constants';
+import { toast } from 'react-toastify';
+import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
+import { useAppSelector } from '@Admin/store/store';
+import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import { useTranslation } from 'react-i18next';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -28,7 +31,7 @@ interface TableParams {
 
 export default function Home() {
     const currentLocale = useAppSelector(selectCurrentLocale);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
     const [data, setData] = useState<ModuleType[]>();
@@ -44,7 +47,7 @@ export default function Home() {
         handleSearch,
         setSearchFormValue,
     } = useFiltersQuery();
-    const {current: currentPage, itemsPerPage} = pagination;
+    const { current: currentPage, itemsPerPage } = pagination;
     const [tableParams, setTableParams] = useState<TableParams>({
         pagination: {
             current: currentPage,
@@ -60,19 +63,22 @@ export default function Home() {
         setData,
     });
 
-    const {isLoading: loading, data: dataApis} = useModuleTypesJsonLdQuery(query);
+    const { isLoading: loading, data: dataApis } = useModuleTypesJsonLdQuery(query);
 
-    const handleDelete = useCallback(async (id: any) => {
-        if (window.confirm(t('Etes-vous sûr'))) {
-            try {
-                await deleteItem(id).unwrap();
-                toast.success(t('Element supprimé'));
-            } catch (err) {
-                const {detail} = getErrorMessage(err);
-                toast.error(detail);
+    const handleDelete = useCallback(
+        async (id: any) => {
+            if (window.confirm(t('Etes-vous sûr'))) {
+                try {
+                    await deleteItem(id).unwrap();
+                    toast.success(t('Element supprimé'));
+                } catch (err) {
+                    const { detail } = getErrorMessage(err);
+                    toast.error(detail);
+                }
             }
-        }
-    }, [deleteItem, t]);
+        },
+        [deleteItem, t],
+    );
     const columns: ColumnsType<ModuleType> = useMemo(
         () => [
             {
@@ -135,7 +141,7 @@ export default function Home() {
                     ];
 
                     return (
-                        <Dropdown className="" menu={{items}}>
+                        <Dropdown className="" menu={{ items }}>
                             <i className="ri-more-2-fill"></i>
                         </Dropdown>
                     );
@@ -185,7 +191,7 @@ export default function Home() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin}/>
+            <Header onSkin={setSkin} />
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -259,7 +265,7 @@ export default function Home() {
                     />
                 </Row>
 
-                <Footer/>
+                <Footer />
             </div>
         </React.Fragment>
     );

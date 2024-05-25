@@ -63,17 +63,20 @@ export default function Home() {
         setData,
     });
 
-    const handleDelete = useCallback(async (id: any) => {
-        if (window.confirm(t('Etes-vous sûr'))) {
-            try {
-                await deleteItem(id).unwrap();
-                toast.success(t("Elément supprimé"));
-            } catch (err) {
-                const {detail} = getErrorMessage(err);
-                toast.error(detail);
+    const handleDelete = useCallback(
+        async (id: any) => {
+            if (window.confirm(t('Etes-vous sûr'))) {
+                try {
+                    await deleteItem(id).unwrap();
+                    toast.success(t('Elément supprimé'));
+                } catch (err) {
+                    const {detail} = getErrorMessage(err);
+                    toast.error(detail);
+                }
             }
-        }
-    }, [deleteItem, t]);
+        },
+        [deleteItem, t],
+    );
 
     const columns: ColumnsType<Module> = useMemo(
         () => [
@@ -205,14 +208,14 @@ export default function Home() {
                         <h4 className="main-title mb-0">{t('Les modules')}</h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
-                        <Button
-                            variant=""
-                            className="btn-white d-flex align-items-center gap-2"
-                        >
-                            <i className="ri-bar-chart-2-line fs-18 lh-1"></i>
-                            {t('Exporter')}
-                            <span className="d-none d-sm-inline"> {t('Rapport')}</span>
-                        </Button>
+                        {/*<Button*/}
+                        {/*    variant=""*/}
+                        {/*    className="btn-white d-flex align-items-center gap-2"*/}
+                        {/*>*/}
+                        {/*    <i className="ri-bar-chart-2-line fs-18 lh-1"></i>*/}
+                        {/*    {t('Exporter')}*/}
+                        {/*    <span className="d-none d-sm-inline"> {t('Rapport')}</span>*/}
+                        {/*</Button>*/}
                         <Link to={AdminPages.MODULES_ADD}>
                             <Button
                                 variant="primary"
