@@ -1,29 +1,29 @@
-import React, {useState} from 'react';
-import {Button, Card, Form} from 'react-bootstrap';
-import {Link, useNavigate} from 'react-router-dom';
-import {setCredentials, setTokenCredentials} from '@Admin/features/authSlice';
-import {getErrorMessage} from '@Admin/utils/getErrorMessage';
-import {useLoginMutation} from '@Admin/services/usersApi';
-import {useAppDispatch} from '@Admin/store/store';
-import {AdminPages} from '@Admin/constants';
-import {useTranslation} from "react-i18next";
+import React, { useState } from 'react';
+import { Button, Card, Form } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { setCredentials, setTokenCredentials } from '@Admin/features/authSlice';
+import { getErrorMessage } from '@Admin/utils/getErrorMessage';
+import { useLoginMutation } from '@Admin/services/usersApi';
+import { useAppDispatch } from '@Admin/store/store';
+import { AdminPages } from '@Admin/constants';
+import { useTranslation } from 'react-i18next';
 
 const form = {
     email: 'admin@otp.picassohouessou.com',
     password: 'admin',
 };
 export default function Signin() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [formValue, setFormValue] = useState(form);
-    const {email, password} = formValue;
+    const { email, password } = formValue;
     //eslint-disable-next-line
     const [errorMessage, setErrorMessage] = useState<any>(null);
     const [login] = useLoginMutation();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const setFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-        setFormValue((prevState) => ({...prevState, [name]: value}));
+        const { name, value } = e.target;
+        setFormValue((prevState) => ({ ...prevState, [name]: value }));
     };
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -38,7 +38,7 @@ export default function Signin() {
                 (res.user?.roles?.includes('ROLE_ADMIN') ||
                     res.user?.roles?.includes('ROLE_USER'))
             ) {
-                dispatch(setCredentials({user: res.user}));
+                dispatch(setCredentials({ user: res.user }));
                 dispatch(
                     setTokenCredentials({
                         token: res?.token,
@@ -63,12 +63,14 @@ export default function Signin() {
                     <Link to="/" className="header-logo mb-4">
                         IoTAdmin
                     </Link>
-                    <Card.Title>{t("Se Connecter")}</Card.Title>
+                    <Card.Title>{t('Se Connecter')}</Card.Title>
                     <Card.Text>
-                        {t("Bienvenue ! Veuillez vous connecter pour continuer. Vous pouvez utiliser")}
+                        {t(
+                            'Bienvenue ! Veuillez vous connecter pour continuer. Vous pouvez utiliser',
+                        )}
                         <ul>
-                            <li>{("Email:")} admin@otp.picassohouessou.com</li>
-                            <li>{t("Mot de passe :")} admin</li>
+                            <li>{'Email:'} admin@otp.picassohouessou.com</li>
+                            <li>{t('Mot de passe :')} admin</li>
                         </ul>
                     </Card.Text>
                 </Card.Header>
@@ -78,7 +80,7 @@ export default function Signin() {
                             <Form.Label>Adresse email</Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder={t("Entrer votre adresse email")}
+                                placeholder={t('Entrer votre adresse email')}
                                 value={email}
                                 onChange={setFormChange}
                             />
@@ -89,13 +91,13 @@ export default function Signin() {
                             </Form.Label>
                             <Form.Control
                                 type="password"
-                                placeholder={t("Entrer votre mot de passe")}
+                                placeholder={t('Entrer votre mot de passe')}
                                 value={password}
                                 onChange={setFormChange}
                             />
                         </div>
                         <Button type="submit" variant="primary" className="btn-sign">
-                            {t("Se Connecter")}
+                            {t('Se Connecter')}
                         </Button>
 
                         <div className="divider">
