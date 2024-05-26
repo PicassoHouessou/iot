@@ -1,18 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import userAvatar from '../assets/img/img1.jpg';
-import notification from '../data/Notification';
 import LanguageSwitcher from '@Admin/components/LanguagueSwitcher';
-import { useTranslation } from 'react-i18next';
-import { AdminPages } from '@Admin/constants';
+import {useTranslation} from 'react-i18next';
+import {AdminPages} from '@Admin/constants';
 
 export default function Header({
-    onSkin,
-}: {
+                                   onSkin,
+                               }: {
     onSkin: React.Dispatch<React.SetStateAction<string>>;
 }) {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const CustomToggle = React.forwardRef(
         (
             {
@@ -93,26 +92,28 @@ export default function Header({
             }
         }
     };
+    /*
+        function NotificationList() {
+            const notiList = notification.map((item, key) => {
+                return (
+                    <li className="list-group-item" key={key}>
+                        <div
+                            className={item.status === 'online' ? 'avatar online' : 'avatar'}
+                        >
+                            {item.avatar}
+                        </div>
+                        <div className="list-group-body">
+                            <p>{item.text}</p>
+                            <span>{item.date}</span>
+                        </div>
+                    </li>
+                );
+            });
 
-    function NotificationList() {
-        const notiList = notification.map((item, key) => {
-            return (
-                <li className="list-group-item" key={key}>
-                    <div
-                        className={item.status === 'online' ? 'avatar online' : 'avatar'}
-                    >
-                        {item.avatar}
-                    </div>
-                    <div className="list-group-body">
-                        <p>{item.text}</p>
-                        <span>{item.date}</span>
-                    </div>
-                </li>
-            );
-        });
 
-        return <ul className="list-group">{notiList}</ul>;
-    }
+            return <ul className="list-group">{notiList}</ul>;
+        }
+        */
 
     const skinMode = (e: any) => {
         e.preventDefault();
@@ -176,7 +177,7 @@ export default function Header({
             {/*    <input type="text" className="form-control" placeholder="Search"/>*/}
             {/*    <i className="ri-search-line"></i>*/}
             {/*</div>*/}
-            <LanguageSwitcher />
+            <LanguageSwitcher/>
             <Dropdown className="dropdown-skin ms-3 ms-xl-4" align="end">
                 <Dropdown.Toggle as={CustomToggle}>
                     <i className="ri-settings-3-line"></i>
@@ -207,7 +208,7 @@ export default function Header({
                             Dark
                         </Link>
                     </nav>
-                    <hr />
+                    <hr/>
                     <label>Sidebar Skin</label>
                     <nav id="sidebarSkin" className="nav nav-skin">
                         <Link
@@ -260,32 +261,32 @@ export default function Header({
                 </Dropdown.Toggle>
             </Dropdown>
 
-            <Dropdown className="dropdown-notification ms-3 ms-xl-4" align="end">
-                <Dropdown.Toggle as={CustomToggle}>
-                    <small>3</small>
-                    <i className="ri-notification-3-line"></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu className="mt-10-f me--10-f">
-                    <div className="dropdown-menu-header">
-                        <h6 className="dropdown-menu-title">{t('Notifications')}</h6>
-                    </div>
-                    {NotificationList()}
-                    <div className="dropdown-menu-footer">
-                        <Link to="#">{t('Voir toutes les notifications')}</Link>
-                    </div>
-                </Dropdown.Menu>
-            </Dropdown>
+            {/*<Dropdown className="dropdown-notification ms-3 ms-xl-4" align="end">*/}
+            {/*    <Dropdown.Toggle as={CustomToggle}>*/}
+            {/*        <small>3</small>*/}
+            {/*        <i className="ri-notification-3-line"></i>*/}
+            {/*    </Dropdown.Toggle>*/}
+            {/*    <Dropdown.Menu className="mt-10-f me--10-f">*/}
+            {/*        <div className="dropdown-menu-header">*/}
+            {/*            <h6 className="dropdown-menu-title">{t('Notifications')}</h6>*/}
+            {/*        </div>*/}
+            {/*        {NotificationList()}*/}
+            {/*        <div className="dropdown-menu-footer">*/}
+            {/*            <Link to="#">{t('Voir toutes les notifications')}</Link>*/}
+            {/*        </div>*/}
+            {/*    </Dropdown.Menu>*/}
+            {/*</Dropdown>*/}
 
             <Dropdown className="dropdown-profile ms-3 ms-xl-4" align="end">
                 <Dropdown.Toggle as={CustomToggle}>
                     <div className="avatar online">
-                        <img src={userAvatar} alt="" />
+                        <img src={userAvatar} alt=""/>
                     </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="mt-10-f">
                     <div className="dropdown-menu-body">
                         <div className="avatar avatar-xl online mb-3">
-                            <img src={userAvatar} alt="" />
+                            <img src={userAvatar} alt=""/>
                         </div>
                         <nav className="nav">
                             <Link to={AdminPages.SIGN_IN}>
