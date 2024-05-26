@@ -1,20 +1,20 @@
 import ReactApexChart from 'react-apexcharts';
-import React, {useMemo} from 'react';
-import {Card, Nav} from 'react-bootstrap';
-import {Statistic} from '@Admin/models';
-import {useTranslation} from 'react-i18next';
+import React, { useMemo } from 'react';
+import { Card, Nav } from 'react-bootstrap';
+import { Statistic } from '@Admin/models';
+import { useTranslation } from 'react-i18next';
 import apexLocaleEn from 'apexcharts/dist/locales/en.json';
 import apexLocaleFr from 'apexcharts/dist/locales/fr.json';
-import {useAppSelector} from '@Admin/store/store';
-import {selectCurrentLocale} from '@Admin/features/localeSlice';
-import {Empty} from 'antd';
+import { useAppSelector } from '@Admin/store/store';
+import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import { Empty } from 'antd';
 
 type Props = {
     data?: Statistic[];
 };
 
-const ChartDonutSummaryType = ({data: statisticsData}: Props) => {
-    const {t} = useTranslation();
+const ChartDonutSummaryType = ({ data: statisticsData }: Props) => {
+    const { t } = useTranslation();
     const currentLocale = useAppSelector(selectCurrentLocale);
 
     const seriesSummaryType = useMemo(() => {
@@ -50,7 +50,7 @@ const ChartDonutSummaryType = ({data: statisticsData}: Props) => {
                 defaultLocale: currentLocale,
             },
             labels: labels,
-            legend: {show: true},
+            legend: { show: true },
         };
     }, [statisticsData, currentLocale]);
 
@@ -79,7 +79,7 @@ const ChartDonutSummaryType = ({data: statisticsData}: Props) => {
                     />
                 ) : (
                     <div className="d-flex justify-content-center align-items-center mt-2 mb-2">
-                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </div>
                 )}
             </Card.Body>
