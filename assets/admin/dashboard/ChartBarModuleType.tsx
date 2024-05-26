@@ -1,20 +1,21 @@
 import ReactApexChart from 'react-apexcharts';
-import React, { useEffect, useMemo, useRef } from 'react';
-import { Card, Nav } from 'react-bootstrap';
-import { Statistic } from '@Admin/models';
-import { useTranslation } from 'react-i18next';
-import { ApexOptions } from 'apexcharts';
+import React, {useEffect, useMemo, useRef} from 'react';
+import {Card, Nav} from 'react-bootstrap';
+import {Statistic} from '@Admin/models';
+import {useTranslation} from 'react-i18next';
+import {ApexOptions} from 'apexcharts';
 import apexLocaleEn from 'apexcharts/dist/locales/en.json';
 import apexLocaleFr from 'apexcharts/dist/locales/fr.json';
-import { useAppSelector } from '@Admin/store/store';
-import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import {useAppSelector} from '@Admin/store/store';
+import {selectCurrentLocale} from '@Admin/features/localeSlice';
+import {Empty} from "antd";
 
 type Props = {
     data?: Statistic[];
 };
 
-const ChartBarModuleType = ({ data: statisticsData }: Props) => {
-    const { t } = useTranslation();
+const ChartBarModuleType = ({data: statisticsData}: Props) => {
+    const {t} = useTranslation();
     const currentLocale = useAppSelector(selectCurrentLocale);
     const chartRef = useRef<ReactApexChart | null>(null);
 
@@ -62,7 +63,7 @@ const ChartBarModuleType = ({ data: statisticsData }: Props) => {
                 defaultLocale: currentLocale,
                 parentHeightOffset: 0,
                 stacked: true,
-                toolbar: { show: true },
+                toolbar: {show: true},
             },
             colors: ['#506fd9', '#85b6ff'],
             grid: {
@@ -106,11 +107,11 @@ const ChartBarModuleType = ({ data: statisticsData }: Props) => {
                         fontWeight: 'bold',
                     },
                 },
-                axisBorder: { show: false },
+                axisBorder: {show: false},
             },
-            dataLabels: { enabled: false },
-            fill: { opacity: 1 },
-            legend: { show: true },
+            dataLabels: {enabled: false},
+            fill: {opacity: 1},
+            legend: {show: true},
             tooltip: {
                 enabled: true,
             },
@@ -131,12 +132,18 @@ const ChartBarModuleType = ({ data: statisticsData }: Props) => {
                 </Nav>
             </Card.Header>
             <Card.Body className="">
-                <ReactApexChart
-                    ref={chartRef}
-                    series={seriesQuantityModuleType}
-                    options={optionQuantityModuleType}
-                    type="bar"
-                />
+                {seriesQuantityModuleType && optionQuantityModuleType && seriesQuantityModuleType[0]?.data?.length > 0 ? (
+                    <ReactApexChart
+                        ref={chartRef}
+                        series={seriesQuantityModuleType}
+                        options={optionQuantityModuleType}
+                        type="bar"
+                    />
+                ) : (
+                    <div className="d-flex justify-content-center align-items-center mt-2 mb-2">
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+                    </div>
+                )}
             </Card.Body>
         </Card>
     );
