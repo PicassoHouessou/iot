@@ -1,17 +1,17 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import userAvatar from '../assets/img/img1.jpg';
 import LanguageSwitcher from '@Admin/components/LanguagueSwitcher';
-import {useTranslation} from 'react-i18next';
-import {AdminPages} from '@Admin/constants';
+import { useTranslation } from 'react-i18next';
+import { AdminPages } from '@Admin/constants';
 
 export default function Header({
-                                   onSkin,
-                               }: {
+    onSkin,
+}: {
     onSkin: React.Dispatch<React.SetStateAction<string>>;
 }) {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const CustomToggle = React.forwardRef(
         (
             {
@@ -177,7 +177,7 @@ export default function Header({
             {/*    <input type="text" className="form-control" placeholder="Search"/>*/}
             {/*    <i className="ri-search-line"></i>*/}
             {/*</div>*/}
-            <LanguageSwitcher/>
+            <LanguageSwitcher />
             <Dropdown className="dropdown-skin ms-3 ms-xl-4" align="end">
                 <Dropdown.Toggle as={CustomToggle}>
                     <i className="ri-settings-3-line"></i>
@@ -208,7 +208,7 @@ export default function Header({
                             Dark
                         </Link>
                     </nav>
-                    <hr/>
+                    <hr />
                     <label>Sidebar Skin</label>
                     <nav id="sidebarSkin" className="nav nav-skin">
                         <Link
@@ -280,13 +280,13 @@ export default function Header({
             <Dropdown className="dropdown-profile ms-3 ms-xl-4" align="end">
                 <Dropdown.Toggle as={CustomToggle}>
                     <div className="avatar online">
-                        <img src={userAvatar} alt=""/>
+                        <img src={userAvatar} alt="" />
                     </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="mt-10-f">
                     <div className="dropdown-menu-body">
                         <div className="avatar avatar-xl online mb-3">
-                            <img src={userAvatar} alt=""/>
+                            <img src={userAvatar} alt="" />
                         </div>
                         <nav className="nav">
                             <Link to={AdminPages.SIGN_IN}>
