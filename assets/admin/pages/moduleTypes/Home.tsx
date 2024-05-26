@@ -7,7 +7,7 @@ import { useSkinMode } from '@Admin/hooks';
 import type { GetProp, MenuProps, TableProps } from 'antd';
 import { Dropdown, Table } from 'antd';
 import {
-    useDeleteModuleMutation,
+    useDeleteModuleTypeMutation,
     useModuleTypesJsonLdQuery,
 } from '@Admin/services/modulesApi';
 import { ModuleType } from '@Admin/models';
@@ -33,7 +33,7 @@ export default function Home() {
     const currentLocale = useAppSelector(selectCurrentLocale);
     const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
-    const [deleteItem] = useDeleteModuleMutation();
+    const [deleteItem] = useDeleteModuleTypeMutation();
     const [data, setData] = useState<ModuleType[]>([]);
     const subscribe = useMercureSubscriber<ModuleType>();
 
@@ -68,7 +68,11 @@ export default function Home() {
 
     const handleDelete = useCallback(
         async (id: any) => {
-            if (window.confirm(t('Etes-vous sûr'))) {
+            if (
+                window.confirm(
+                    t('Etes-vous sûr? Cela va supprimer tous les modules associés'),
+                )
+            ) {
                 try {
                     await deleteItem(id).unwrap();
                     toast.success(t('Element supprimé'));

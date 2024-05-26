@@ -68,6 +68,7 @@ class Module
     private ?string $description;
 
     #[ORM\ManyToOne(targetEntity: ModuleType::class)]
+    #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     #[Groups(["module:read", "module:write", "module_history:read"])]
     private ?ModuleType $type = null;

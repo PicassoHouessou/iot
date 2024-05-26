@@ -6,7 +6,7 @@ import Header from '../../layouts/Header';
 import { useSkinMode } from '@Admin/hooks';
 import { Dropdown, GetProp, MenuProps, Table, TableProps, Tag } from 'antd';
 import {
-    useDeleteModuleMutation,
+    useDeleteModuleStatusMutation,
     useModuleStatusesJsonLdQuery,
 } from '@Admin/services/modulesApi';
 import { ModuleStatus } from '@Admin/models';
@@ -29,7 +29,7 @@ interface TableParams {
 export default function Home() {
     const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
-    const [deleteItem] = useDeleteModuleMutation();
+    const [deleteItem] = useDeleteModuleStatusMutation();
     const [data, setData] = useState<ModuleStatus[]>([]);
 
     const {
@@ -69,7 +69,7 @@ export default function Home() {
         if (window.confirm(t('Etes-vous sûr'))) {
             try {
                 await deleteItem(id).unwrap();
-                //toast.success(t("cms Deleted Successfully"));
+                toast.success(t('Elément supprimé'));
             } catch (err) {
                 const { detail } = getErrorMessage(err);
                 toast.error(detail);
