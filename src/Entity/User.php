@@ -81,8 +81,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(),
         new Post(),
     ],
-    normalizationContext: ['groups' => ['read:User']],
-    denormalizationContext: ['groups' => ['write:User']],
+    normalizationContext: ['groups' => ['read:user']],
+    denormalizationContext: ['groups' => ['write:user']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
@@ -128,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[Groups(["user:read", "user:avatar"])]
     private $avatar;
 
-    #[Groups(["read:User"])]
+    #[Groups(["read:user"])]
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private $isVerified = false;
 

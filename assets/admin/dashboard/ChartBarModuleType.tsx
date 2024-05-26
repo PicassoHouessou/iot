@@ -8,6 +8,7 @@ import apexLocaleEn from 'apexcharts/dist/locales/en.json';
 import apexLocaleFr from 'apexcharts/dist/locales/fr.json';
 import { useAppSelector } from '@Admin/store/store';
 import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import { Empty } from 'antd';
 
 type Props = {
     data?: Statistic[];
@@ -131,12 +132,20 @@ const ChartBarModuleType = ({ data: statisticsData }: Props) => {
                 </Nav>
             </Card.Header>
             <Card.Body className="">
-                <ReactApexChart
-                    ref={chartRef}
-                    series={seriesQuantityModuleType}
-                    options={optionQuantityModuleType}
-                    type="bar"
-                />
+                {seriesQuantityModuleType &&
+                optionQuantityModuleType &&
+                seriesQuantityModuleType[0]?.data?.length > 0 ? (
+                    <ReactApexChart
+                        ref={chartRef}
+                        series={seriesQuantityModuleType}
+                        options={optionQuantityModuleType}
+                        type="bar"
+                    />
+                ) : (
+                    <div className="d-flex justify-content-center align-items-center mt-2 mb-2">
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    </div>
+                )}
             </Card.Body>
         </Card>
     );

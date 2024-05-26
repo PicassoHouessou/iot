@@ -213,14 +213,6 @@ export default function Home() {
                         <h4 className="main-title mb-0">Les types de module</h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
-                        <Button
-                            variant=""
-                            className="btn-white d-flex align-items-center gap-2"
-                        >
-                            <i className="ri-bar-chart-2-line fs-18 lh-1"></i>
-                            Générer
-                            <span className="d-none d-sm-inline"> Rapport</span>
-                        </Button>
                         <Link to={AdminPages.MODULE_TYPES_ADD}>
                             <Button
                                 variant="primary"

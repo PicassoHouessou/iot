@@ -60,21 +60,54 @@ class ModuleRepository extends ServiceEntityRepository
         return $result;
     }
 
-    /*
-        public function countForStatus(?ModuleStatus $status = null): int
-        {
-            $query = $this->createQueryBuilder('u')
-                ->select('COUNT(u.id)');
-            if ($status) {
-                $query->andWhere('u.status = :status')
-                    ->setParameter('status', $status);
-            }
-            $result = $query->getQuery()
-                ->getSingleScalarResult();
-            return $result;
-        }
-    */
     public function countForLast12Months(?ModuleType $type = null): array
+    {
+        $endDate = new \DateTime();
+        $startDate = (clone $endDate)->modify('-12 months');
+
+        $query = $this->createQueryBuilder('u')
+            ->select('SUBSTRING(u.createdAt, 1, 7) as year_month, COUNT(u.id) as count')
+            ->where('u.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->groupBy('year_month')
+            ->orderBy('year_month', 'ASC');
+
+        if ($type) {
+            $query->andWhere('u.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
+    public function countForLast7Days(?ModuleType $type = null): array
+    {
+        $endDate = new \DateTime();
+        $startDate = (clone $endDate)->modify('-7 days');
+
+        $query = $this->createQueryBuilder('u')
+            ->select('SUBSTRING(u.createdAt, 1, 10) as date, COUNT(u.id) as count')
+            ->where('u.createdAt BETWEEN :startDate AND :endDate')
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->groupBy('date')
+            ->orderBy('date', 'ASC');
+
+        if ($type) {
+            $query->andWhere('u.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @param ModuleType|null $type
+     * @return array
+     * @deprecated It works only for mysql or mariadb, and it will be removed in the future
+     */
+    public function countForLast12MonthsMySql(?ModuleType $type = null): array
     {
         $endDate = new \DateTime();
         $startDate = (clone $endDate)->modify('-12 months');
@@ -95,7 +128,12 @@ class ModuleRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
-    public function countForLast7Days(?ModuleType $type = null): array
+    /**
+     * @param ModuleType|null $type
+     * @return array
+     * @deprecated It works only for mysql or mariadb, and it will be removed in the future
+     */
+    public function countForLast7DaysMySql(?ModuleType $type = null): array
     {
         $endDate = new \DateTime();
         $startDate = (clone $endDate)->modify('-7 days');

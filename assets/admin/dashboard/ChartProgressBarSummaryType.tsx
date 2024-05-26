@@ -6,6 +6,7 @@ import apexLocaleEn from 'apexcharts/dist/locales/en.json';
 import apexLocaleFr from 'apexcharts/dist/locales/fr.json';
 import { useAppSelector } from '@Admin/store/store';
 import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import { Empty } from 'antd';
 
 type Props = {
     data?: Statistic[];
@@ -58,7 +59,9 @@ const ChartProgressBarSummaryType = ({ data: statisticsData }: Props) => {
                 <Card.Title as="h6">Marge type de module (%)</Card.Title>
             </Card.Header>
             <Card.Body className="pt-0">
-                {seriesSummaryType && optionSummaryType && (
+                {seriesSummaryType &&
+                optionSummaryType &&
+                seriesSummaryType?.length > 0 ? (
                     <>
                         <p className="fs-sm text-secondary mb-4">
                             {t('Vous avez la marge de chaque type de module.')}
@@ -82,6 +85,10 @@ const ChartProgressBarSummaryType = ({ data: statisticsData }: Props) => {
                             ))}
                         </Row>
                     </>
+                ) : (
+                    <div className="d-flex justify-content-center align-items-center mt-2 mb-2">
+                        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    </div>
                 )}
             </Card.Body>
         </Card>
