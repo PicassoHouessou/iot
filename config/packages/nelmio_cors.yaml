@@ -17,7 +17,7 @@ nelmio_cors:
             max_age: 3600
         '^/':
             origin_regex: true
-            allow_origin: [ '^https?://(otp.picassohouessou.com)(:[0-9]+)?$' ]
+            allow_origin: [ '%env(CORS_ALLOW_ORIGIN)%' ]
             allow_headers: [ '*' ]
             allow_methods: [ 'POST', 'OPTIONS', 'PUT', 'GET', 'DELETE' ]
             max_age: 3600

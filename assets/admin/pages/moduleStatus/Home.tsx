@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Button, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import { Dropdown, GetProp, MenuProps, Table, TableProps, Tag } from 'antd';
-import {
-    useDeleteModuleMutation,
-    useModuleStatusesJsonLdQuery,
-} from '@Admin/services/modulesApi';
-import { ModuleStatus } from '@Admin/models';
-import { getErrorMessage } from '@Admin/utils';
-import { AdminPages } from '@Admin/constants';
-import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
+import {useSkinMode} from '@Admin/hooks';
+import {Dropdown, GetProp, MenuProps, Table, TableProps, Tag} from 'antd';
+import {useDeleteModuleMutation, useModuleStatusesJsonLdQuery,} from '@Admin/services/modulesApi';
+import {ModuleStatus} from '@Admin/models';
+import {getErrorMessage, useMercureSubscriber} from '@Admin/utils';
+import {AdminPages, ApiRoutesWithoutPrefix} from '@Admin/constants';
+import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
+import {toast} from 'react-toastify';
+import {useTranslation} from 'react-i18next';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -27,10 +24,10 @@ interface TableParams {
 }
 
 export default function Home() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
-    const [data, setData] = useState<ModuleStatus[]>();
+    const [data, setData] = useState<ModuleStatus[]>([]);
 
     const {
         pagination,
@@ -43,7 +40,7 @@ export default function Home() {
         handleSearch,
         setSearchFormValue,
     } = useFiltersQuery();
-    const { current: currentPage, itemsPerPage } = pagination;
+    const {current: currentPage, itemsPerPage} = pagination;
     const [tableParams, setTableParams] = useState<TableParams>({
         pagination: {
             current: currentPage,
@@ -71,7 +68,7 @@ export default function Home() {
                 await deleteItem(id).unwrap();
                 //toast.success(t("cms Deleted Successfully"));
             } catch (err) {
-                const { detail } = getErrorMessage(err);
+                const {detail} = getErrorMessage(err);
                 toast.error(detail);
             }
         }
@@ -127,13 +124,64 @@ export default function Home() {
                 ];
 
                 return (
-                    <Dropdown className="" menu={{ items }}>
+                    <Dropdown className="" menu={{items}}>
                         <i className="ri-more-2-fill"></i>
                     </Dropdown>
                 );
             },
         },
     ];
+
+    /*
+  Register Mercure event
+  */
+    /*
+    React.useEffect(() => {
+        const url = new URL(`${mercureUrl}/.well-known/mercure`);
+        url.searchParams.append("topic", getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_STATUSES));
+        const eventSource = new EventSource(url);
+        eventSource.onmessage = (e) => {
+            if (e.data) {
+
+                const {type, data: moduleStatus}: { type: string, data: ModuleStatus } = JSON.parse(e.data);
+                if (moduleStatus?.id) {
+                    setData((data) => {
+                        // Create a set of existing message IDs
+
+                        if (type === MERCURE_NOTIFICATION_TYPE.NEW) {
+                            const find = data?.find((item) => item.id === moduleStatus?.id);
+                            if (!find) {
+                                return [moduleStatus, ...data];
+
+                            }
+
+                        } else if (type == MERCURE_NOTIFICATION_TYPE.UPDATE) {
+                            return data.map((item) => {
+                                if (item.id == moduleStatus.id) {
+                                    return moduleStatus;
+                                }
+                                return item;
+                            })
+                        } else if (MERCURE_NOTIFICATION_TYPE.DELETE) {
+                            return data.filter((item) => (item.id !== moduleStatus.id));
+                        }
+                        return data;
+                    });
+
+                }
+
+            }
+        };
+        return () => {
+            eventSource.close();
+        };
+    }, []);
+*/
+    const subscribe = useMercureSubscriber<ModuleStatus>();
+    useEffect(() => {
+        const unsubscribe = subscribe(ApiRoutesWithoutPrefix.MODULE_STATUSES, setData)
+        return () => unsubscribe(); // Clean up subscription on component unmount
+    }, [subscribe, setData]);
 
     useEffect(() => {
         if (dataApis) {
@@ -176,7 +224,7 @@ export default function Home() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -241,7 +289,7 @@ export default function Home() {
                         onChange={handleTableChange}
                     />
                 </Row>
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );
