@@ -11,8 +11,8 @@ import {
     useModuleTypesJsonLdQuery,
 } from '@Admin/services/modulesApi';
 import { ModuleType } from '@Admin/models';
-import { formatDate, getErrorMessage } from '@Admin/utils';
-import { AdminPages } from '@Admin/constants';
+import { formatDate, getErrorMessage, useMercureSubscriber } from '@Admin/utils';
+import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
 import { toast } from 'react-toastify';
 import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
 import { useAppSelector } from '@Admin/store/store';
@@ -34,7 +34,8 @@ export default function Home() {
     const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
-    const [data, setData] = useState<ModuleType[]>();
+    const [data, setData] = useState<ModuleType[]>([]);
+    const subscribe = useMercureSubscriber<ModuleType>();
 
     const {
         pagination,
@@ -79,6 +80,12 @@ export default function Home() {
         },
         [deleteItem, t],
     );
+
+    useEffect(() => {
+        const unsubscribe = subscribe(ApiRoutesWithoutPrefix.MODULE_TYPES, setData);
+        return () => unsubscribe();
+    }, [subscribe, setData]);
+
     const columns: ColumnsType<ModuleType> = useMemo(
         () => [
             {

@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Filter\ModuleStatusSearchFilter;
 use App\Repository\ModuleStatusRepository;
+use App\State\ModuleStatusProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -33,6 +34,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
+    processor: ModuleStatusProcessor::class,
+
 )]
 #[ORM\HasLifecycleCallbacks]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug', 'createdAt'])]
@@ -43,6 +46,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity("slug")]
 class ModuleStatus
 {
+    const READ = "module_status:read";
+    const MERCURE_TOPIC = "/api/module_statuses";
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -55,12 +60,12 @@ class ModuleStatus
     #[Groups(["module_status:read", "module_status:write", "module_history:read"])]
     private string $name;
 
-    #[ORM\Column(type: "string", length: 255, unique: true)]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     #[Groups(["module_status:read", "module_status:write", "module_history:read"])]
-    private string $color;
+    private ?string $color = null;
 
-    #[ORM\Column(type: "string", length: 255, unique: true)]
+    #[ORM\Column(type: "string", length: 255, unique: true, nullable: true)]
     #[Assert\Length(max: 255)]
     #[Groups(["module_status:read", "module_status:write"])]
     private string $slug;
@@ -115,7 +120,7 @@ class ModuleStatus
         return $this->color;
     }
 
-    public function setColor(string $color): self
+    public function setColor(?string $color): self
     {
         $this->color = $color;
         return $this;

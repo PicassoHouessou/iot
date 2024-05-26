@@ -91,3 +91,9 @@ export enum DATE_FORMAT {
     DATE = 'LL',
     DATETIME = 'LLLL',
 }
+
+export enum MERCURE_NOTIFICATION_TYPE {
+    NEW = 'NEW',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+}

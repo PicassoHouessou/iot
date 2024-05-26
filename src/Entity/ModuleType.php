@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Filter\ModuleTypeSearchFilter;
 use App\Repository\ModuleTypeRepository;
+use App\State\ModuleTypeProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -34,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
+    processor: ModuleTypeProcessor::class,
 )]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity("name")]
@@ -43,6 +45,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ModuleTypeRepository::class)]
 class ModuleType
 {
+    const READ = "module_type:read";
+    const MERCURE_TOPIC = "/api/module_types";
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

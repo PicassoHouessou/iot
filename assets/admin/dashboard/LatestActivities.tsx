@@ -4,9 +4,10 @@ import { ModuleHistory } from '@Admin/models';
 import { useTranslation } from 'react-i18next';
 import { List, Tag } from 'antd';
 import { useModuleHistoriesJsonLdQuery } from '@Admin/services/modulesApi';
-import { parseDate } from '@Admin/utils';
+import { parseDate, useMercureSubscriber } from '@Admin/utils';
 import { useAppSelector } from '@Admin/store/store';
 import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
 
 const LatestActivities = () => {
     const { t } = useTranslation();
@@ -19,7 +20,14 @@ const LatestActivities = () => {
     const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query);
     const [canLoadMore, setCanLoadMore] = useState(false);
     const [list, setList] = useState<ModuleHistory[]>([]);
+    const subscribe = useMercureSubscriber<ModuleHistory>();
+
     const loadMoreRef = useRef(null);
+
+    useEffect(() => {
+        const unsubscribe = subscribe(ApiRoutesWithoutPrefix.MODULE_HISTORIES, setList);
+        return () => unsubscribe();
+    }, [subscribe, setList]);
 
     useEffect(() => {
         if (histories) {

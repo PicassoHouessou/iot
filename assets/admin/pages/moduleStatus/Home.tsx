@@ -10,8 +10,8 @@ import {
     useModuleStatusesJsonLdQuery,
 } from '@Admin/services/modulesApi';
 import { ModuleStatus } from '@Admin/models';
-import { getErrorMessage } from '@Admin/utils';
-import { AdminPages } from '@Admin/constants';
+import { getErrorMessage, useMercureSubscriber } from '@Admin/utils';
+import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
 import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +30,7 @@ export default function Home() {
     const { t } = useTranslation();
     const [, setSkin] = useSkinMode();
     const [deleteItem] = useDeleteModuleMutation();
-    const [data, setData] = useState<ModuleStatus[]>();
+    const [data, setData] = useState<ModuleStatus[]>([]);
 
     const {
         pagination,
@@ -134,6 +134,57 @@ export default function Home() {
             },
         },
     ];
+
+    /*
+  Register Mercure event
+  */
+    /*
+    React.useEffect(() => {
+        const url = new URL(`${mercureUrl}/.well-known/mercure`);
+        url.searchParams.append("topic", getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_STATUSES));
+        const eventSource = new EventSource(url);
+        eventSource.onmessage = (e) => {
+            if (e.data) {
+
+                const {type, data: moduleStatus}: { type: string, data: ModuleStatus } = JSON.parse(e.data);
+                if (moduleStatus?.id) {
+                    setData((data) => {
+                        // Create a set of existing message IDs
+
+                        if (type === MERCURE_NOTIFICATION_TYPE.NEW) {
+                            const find = data?.find((item) => item.id === moduleStatus?.id);
+                            if (!find) {
+                                return [moduleStatus, ...data];
+
+                            }
+
+                        } else if (type == MERCURE_NOTIFICATION_TYPE.UPDATE) {
+                            return data.map((item) => {
+                                if (item.id == moduleStatus.id) {
+                                    return moduleStatus;
+                                }
+                                return item;
+                            })
+                        } else if (MERCURE_NOTIFICATION_TYPE.DELETE) {
+                            return data.filter((item) => (item.id !== moduleStatus.id));
+                        }
+                        return data;
+                    });
+
+                }
+
+            }
+        };
+        return () => {
+            eventSource.close();
+        };
+    }, []);
+*/
+    const subscribe = useMercureSubscriber<ModuleStatus>();
+    useEffect(() => {
+        const unsubscribe = subscribe(ApiRoutesWithoutPrefix.MODULE_STATUSES, setData);
+        return () => unsubscribe(); // Clean up subscription on component unmount
+    }, [subscribe, setData]);
 
     useEffect(() => {
         if (dataApis) {

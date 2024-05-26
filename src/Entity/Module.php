@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Filter\ModuleSearchFilter;
 use App\Repository\ModuleRepository;
+use App\State\ModuleProcessor;
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,6 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
+    processor: ModuleProcessor::class,
 )]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'type' => 'exact'])]
@@ -46,6 +48,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module
 {
+    const READ = "module:read";
+    const MERCURE_TOPIC = "/api/modules";
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

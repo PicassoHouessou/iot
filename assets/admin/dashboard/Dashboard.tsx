@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Footer from '../layouts/Footer';
@@ -6,7 +6,7 @@ import Header from '../layouts/Header';
 import { useSkinMode } from '@Admin/hooks';
 import { useStatisticsQuery } from '@Admin/services/statisticApi';
 import TotalStatistic from '@Admin/components/TotalStatistic';
-import { StatisticEnum } from '@Admin/constants';
+import { ApiRoutesWithoutPrefix, mercureUrl, StatisticEnum } from '@Admin/constants';
 import { Tour, TourProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSimulateMutation } from '@Admin/services/commandApi';
@@ -17,6 +17,7 @@ import ChartProgressBarSummaryType from '@Admin/dashboard/ChartProgressBarSummar
 import ChartDonutSummaryType from '@Admin/dashboard/ChartDonutSummaryType';
 import ChartSummaryStatus from '@Admin/dashboard/CharSummaryStatus';
 import LatestActivities from '@Admin/dashboard/LatestActivities';
+import { getApiRoutesWithPrefix } from '@Admin/utils';
 
 export default function Dashboard() {
     const { t } = useTranslation();
@@ -27,13 +28,57 @@ export default function Dashboard() {
     const tourStep5 = useRef(null);
     const tourStep6 = useRef(null);
     const tourStep7 = useRef(null);
-    const { data: statisticsData } = useStatisticsQuery();
+    const { data: statisticsData, refetch } = useStatisticsQuery();
     const [openTour, setOpenTour] = useState<boolean>(false);
 
     const [isSimulating, setIsSimulating] = useState<boolean>(false);
     const [simulateModule] = useSimulateMutation();
 
     const [, setSkin] = useSkinMode();
+
+    //Force refecth if we have mercure event
+    useEffect(() => {
+        const urlModule = new URL(`${mercureUrl}/.well-known/mercure`);
+        const urlModuleStatus = new URL(`${mercureUrl}/.well-known/mercure`);
+        const urlModuleType = new URL(`${mercureUrl}/.well-known/mercure`);
+        urlModule.searchParams.append(
+            'topic',
+            getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULES),
+        );
+        urlModuleStatus.searchParams.append(
+            'topic',
+            getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_STATUSES),
+        );
+        urlModuleType.searchParams.append(
+            'topic',
+            getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_TYPES),
+        );
+        const eventSourceModule = new EventSource(urlModule);
+        const eventSourceModuleStatus = new EventSource(urlModuleStatus);
+        const eventSourceModuleType = new EventSource(urlModuleType);
+
+        eventSourceModule.onmessage = (e: MessageEvent) => {
+            if (e.data) {
+                refetch();
+            }
+        };
+        eventSourceModuleStatus.onmessage = (e: MessageEvent) => {
+            if (e.data) {
+                refetch();
+            }
+        };
+        eventSourceModuleType.onmessage = (e: MessageEvent) => {
+            if (e.data) {
+                refetch();
+            }
+        };
+
+        return () => {
+            eventSourceModule.close();
+            eventSourceModuleStatus.close();
+            eventSourceModuleType.close();
+        };
+    }, [refetch]);
 
     const statistic = useMemo(() => {
         return Array.isArray(statisticsData) ? statisticsData[0] : null;

@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\ModuleHistoryRepository;
+use App\State\ModuleHistoryProcessor;
 use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,6 +34,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
+    processor: ModuleHistoryProcessor::class,
+
 )]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'value' => 'partial', 'module' => 'exact', 'status' => 'exact'])]
@@ -41,6 +44,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ModuleHistoryRepository::class)]
 class ModuleHistory
 {
+    const READ = "module_history:read";
+    const MERCURE_TOPIC = "/api/module_histories";
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

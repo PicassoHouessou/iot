@@ -1,9 +1,15 @@
-import { ApiRoutesWithoutPrefix, DATE_FORMAT } from '@Admin/constants';
+import {
+    ApiRoutesWithoutPrefix,
+    DATE_FORMAT,
+    MERCURE_NOTIFICATION_TYPE,
+    mercureUrl,
+} from '@Admin/constants';
 import dayjs, { ConfigType } from 'dayjs';
 import 'dayjs/locale/fr'; // Import the locale you want to use
 import localizedFormat from 'dayjs/plugin/localizedFormat'; // Import the localizedFormat plugin
 import { defaultLocale, Locale } from '@Admin/constants/language';
-import relativeTime from 'dayjs/plugin/relativeTime'; // Import the locale you want to use
+import relativeTime from 'dayjs/plugin/relativeTime';
+import { useCallback } from 'react';
 
 // Extend dayjs with the localizedFormat plugin
 dayjs.extend(localizedFormat);
@@ -114,6 +120,69 @@ export const parseDate = (date: string, locale: Locale = defaultLocale) => {
     return parsedDate.isValid() ? parsedDate : dayjs(date);
 };
 
+type MercureNotification<T> = {
+    type: string;
+    data: T;
+};
+
+export const useMercureSubscriber = <T extends { id: string }>() => {
+    return useCallback(
+        (
+            apiRoutesWithoutPrefix: any, // Replace 'any' with the correct type for 'apiRoutesWithoutPrefix'
+            setData: React.Dispatch<React.SetStateAction<T[]>>,
+        ) => {
+            const url = new URL(`${mercureUrl}/.well-known/mercure`);
+            url.searchParams.append(
+                'topic',
+                getApiRoutesWithPrefix(apiRoutesWithoutPrefix),
+            );
+            const eventSource = new EventSource(url);
+
+            eventSource.onmessage = (e: MessageEvent) => {
+                if (e.data) {
+                    const notification: MercureNotification<T> = JSON.parse(e.data);
+                    if (notification.data?.id) {
+                        setData((data: T[]) => {
+                            if (notification.type === MERCURE_NOTIFICATION_TYPE.NEW) {
+                                const find = data?.find(
+                                    (item) => item.id === notification.data?.id,
+                                );
+                                if (!find) {
+                                    return [notification.data, ...data];
+                                }
+                            } else if (
+                                notification.type === MERCURE_NOTIFICATION_TYPE.UPDATE
+                            ) {
+                                return data.map((item) => {
+                                    if (item.id === notification.data.id) {
+                                        return notification.data;
+                                    }
+                                    return item;
+                                });
+                            } else if (
+                                notification.type === MERCURE_NOTIFICATION_TYPE.DELETE
+                            ) {
+                                return data.filter(
+                                    (item) => item.id !== notification.data.id,
+                                );
+                            }
+                            return data;
+                        });
+                    }
+                }
+            };
+
+            return () => {
+                eventSource.close();
+            };
+        },
+        [],
+    );
+};
+
+export const getApiRoutesWithPrefix = (prefix: ApiRoutesWithoutPrefix) => {
+    return '/api' + prefix;
+};
 export * from './useUserByToken';
 export * from './getErrorMessage';
 export * from './truncate';
