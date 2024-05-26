@@ -37,7 +37,6 @@ export enum ApiRoutesWithoutPrefix {
     COMMANDS = '/commands',
 }
 
-
 export enum AdminPages {
     LOGS = '/logs',
     MODULES = '/modules/main',
@@ -94,7 +93,7 @@ export enum DATE_FORMAT {
 }
 
 export enum MERCURE_NOTIFICATION_TYPE {
-    NEW = "NEW",
-    UPDATE = "UPDATE",
-    DELETE = "DELETE",
+    NEW = 'NEW',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
 }
