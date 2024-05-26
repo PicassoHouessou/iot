@@ -21,17 +21,17 @@ class StatisticService
 
         // Calculate date ranges
         $now = new \DateTime('now', new \DateTimeZone($this->timezone));
-        $now = new \DateTime();
-        $startOfThisWeek = (clone $now)->modify('monday this week');
-        $endOfThisWeek = (clone $startOfThisWeek)->modify('sunday this week');
+        $startOfThisWeek = (clone $now)->modify('monday this week')->setTime(0, 0, 0);
+        $endOfThisWeek = (clone $startOfThisWeek)->modify('sunday this week')->setTime(23, 59, 59);
 
         $startOfLastWeek = (clone $startOfThisWeek)->modify('-1 week');
-        $endOfLastWeek = (clone $startOfLastWeek)->modify('sunday last week');
+        $endOfLastWeek = (clone $endOfThisWeek)->modify('-1 week');
+
 
         // Get entities created in the date ranges
         $thisWeekEntities = $repository->findCreatedBetween($startOfThisWeek, $endOfThisWeek);
         $lastWeekEntities = $repository->findCreatedBetween($startOfLastWeek, $endOfLastWeek);
-
+        
         // Calculate the counts and increase
         $thisWeekCount = count($thisWeekEntities);
         $lastWeekCount = count($lastWeekEntities);
