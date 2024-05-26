@@ -17,6 +17,7 @@ export interface ModuleEdit {
 export interface ModuleStatus {
     id: string;
     name: string;
+    slug: string;
     color: string;
     description: string;
 }
