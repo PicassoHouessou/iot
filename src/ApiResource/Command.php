@@ -52,6 +52,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\HasLifecycleCallbacks]
 class Command
 {
+    const READ = "command:read";
+    const MERCURE_TOPIC = "/api/commands";
+
     #[Groups(["command:read"])]
     public ?\DateTimeInterface $date = null;
 

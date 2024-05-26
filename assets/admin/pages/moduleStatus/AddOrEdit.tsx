@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 const initialState = {
     id: '',
     name: '',
+    slug: '',
     color: '',
     description: '',
 };
@@ -150,6 +151,21 @@ export default function AddOrEdit() {
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors?.name}
+                                        </Form.Control.Feedback>
+                                    </div>
+                                    <div className="mb-3">
+                                        <Form.Label htmlFor="slug">
+                                            {t('Slug')}
+                                        </Form.Label>
+                                        <Form.Control
+                                            id="slug"
+                                            name="slug"
+                                            value={formValue.slug}
+                                            onChange={handleInputChange}
+                                            isInvalid={!!errors.slug}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors?.slug}
                                         </Form.Control.Feedback>
                                     </div>
                                     <div className="mb-3">

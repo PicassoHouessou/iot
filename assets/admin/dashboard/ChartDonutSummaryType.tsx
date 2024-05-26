@@ -70,7 +70,7 @@ const ChartDonutSummaryType = ({ data: statisticsData }: Props) => {
             <Card.Body className="">
                 {seriesSummaryType &&
                 optionSummaryType &&
-                seriesSummaryType[0]?.data?.length > 0 ? (
+                seriesSummaryType.length > 0 ? (
                     <ReactApexChart
                         series={seriesSummaryType}
                         options={optionSummaryType}

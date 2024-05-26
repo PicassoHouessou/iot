@@ -11,6 +11,7 @@ class MercurePublisher
     const OPERATION_NEW = "NEW";
     const OPERATION_UPDATE = "UPDATE";
     const OPERATION_DELETE = "DELETE";
+    const OPERATION_REFETCH = "REFETCH";
 
     public function __construct(private HubInterface $hub)
     {

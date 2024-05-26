@@ -4,7 +4,6 @@ import Header from '../layouts/Header';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Button, Card, Modal, Nav } from 'react-bootstrap';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
-
 import allLocales from '@fullcalendar/core/locales-all';
 import { fr } from 'date-fns/locale'; // Import locales from date-fns
 import FullCalendar from '@fullcalendar/react';
@@ -20,13 +19,15 @@ import { Flex, Tag } from 'antd';
 import { DatesSetArg, EventClickArg } from '@fullcalendar/core';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
+import { getApiRoutesWithPrefix } from '@Admin/utils';
+import { ApiRoutesWithoutPrefix, mercureUrl } from '@Admin/constants';
 
 registerLocale('fr', fr);
 
 export default function AppCalendar() {
     const { t, i18n } = useTranslation();
+    const [, setSkin] = useSkinMode();
     const [startDate, setStartDate] = useState(new Date());
-
     const calendarRef = useRef<FullCalendar>(null);
     const [currentView, setCurrentView] = useState('dayGridMonth');
     const [visibleDateRange, setVisibleDateRange] = useState({
@@ -35,11 +36,20 @@ export default function AppCalendar() {
     });
     const [history, setHistory] = useState<ModuleHistory | null>(null);
     const [histories, setHistories] = useState<Array<ModuleHistory>>([]);
-    const { data } = useModuleHistoriesJsonLdQuery({
+    const { data, refetch: refetchHistories } = useModuleHistoriesJsonLdQuery({
         'createdAt[after]': dayjs(visibleDateRange.start).format('YYYY-MM-DD'),
         itemsPerPage: 1000,
     });
-    const { data: moduleStatuses } = useModuleStatusesQuery({ pagination: false });
+    const { data: moduleStatuses, refetch: refetchModuleStatuses } =
+        useModuleStatusesQuery({ pagination: false });
+
+    // toggle sidebar calendar
+    const [isSidebarShow, setSidebarShow] = useState(false);
+
+    // Modal
+    const [modalShow, setModalShow] = useState(false);
+    const handleModalClose = () => setModalShow(false);
+    const handleModalShow = () => setModalShow(true);
 
     useEffect(() => {
         if (data) {
@@ -54,13 +64,45 @@ export default function AppCalendar() {
         };
     }, []);
 
-    // toggle sidebar calendar
-    const [isSidebarShow, setSidebarShow] = useState(false);
+    //Force refecth if we have mercure event
+    useEffect(() => {
+        const urlModuleStatus = new URL(`${mercureUrl}/.well-known/mercure`);
 
-    // Modal
-    const [modalShow, setModalShow] = useState(false);
-    const handleModalClose = () => setModalShow(false);
-    const handleModalShow = () => setModalShow(true);
+        urlModuleStatus.searchParams.append(
+            'topic',
+            getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_STATUSES),
+        );
+
+        const eventSourceModuleStatus = new EventSource(urlModuleStatus);
+        eventSourceModuleStatus.onmessage = (e: MessageEvent) => {
+            if (e.data) {
+                refetchModuleStatuses();
+            }
+        };
+
+        return () => {
+            eventSourceModuleStatus.close();
+        };
+    }, [refetchModuleStatuses]);
+    useEffect(() => {
+        const url = new URL(`${mercureUrl}/.well-known/mercure`);
+
+        url.searchParams.append(
+            'topic',
+            getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.COMMANDS),
+        );
+
+        const eventSourceModuleHistory = new EventSource(url);
+        eventSourceModuleHistory.onmessage = (e: MessageEvent) => {
+            if (e.data) {
+                refetchHistories();
+            }
+        };
+
+        return () => {
+            eventSourceModuleHistory.close();
+        };
+    }, [refetchHistories]);
 
     const handleClick = (arg: EventClickArg) => {
         const id = arg.event.id;
@@ -96,7 +138,6 @@ export default function AppCalendar() {
         setVisibleDateRange({ start, end });
     };
 
-    const [, setSkin] = useSkinMode();
     return (
         <React.Fragment>
             <Header onSkin={setSkin} />

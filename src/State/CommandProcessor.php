@@ -6,17 +6,21 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\ApiResource\Command;
+use App\Service\MercurePublisher;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @implements ProcessorInterface<Command, Command|void>
  */
 final class CommandProcessor implements ProcessorInterface
 {
-    public function __construct(private KernelInterface $kernel
+    public function __construct(private KernelInterface     $kernel,
+                                private MercurePublisher    $mercurePublisher,
+                                private NormalizerInterface $normalizer,
     )
     {
     }
@@ -35,7 +39,14 @@ final class CommandProcessor implements ProcessorInterface
 
         // Run the command
         $simulateCommand->run($input, $output);
-        // call your persistence layer to save $data
+
+        try {
+            $serializedData = $this->normalizer->normalize(["type" => MercurePublisher::OPERATION_REFETCH, "data" => $data], null, ['groups' => Command::READ]);
+            $this->mercurePublisher->publishUpdate($serializedData, Command::MERCURE_TOPIC);
+        } catch (\Exception $exception) {
+            return $data;
+        }
+
         return $data;
     }
 }
