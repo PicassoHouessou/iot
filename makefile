@@ -133,7 +133,8 @@ sf-log: ## Show symfony logs.
 .PHONY: sf-log
 
 sf-dc: ## Create symfony database.
-	$(SYMFONY_CONSOLE) doctrine:database:create --if-not-exists
+	$(SYMFONY_CONSOLE) doctrine:database:create --if-not-exists > /dev/null 2>&1 || true
+	$(SYMFONY_CONSOLE) doctrine:database:create  > /dev/null 2>&1 || true # A hack to support both mysql and sqlite
 .PHONY: sf-dc
 
 sf-dd: ## Drop symfony database.
