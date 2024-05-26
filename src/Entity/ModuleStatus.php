@@ -56,7 +56,7 @@ class ModuleStatus
 
     #[ORM\Column(type: "string", length: 255, unique: true)]
     #[Assert\Length(max: 255)]
-    #[Assert\NotNull()]
+    #[Assert\NotBlank]
     #[Groups(["module_status:read", "module_status:write", "module_history:read"])]
     private string $name;
 
