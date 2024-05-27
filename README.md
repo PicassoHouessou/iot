@@ -82,13 +82,13 @@ pnpm install
 
 ### 4. Configure the environment.
 
-**By default you don't need it to configure because SQLite is used for the database** If you want to use mysql do it
+**By default you don't need it to configure because SQLite is used for the database** If you want to use MySql do it
 
-_Copy the `.env` file and adjust the configuration parameters (database, etc.):
+Copy the `.env` file and adjust the configuration parameters (database, etc.):
 
 ```bash
 cp .env .env.local
-```_
+```
 
 Modify `.env.local` as needed.
 
