@@ -134,8 +134,6 @@ To simulate the values and statuses of the modules, run the following command:
 php bin/console app:module:simulate
 ```
 
-You can automate this command with a cron job for periodic execution.
-
 ## Usage
 
 - Access the web interface via the URL provided by the Symfony server.
