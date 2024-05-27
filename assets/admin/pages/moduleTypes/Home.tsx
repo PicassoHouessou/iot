@@ -70,7 +70,7 @@ export default function Home() {
         async (id: any) => {
             if (
                 window.confirm(
-                    t('Etes-vous sûr? Cela va supprimer tous les modules associés'),
+                    t('Êtes-vous sûr ? Cela supprimera tous les modules associés'),
                 )
             ) {
                 try {
@@ -133,7 +133,7 @@ export default function Home() {
                                     className="details"
                                     to={`${AdminPages.MODULE_TYPES_EDIT}/${record.id}`}
                                 >
-                                    <i className="ri-edit-line"></i> Modifier
+                                    <i className="ri-edit-line"></i> {t('Modifier')}
                                 </Link>
                             ),
                             key: '1',
@@ -144,7 +144,8 @@ export default function Home() {
                                     className="details"
                                     onClick={() => handleDelete(record.id)}
                                 >
-                                    <i className="ri-delete-bin-line"></i> Delete
+                                    <i className="ri-delete-bin-line"></i>{' '}
+                                    {t('Supprimer')}
                                 </span>
                             ),
                             key: '2',
@@ -246,7 +247,7 @@ export default function Home() {
                         <input
                             type="search"
                             className="form-control form-control-lg"
-                            placeholder={'Rechercher'}
+                            placeholder={t('Rechercher')}
                             value={searchFormValue}
                             onChange={(e) => setSearchFormValue(e.target.value)}
                             onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) =>

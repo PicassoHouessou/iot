@@ -9,13 +9,14 @@ interface SidebarMenuProps extends WithTranslation {
 
 class SidebarMenu extends Component<SidebarMenuProps> {
     populateMenu = (m: any[]) => {
+        const { t } = this.props; // Destructure t from props for translation
         const menu = m.map((m, key) => {
             let sm;
             if (m.submenu) {
                 sm = m.submenu.map((sm: any, key: any) => {
                     return (
                         <NavLink to={sm.link} className="nav-sub-link" key={key}>
-                            {sm.label}
+                            {t(sm.label)}
                         </NavLink>
                     );
                 });
@@ -26,12 +27,12 @@ class SidebarMenu extends Component<SidebarMenuProps> {
                     {!sm ? (
                         <NavLink to={m.link} className="nav-link">
                             <i className={m.icon}></i>
-                            <span>{m.label}</span>
+                            <span>{t(m.label)}</span>
                         </NavLink>
                     ) : (
                         <div onClick={this.toggleSubMenu} className="nav-link has-sub">
                             <i className={m.icon}></i>
-                            <span>{m.label}</span>
+                            <span>{t(m.label)}</span>
                         </div>
                     )}
                     {m.submenu && <nav className="nav nav-sub">{sm}</nav>}

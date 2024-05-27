@@ -126,7 +126,8 @@ export default function Home() {
                                     className="details"
                                     to={`${AdminPages.MODULES_SEE}/${record.id}`}
                                 >
-                                    <i className="ri-information-line"></i> Voir Détails
+                                    <i className="ri-information-line"></i>{' '}
+                                    {t('Voir Détails')}
                                 </Link>
                             ),
                             key: '0',
@@ -137,7 +138,7 @@ export default function Home() {
                                     className="details"
                                     to={`${AdminPages.MODULES_EDIT}/${record.id}`}
                                 >
-                                    <i className="ri-edit-line"></i> Modifier
+                                    <i className="ri-edit-line"></i> {t('Modifier')}
                                 </Link>
                             ),
                             key: '1',
@@ -148,7 +149,7 @@ export default function Home() {
                                     className="details"
                                     onClick={() => handleDelete(record.id)}
                                 >
-                                    <i className="ri-delete-bin-line"></i> Delete
+                                    <i className="ri-delete-bin-line"></i> {'Supprimer'}
                                 </span>
                             ),
                             key: '2',
@@ -255,7 +256,7 @@ export default function Home() {
                         <input
                             type="search"
                             className="form-control form-control-lg"
-                            placeholder={'Rechercher'}
+                            placeholder={t('Rechercher')}
                             value={searchFormValue}
                             onChange={(e) => setSearchFormValue(e.target.value)}
                             onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) =>

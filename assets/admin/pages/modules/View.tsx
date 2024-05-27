@@ -11,9 +11,11 @@ import {
 } from '@Admin/services/modulesApi';
 import { List, Tag } from 'antd';
 import { ModuleHistory } from '@Admin/models';
+import { useTranslation } from 'react-i18next';
 
 export default function View() {
     const { id } = useParams();
+    const { t } = useTranslation();
     const loadMoreRef = useRef(null);
     const { data: module } = useModuleQuery(id!, { skip: id ? false : true });
     const [query, setQuery] = useState<any>({
@@ -146,7 +148,8 @@ export default function View() {
                     <Row className="g-5">
                         <Col xl="9">
                             <h2 className="main-title mb-3">
-                                Type: {module?.type?.name}
+                                {t('Type : ')}
+                                {module?.type?.name}
                             </h2>
                             <p className="text-secondary mb-5">{module?.description}</p>
 
@@ -162,14 +165,13 @@ export default function View() {
                                 className="activity-group mb-5"
                                 loading={isLoading}
                                 itemLayout="horizontal"
-                                //loadMore={<div ref={loadMoreRef}></div>}
                                 dataSource={list}
                                 renderItem={(item, index) => renderItem(item, index)}
                                 footer={
                                     isLoading && (
                                         <Spinner animation="border" role="status">
                                             <span className="visually-hidden">
-                                                Loading...
+                                                {t('Chargement...')}
                                             </span>
                                         </Spinner>
                                     )

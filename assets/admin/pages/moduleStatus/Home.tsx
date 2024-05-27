@@ -119,7 +119,7 @@ export default function Home() {
                                 className="details"
                                 onClick={() => handleDelete(record.id)}
                             >
-                                <i className="ri-delete-bin-line"></i> {'Supprimer'}
+                                <i className="ri-delete-bin-line"></i> {t('Supprimer')}
                             </span>
                         ),
                         key: '1',
@@ -271,7 +271,7 @@ export default function Home() {
                         <input
                             type="search"
                             className="form-control form-control-lg"
-                            placeholder={'Rechercher'}
+                            placeholder={t('Rechercher')}
                             value={searchFormValue}
                             onChange={(e) => setSearchFormValue(e.target.value)}
                             onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) =>
