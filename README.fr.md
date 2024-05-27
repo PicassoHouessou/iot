@@ -80,7 +80,21 @@ composer install
 pnpm install
 ```
 
-### 4. Configurer l'environnement
+### 4. Compiler les assets
+
+Pour l'environnement de développement, exécutez :
+
+```bash
+pnpm run dev-server
+```
+
+Pour l'environnement de production, exécutez :
+
+```bash
+pnpm run build
+```
+
+### 5. Configurer l'environnement
 
 **Par défaut, vous n'avez pas besoin de configurer quoi que ce soit car SQLite est utilisé pour la base de données.** Si
 vous souhaitez utiliser MySQL, procédez comme suit :
@@ -93,7 +107,7 @@ cp .env .env.local
 
 Modifiez `.env.local` selon vos besoins.
 
-### 5. Créer la base de données et exécuter les migrations
+### 6. Créer la base de données et exécuter les migrations
 
 ```bash
 php bin/console doctrine:database:drop # Supprimer la base de données
@@ -101,22 +115,24 @@ php bin/console doctrine:database:create # Créer la base de données
 php bin/console doctrine:migrations:migrate # Exécuter la migration
 ```
 
-### 6. Charger les fixtures
+### 7. Charger les fixtures
 
 ```bash
 php bin/console hautelook:fixtures:load --no-interaction # Générer les fixtures
 ```
 
-### 7. Démarrer le serveur de développement
+### 8. Démarrer le serveur de développement
 
 ```bash
+
+
 symfony server:start
 ```
 
 Veuillez utiliser **localhost** au lieu de 127.0.0.1.
 Par exemple : https://localhost:8000
 
-### 8. Démarrer le serveur de notifications
+### 9. Démarrer le serveur de notifications
 
 Nous utilisons Docker pour installer le serveur de notifications instantanées. Pour démarrer le serveur de notifications
 Mercure, exécutez :
@@ -128,13 +144,15 @@ docker-compose up --build
 Cette commande va construire et démarrer les conteneurs Docker, y compris le serveur Mercure, accessible à
 l'adresse http://localhost:3000.
 
-### 9. Exécuter la commande de simulation
+### 10. Exécuter la commande de simulation
 
 Pour simuler les valeurs et les états des modules, exécutez la commande suivante :
 
 ```bash
 php bin/console app:module:simulate
 ```
+
+Vous pouvez automatiser cette commande avec un cron job pour une exécution périodique.
 
 ## Utilisation
 
@@ -162,3 +180,5 @@ détails.
 ## Contact
 
 Pour toute question ou demande de support, veuillez contacter [Picasso Houessou](mailto:houessoupicasso@yahoo.fr).
+
+```

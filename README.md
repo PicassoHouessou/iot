@@ -40,8 +40,9 @@ modules, view the measured values, and display this information visually.
   ```bash
   make first-install
   ```
-  This command will set everything up. Open your web browser and navigate to **https://localhost:8000**.
-  Please use **localhost** instead of 127.0.0.1.
+
+This command will set everything up. Open your web browser and navigate to **https://localhost:8000**.
+Please use **localhost** instead of 127.0.0.1.
 
 - **Start the notification server:**
 
@@ -79,7 +80,21 @@ composer install
 pnpm install
 ```
 
-### 4. Configure the environment
+### 4. Compile assets
+
+For the development environment, run:
+
+```bash
+pnpm run dev-server
+```
+
+For the production environment, run:
+
+```bash
+pnpm run build
+```
+
+### 5. Configure the environment
 
 **By default, you don't need to configure anything because SQLite is used for the database.** If you want to use MySQL,
 do the following:
@@ -92,7 +107,7 @@ cp .env .env.local
 
 Modify `.env.local` as needed.
 
-### 5. Create the database and run migrations
+### 6. Create the database and run migrations
 
 ```bash
 php bin/console doctrine:database:drop # Delete the database
@@ -100,13 +115,13 @@ php bin/console doctrine:database:create # Create the database
 php bin/console doctrine:migrations:migrate # Run the migration
 ```
 
-### 6. Load fixtures
+### 7. Load fixtures
 
 ```bash
 php bin/console hautelook:fixtures:load --no-interaction # Generate the fixtures
 ```
 
-### 7. Start the development server
+### 8. Start the development server
 
 ```bash
 symfony server:start
@@ -115,7 +130,7 @@ symfony server:start
 Please use **localhost** instead of 127.0.0.1.
 Eg: https://localhost:8000
 
-### 8. Start the notification server
+### 9. Start the notification server
 
 We use Docker to install the instant notification server. To start the Mercure notification server, run:
 
@@ -126,13 +141,15 @@ docker-compose up --build
 This command will build and start the Docker containers, including the Mercure server, accessible
 at http://localhost:3000.
 
-### 9. Run the simulation command
+### 10. Run the simulation command
 
 To simulate the values and statuses of the modules, run the following command:
 
 ```bash
 php bin/console app:module:simulate
 ```
+
+You can automate this command with a cron job for periodic execution.
 
 ## Usage
 
@@ -160,3 +177,5 @@ for details.
 ## Contact
 
 For any inquiries or support, please contact [Picasso Houessou](mailto:houessoupicasso@yahoo.fr).
+
+
