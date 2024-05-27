@@ -27,12 +27,12 @@ class SidebarMenu extends Component<SidebarMenuProps> {
                     {!sm ? (
                         <NavLink to={m.link} className="nav-link">
                             <i className={m.icon}></i>
-                            <span>{m.label}</span>
+                            <span>{t(m.label)}</span>
                         </NavLink>
                     ) : (
                         <div onClick={this.toggleSubMenu} className="nav-link has-sub">
                             <i className={m.icon}></i>
-                            <span>{m.label}</span>
+                            <span>{t(m.label)}</span>
                         </div>
                     )}
                     {m.submenu && <nav className="nav nav-sub">{sm}</nav>}
