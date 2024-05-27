@@ -18,6 +18,7 @@ modules, the measured values, and display this information visually.
 - [Composer](https://getcomposer.org/)
 - [pnpm](https://pnpm.io/fr/)
 - [SQLite](https://www.sqlite.org/)
+- [Docker](https://www.docker.com/) Not mandatory. It is required to have instant notification
 
 ## Quick Installation
 
@@ -41,6 +42,15 @@ modules, the measured values, and display this information visually.
   Please use **localhost** instead of 127.0.0.1
 
   Eg: https://localhost:8000
+
+
+- **Start the notification server**
+
+  We use docker to install the instant Notification server
+  To start Mercure server, run:
+  ```bash
+  docker-compose up --build
+  ```
 
 
 - **Database Generation**: If you have already installed the dependencies and only want to generate the database, run:
@@ -105,7 +115,20 @@ symfony server:start
 Please use **localhost** instead of 127.0.0.1
 Eg: https://localhost:8000
 
-### 8. Run the simulation command
+### 8. Start the notification server
+
+We use docker to install the instant Notification server
+
+To start the Mercure notification server, run:
+
+```bash
+docker-compose up --build
+```
+
+This command will build and start the Docker containers, including the Mercure server accessible
+at http://localhost:3030.
+
+### 9. Run the simulation command
 
 To simulate the values and statuses of the modules, run the following command:
 
