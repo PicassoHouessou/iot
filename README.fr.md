@@ -136,8 +136,6 @@ Pour simuler les valeurs et les états des modules, exécutez la commande suivan
 php bin/console app:module:simulate
 ```
 
-Vous pouvez automatiser cette commande avec un cron job pour une exécution périodique.
-
 ## Utilisation
 
 - Accédez à l'interface web via l'URL fournie par le serveur Symfony.
