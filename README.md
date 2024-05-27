@@ -148,7 +148,7 @@ You can automate this command with a cron job for periodic execution.
 ## Technologies Used
 
 - **Backend**: PHP 8, Symfony 7, Doctrine ORM
-- **Frontend**: HTML, CSS, TypeScript, JavaScript, Bootstrap, React
+- **Frontend**: HTML, CSS, TypeScript, JavaScript, Bootstrap, Antd, React
 - **Database**: Sqlite
 - **Development Tools**: Composer, pnpm, Faker
 
