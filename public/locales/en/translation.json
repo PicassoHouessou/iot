@@ -1,5 +1,5 @@
 {
-    "États": "Statuses",
+    "États": "States",
     "Détails": "Details",
     "Fermer": "Close",
     "Choisir votre langue": "Choose your language",
@@ -77,6 +77,7 @@
     "Mot de passe :": "Password",
     "Entrer votre adresse email": "Enter you address email",
     "Entrer votre mot de passe": "Enter your password",
+    "États modules": "Modules States",
     "État enregistré": "State saved",
     "État modules": "Module state",
     "Bienvenue dans l'application de simulation des module IOT.": "Welcome to the IOT module simulation application.",
