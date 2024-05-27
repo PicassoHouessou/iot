@@ -1,12 +1,14 @@
 # IoT Module Monitoring System
 
+*Read this in other languages: [Français](README.fr.md).*
+
 This project is an IoT module monitoring system developed with Symfony. It allows you to track the operating status of
-modules, the measured values, and display this information visually.
+modules, view the measured values, and display this information visually.
 
 ## Features
 
 - **Creation of IoT Modules**: Add new modules via a form.
-- **Module Monitoring**: View the current operating status, uptime, number of data sent, and measured values.
+- **Module Monitoring**: View the current operating status, uptime, number of data points sent, and measured values.
 - **Tracking Graphs**: Track the evolution of measured values using graphs.
 - **Notifications**: Receive visual notifications in case of module malfunctions.
 - **Module Simulation**: Automatically simulate the states and values of modules with a Symfony command.
@@ -18,7 +20,7 @@ modules, the measured values, and display this information visually.
 - [Composer](https://getcomposer.org/)
 - [pnpm](https://pnpm.io/fr/)
 - [SQLite](https://www.sqlite.org/)
-- [Docker](https://www.docker.com/) Not mandatory. It is required to have instant notification
+- [Docker](https://www.docker.com/) (Required for instant notifications)
 
 ## Quick Installation
 
@@ -38,22 +40,19 @@ modules, the measured values, and display this information visually.
   ```bash
   make first-install
   ```
-  This command will set everything up. Open your web browser and navigate to **`https://localhost:8000`**.
-  Please use **localhost** instead of 127.0.0.1
+  This command will set everything up. Open your web browser and navigate to **https://localhost:8000**.
+  Please use **localhost** instead of 127.0.0.1.
 
-  Eg: https://localhost:8000
+- **Start the notification server:**
 
-
-- **Start the notification server**
-
-  We use docker to install the instant Notification server
-  To start Mercure server, run:
+  We use Docker to install the instant notification server. To start the Mercure server, run:
   ```bash
   docker-compose up --build
   ```
 
-
-- **Database Generation**: If you have already installed the dependencies and only want to generate the database, run:
+- **Database Generation**: If you have already installed the dependencies and only want to generate the database, run
+  the following command. By default, you don't need to run this command because SQLite is used for the database and the
+  file is already provided:
 
   ```bash
   make data
@@ -80,9 +79,10 @@ composer install
 pnpm install
 ```
 
-### 4. Configure the environment.
+### 4. Configure the environment
 
-**By default you don't need it to configure because SQLite is used for the database** If you want to use MySql do it
+**By default, you don't need to configure anything because SQLite is used for the database.** If you want to use MySQL,
+do the following:
 
 Copy the `.env` file and adjust the configuration parameters (database, etc.):
 
@@ -112,21 +112,19 @@ php bin/console hautelook:fixtures:load --no-interaction # Generate the fixtures
 symfony server:start
 ```
 
-Please use **localhost** instead of 127.0.0.1
+Please use **localhost** instead of 127.0.0.1.
 Eg: https://localhost:8000
 
 ### 8. Start the notification server
 
-We use docker to install the instant Notification server
-
-To start the Mercure notification server, run:
+We use Docker to install the instant notification server. To start the Mercure notification server, run:
 
 ```bash
 docker-compose up --build
 ```
 
-This command will build and start the Docker containers, including the Mercure server accessible
-at http://localhost:3030.
+This command will build and start the Docker containers, including the Mercure server, accessible
+at http://localhost:3000.
 
 ### 9. Run the simulation command
 
@@ -149,7 +147,7 @@ You can automate this command with a cron job for periodic execution.
 
 - **Backend**: PHP 8, Symfony 7, Doctrine ORM
 - **Frontend**: HTML, CSS, TypeScript, JavaScript, Bootstrap, Antd, React
-- **Database**: Sqlite
+- **Database**: SQLite
 - **Development Tools**: Composer, pnpm, Faker
 
 ## Contributing
