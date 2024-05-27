@@ -1,15 +1,15 @@
-import { Card, Col } from 'react-bootstrap';
+import {Card, Col} from 'react-bootstrap';
 import React from 'react';
-import { StatisticsDetail } from '@Admin/models';
-import { StatisticEnum } from '@Admin/constants';
-import { useTranslation } from 'react-i18next';
+import {StatisticsDetail} from '@Admin/models';
+import {StatisticEnum} from '@Admin/constants';
+import {useTranslation} from 'react-i18next';
 
 type TotalStatisticProps = {
     data: StatisticsDetail;
     type: StatisticEnum;
 };
 const TotalStatistic = (props: TotalStatisticProps) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const getIcon = (type: StatisticEnum) => {
         switch (type) {
             case StatisticEnum.USER: {
@@ -56,7 +56,7 @@ const TotalStatistic = (props: TotalStatisticProps) => {
                 label = t('Modules');
                 break;
             case StatisticEnum.MODULE_STATUS:
-                label = t('Statut modules');
+                label = t("États modules");
                 break;
             default:
                 label = '';
@@ -65,7 +65,7 @@ const TotalStatistic = (props: TotalStatisticProps) => {
         return label;
     };
 
-    const { data, type } = props;
+    const {data, type} = props;
     return (
         <Col xs="6" sm="3">
             <Card className="card-one">
