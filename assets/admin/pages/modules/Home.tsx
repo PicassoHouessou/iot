@@ -1,23 +1,20 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {Button, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import type { GetProp, MenuProps, TableProps } from 'antd';
-import { Dropdown, Table } from 'antd';
-import {
-    useDeleteModuleMutation,
-    useModulesJsonLdQuery,
-} from '@Admin/services/modulesApi';
-import { Module } from '@Admin/models';
-import { formatDate, getErrorMessage, useMercureSubscriber } from '@Admin/utils';
-import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
-import { toast } from 'react-toastify';
-import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
-import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@Admin/store/store';
-import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import {useSkinMode} from '@Admin/hooks';
+import type {GetProp, MenuProps, TableProps} from 'antd';
+import {Dropdown, Table} from 'antd';
+import {useDeleteModuleMutation, useModulesJsonLdQuery,} from '@Admin/services/modulesApi';
+import {Module} from '@Admin/models';
+import {formatDate, getErrorMessage, useMercureSubscriber} from '@Admin/utils';
+import {AdminPages, ApiRoutesWithoutPrefix} from '@Admin/constants';
+import {toast} from 'react-toastify';
+import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
+import {useTranslation} from 'react-i18next';
+import {useAppSelector} from '@Admin/store/store';
+import {selectCurrentLocale} from '@Admin/features/localeSlice';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -30,7 +27,7 @@ interface TableParams {
 }
 
 export default function Home() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const currentLocale = useAppSelector(selectCurrentLocale);
 
     const [, setSkin] = useSkinMode();
@@ -48,8 +45,8 @@ export default function Home() {
         handleSearch,
         setSearchFormValue,
     } = useFiltersQuery();
-    const { current: currentPage, itemsPerPage } = pagination;
-    const { isLoading: loading, error, data: dataApis } = useModulesJsonLdQuery(query);
+    const {current: currentPage, itemsPerPage} = pagination;
+    const {isLoading: loading, error, data: dataApis} = useModulesJsonLdQuery(query);
     const [data, setData] = useState<Module[]>([]);
     const subscribe = useMercureSubscriber<Module>();
 
@@ -75,7 +72,7 @@ export default function Home() {
                     await deleteItem(id).unwrap();
                     toast.success(t('Elément supprimé'));
                 } catch (err) {
-                    const { detail } = getErrorMessage(err);
+                    const {detail} = getErrorMessage(err);
                     toast.error(detail);
                 }
             }
@@ -157,7 +154,7 @@ export default function Home() {
                     ];
 
                     return (
-                        <Dropdown className="" menu={{ items }}>
+                        <Dropdown className="" menu={{items}}>
                             <i className="ri-more-2-fill"></i>
                         </Dropdown>
                     );
@@ -204,13 +201,13 @@ export default function Home() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.DASHBOARD}>{t('Dashboard')}</Link>
+                                <Link to={AdminPages.DASHBOARD}>{t('Tableau de bord')}</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
                                 {t('Modules')}
@@ -278,7 +275,7 @@ export default function Home() {
                     />
                 </Row>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );
