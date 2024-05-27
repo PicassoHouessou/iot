@@ -87,7 +87,7 @@ class Module
         return $this->id;
     }
 
-    #[ORM\OneToMany(targetEntity: ModuleHistory::class, mappedBy: "module")]
+    #[ORM\OneToMany(targetEntity: ModuleHistory::class, mappedBy: "module", cascade: ["remove"])]
     private Collection $histories;
 
     public function __construct()
