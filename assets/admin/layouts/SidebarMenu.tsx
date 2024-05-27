@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
-import {applicationsMenu, dashboardMenu} from '@Admin/data/Menu';
-import {withTranslation, WithTranslation} from 'react-i18next';
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+import { applicationsMenu, dashboardMenu } from '@Admin/data/Menu';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 interface SidebarMenuProps extends WithTranslation {
     onUpdateSize: () => void;
@@ -9,7 +9,7 @@ interface SidebarMenuProps extends WithTranslation {
 
 class SidebarMenu extends Component<SidebarMenuProps> {
     populateMenu = (m: any[]) => {
-        const {t} = this.props; // Destructure t from props for translation
+        const { t } = this.props; // Destructure t from props for translation
         const menu = m.map((m, key) => {
             let sm;
             if (m.submenu) {
@@ -72,7 +72,7 @@ class SidebarMenu extends Component<SidebarMenuProps> {
     };
 
     render() {
-        const {t} = this.props;
+        const { t } = this.props;
         return (
             <React.Fragment>
                 <div className="nav-group show">
