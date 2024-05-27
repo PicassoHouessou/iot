@@ -1,27 +1,24 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Col, Row, Spinner } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Button, Col, Row, Spinner} from 'react-bootstrap';
+import {Link, useParams} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import { AdminPages } from '@Admin/constants';
-import {
-    useModuleHistoriesJsonLdQuery,
-    useModuleQuery,
-} from '@Admin/services/modulesApi';
-import { List, Tag } from 'antd';
-import { ModuleHistory } from '@Admin/models';
+import {useSkinMode} from '@Admin/hooks';
+import {AdminPages} from '@Admin/constants';
+import {useModuleHistoriesJsonLdQuery, useModuleQuery,} from '@Admin/services/modulesApi';
+import {List, Tag} from 'antd';
+import {ModuleHistory} from '@Admin/models';
 
 export default function View() {
-    const { id } = useParams();
+    const {id} = useParams();
     const loadMoreRef = useRef(null);
-    const { data: module } = useModuleQuery(id!, { skip: id ? false : true });
+    const {data: module} = useModuleQuery(id!, {skip: id ? false : true});
     const [query, setQuery] = useState<any>({
         module: id,
         'order[createdAt]': 'desc',
         itemsPerPage: 10,
     });
-    const { data: histories, isLoading } = useModuleHistoriesJsonLdQuery(query, {
+    const {data: histories, isLoading} = useModuleHistoriesJsonLdQuery(query, {
         skip: id ? false : true,
     });
     const [, setSkin] = useSkinMode();
@@ -74,7 +71,7 @@ export default function View() {
                     onLoadMore();
                 }
             },
-            { threshold: 1.0 },
+            {threshold: 1.0},
         );
 
         const currentRef = loadMoreRef.current;
@@ -98,7 +95,7 @@ export default function View() {
                 <li className="activity-date">{item?.module?.createdAt}</li>
                 <li
                     className="activity-item "
-                    style={{ backgroundColor: item?.module?.color }}
+                    style={{backgroundColor: item?.module?.color}}
                     ref={addRef ? loadMoreRef : null}
                 >
                     <p className="d-sm-flex align-items-center mb-0">
@@ -115,7 +112,7 @@ export default function View() {
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className="main main-app p-3 p-lg-4">
                 <div className="d-md-flex align-items-center justify-content-between mb-4">
                     <div>
@@ -146,7 +143,7 @@ export default function View() {
                     <Row className="g-5">
                         <Col xl="9">
                             <h2 className="main-title mb-3">
-                                Type: {module?.type?.name}
+                                {t("Type : ")}{module?.type?.name}
                             </h2>
                             <p className="text-secondary mb-5">{module?.description}</p>
 
@@ -179,7 +176,7 @@ export default function View() {
                     </Row>
                 </div>
 
-                <Footer />
+                <Footer/>
             </div>
         </React.Fragment>
     );
