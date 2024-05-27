@@ -233,13 +233,15 @@ export default function Home() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.DASHBOARD}>{t('Dashboard')}</Link>
+                                <Link to={AdminPages.DASHBOARD}>
+                                    {t('Tableau de bord')}
+                                </Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
                                 {t('États de module')}
                             </li>
                         </ol>
-                        <h4 className="main-title mb-0">Les états de module</h4>
+                        <h4 className="main-title mb-0">{t('Les états des modules')}</h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">
                         <Link to={AdminPages.MODULE_STATUSES_ADD}>

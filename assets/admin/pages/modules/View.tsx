@@ -123,10 +123,10 @@ export default function View() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.MODULES}>Modules</Link>
+                                <Link to={AdminPages.MODULES}>{t('Modules')}</Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
-                                Détails
+                                {t('Détails')}
                             </li>
                         </ol>
                         <h4 className="main-title mb-0">{module?.name}</h4>

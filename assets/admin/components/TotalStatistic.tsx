@@ -56,7 +56,7 @@ const TotalStatistic = (props: TotalStatisticProps) => {
                 label = t('Modules');
                 break;
             case StatisticEnum.MODULE_STATUS:
-                label = t('Statut modules');
+                label = t('États modules');
                 break;
             default:
                 label = '';

@@ -161,7 +161,9 @@ export default function AppCalendar() {
 
                         <div className="mb-5"></div>
 
-                        <h5 className="section-title section-title-sm mb-4">Statuts</h5>
+                        <h5 className="section-title section-title-sm mb-4">
+                            {t('États')}
+                        </h5>
                         <Nav className="d-flex flex-column mb-4">
                             <Flex gap="4px 0" vertical>
                                 {moduleStatuses?.map((status) => (

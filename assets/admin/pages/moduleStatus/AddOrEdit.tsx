@@ -86,7 +86,7 @@ export default function AddOrEdit() {
                 await addData(data).unwrap();
                 setErrors({});
                 navigate(-1);
-                toast.success(t('Statut enregistré'));
+                toast.success(t('État enregistré'));
             } else {
                 setErrors({});
                 await updateData({
@@ -94,7 +94,7 @@ export default function AddOrEdit() {
                     id,
                 }).unwrap();
                 navigate(-1);
-                toast.success(t('Statut enregistré'));
+                toast.success(t('État enregistré'));
             }
         } catch (err) {
             const { detail, errors } = getErrorMessage(err);
@@ -119,7 +119,7 @@ export default function AddOrEdit() {
                             </li>
                         </ol>
                         <h4 className="main-title mb-0">
-                            {t('Ajouter un status de module')}
+                            {t('Ajouter un état de module')}
                         </h4>
                     </div>
                     <div className="d-flex gap-2 mt-3 mt-md-0">

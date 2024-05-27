@@ -210,7 +210,9 @@ export default function Home() {
                     <div>
                         <ol className="breadcrumb fs-sm mb-1">
                             <li className="breadcrumb-item">
-                                <Link to={AdminPages.DASHBOARD}>{t('Dashboard')}</Link>
+                                <Link to={AdminPages.DASHBOARD}>
+                                    {t('Tableau de bord')}
+                                </Link>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">
                                 {t('Modules')}
