@@ -82,13 +82,13 @@ pnpm install
 
 ### 4. Configure the environment.
 
-**By default you don't need it to configure because SQLite is used for the database** If you want to use mysql do it
+**By default you don't need it to configure because SQLite is used for the database** If you want to use MySql do it
 
-_Copy the `.env` file and adjust the configuration parameters (database, etc.):
+Copy the `.env` file and adjust the configuration parameters (database, etc.):
 
 ```bash
 cp .env .env.local
-```_
+```
 
 Modify `.env.local` as needed.
 
@@ -148,7 +148,7 @@ You can automate this command with a cron job for periodic execution.
 ## Technologies Used
 
 - **Backend**: PHP 8, Symfony 7, Doctrine ORM
-- **Frontend**: HTML, CSS, TypeScript, JavaScript, Bootstrap, React
+- **Frontend**: HTML, CSS, TypeScript, JavaScript, Bootstrap, Antd, React
 - **Database**: Sqlite
 - **Development Tools**: Composer, pnpm, Faker
 
