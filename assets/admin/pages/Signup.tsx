@@ -1,13 +1,12 @@
-import React, {useState} from 'react';
-import {Button, Card, Form,} from 'react-bootstrap';
-import {Link, useNavigate} from 'react-router-dom';
-import {AdminPages} from '@Admin/constants';
-import {useTranslation} from "react-i18next";
-import {toast} from "react-toastify";
-import {getErrorMessage} from "@Admin/utils";
-import {useAddUserMutation} from "@Admin/services/usersApi";
-import {UserRegistration} from "@Admin/models";
-
+import React, { useState } from 'react';
+import { Button, Card, Form } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { AdminPages } from '@Admin/constants';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@Admin/utils';
+import { useAddUserMutation } from '@Admin/services/usersApi';
+import { UserRegistration } from '@Admin/models';
 
 const initialState: UserRegistration = {
     firstName: '',
@@ -19,33 +18,29 @@ const initialState: UserRegistration = {
 
 export default function Signup() {
     const navigate = useNavigate();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [formValue, setFormValue] = useState<UserRegistration>(initialState);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [addUser] = useAddUserMutation();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormValue({
             ...formValue,
             [name]: value,
         });
-        setErrors((prevState) => ({...prevState, [name]: ''}));
-
-
+        setErrors((prevState) => ({ ...prevState, [name]: '' }));
     };
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-
             await addUser(formValue).unwrap();
             setErrors({});
             navigate(AdminPages.DASHBOARD);
             toast.success(t('Bienvenue, votre compte est créé '));
-
         } catch (err) {
-            const {detail, errors} = getErrorMessage(err);
+            const { detail, errors } = getErrorMessage(err);
             if (errors) {
                 setErrors(errors);
             }
@@ -151,10 +146,11 @@ export default function Signup() {
                     */}
                     <Form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                            <Form.Label>{t("Email adresse")}</Form.Label>
+                            <Form.Label>{t('Email adresse')}</Form.Label>
                             <Form.Control
-                                type="text" name="email"
-                                placeholder={t("Entrer votre adresse email")}
+                                type="text"
+                                name="email"
+                                placeholder={t('Entrer votre adresse email')}
                                 onChange={handleInputChange}
                                 isInvalid={!!errors.email}
                             />
@@ -163,50 +159,65 @@ export default function Signup() {
                             </Form.Control.Feedback>
                         </div>
                         <div className="mb-3">
-                            <Form.Label>{("Nom")}</Form.Label>
-                            <Form.Control type="text"
-                                          name="lastName" placeholder={t("Entrez votre nom")}
-                                          onChange={handleInputChange}
-                                          isInvalid={!!errors.lastName}/>
+                            <Form.Label>{'Nom'}</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="lastName"
+                                placeholder={t('Entrez votre nom')}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.lastName}
+                            />
                             <Form.Control.Feedback type="invalid">
                                 {errors?.lastName}
                             </Form.Control.Feedback>
                         </div>
                         <div className="mb-3">
-                            <Form.Label>{("Prénoms")}</Form.Label>
-                            <Form.Control type="text" name="firstName" placeholder={t("Entrez votre prénom")}
-                                          onChange={handleInputChange}
-                                          isInvalid={!!errors.firstName}/>
+                            <Form.Label>{'Prénoms'}</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="firstName"
+                                placeholder={t('Entrez votre prénom')}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.firstName}
+                            />
                             <Form.Control.Feedback type="invalid">
                                 {errors?.firstName}
                             </Form.Control.Feedback>
                         </div>
                         <div className="mb-3">
-                            <Form.Label>{t("Mot de passe")}</Form.Label>
-                            <Form.Control type="password" name="password" onChange={handleInputChange}
-                                          isInvalid={!!errors.password}/>
+                            <Form.Label>{t('Mot de passe')}</Form.Label>
+                            <Form.Control
+                                type="password"
+                                name="password"
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.password}
+                            />
                             <Form.Control.Feedback type="invalid">
                                 {errors?.password}
                             </Form.Control.Feedback>
                         </div>
                         <div className="mb-3">
-                            <Form.Label>{t("Même mot de passe")}</Form.Label>
-                            <Form.Control type="password" name="confirmPassword" onChange={handleInputChange}
-                                          isInvalid={!!errors.confirmPassword}/>
+                            <Form.Label>{t('Même mot de passe')}</Form.Label>
+                            <Form.Control
+                                type="password"
+                                name="confirmPassword"
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.confirmPassword}
+                            />
                             <Form.Control.Feedback type="invalid">
                                 {errors?.confirmPassword}
                             </Form.Control.Feedback>
                         </div>
 
                         <Button variant="primary" className="btn-sign" type="submit">
-                            {t("Créer un compte")}
+                            {t('Créer un compte')}
                         </Button>
                     </Form>
                 </Card.Body>
                 <Card.Footer>
-                    {("Vous avez déja un compte")} <Link to={AdminPages.SIGN_IN}>{("Se connecter")}</Link>
+                    {'Vous avez déja un compte'}{' '}
+                    <Link to={AdminPages.SIGN_IN}>{'Se connecter'}</Link>
                 </Card.Footer>
-
             </Card>
         </div>
     );

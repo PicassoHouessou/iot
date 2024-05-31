@@ -35,7 +35,7 @@ export enum ApiRoutesWithoutPrefix {
     MODULE_STATUSES = '/module_statuses',
     STATISTICS = '/statistics',
     COMMANDS = '/commands',
-    LOGIN = "/login"
+    LOGIN = '/login',
 }
 
 export enum AdminPages {

@@ -14,20 +14,12 @@ export interface User {
 
 export type UserEdit = Pick<
     User,
-    | 'id'
-    | 'firstName'
-    | 'lastName'
-    | 'roles'
-    | 'email'
-    | 'password'
+    'id' | 'firstName' | 'lastName' | 'roles' | 'email' | 'password'
 >;
 
 export type UserRegistration = Pick<
     UserEdit,
-    | 'firstName'
-    | 'lastName'
-    | 'email'
-    | 'password'
+    'firstName' | 'lastName' | 'email' | 'password'
 > & { confirmPassword: string };
 
 export type UserChangePaswword = {
@@ -36,7 +28,6 @@ export type UserChangePaswword = {
     confirmPassword: string;
     id: string;
 };
-
 
 export interface UserAuth {
     id: string;
@@ -58,5 +49,4 @@ export interface LoginRequest {
     password: string;
 }
 
-export type AvatarEdit = Pick<User, "avatar"> & { id: string };
-
+export type AvatarEdit = Pick<User, 'avatar'> & { id: string };
