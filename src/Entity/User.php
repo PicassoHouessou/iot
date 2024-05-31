@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -17,6 +18,7 @@ use App\Controller\ChangePasswordController;
 use App\Controller\EditAvatarController;
 use App\Repository\UserRepository;
 use App\State\UserProcessor;
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -81,8 +83,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(),
         new Post(),
     ],
-    normalizationContext: ['groups' => ['read:user']],
-    denormalizationContext: ['groups' => ['write:user']],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']],
     paginationClientEnabled: true,
     paginationClientItemsPerPage: true,
     paginationEnabled: true,
@@ -106,6 +108,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Sequentially([
+        new Assert\NotBlank,
+        new Assert\Email,
+        new Assert\Length(max: 170)
+    ])]
     #[Groups(["user:read", "user:write"])]
     private ?string $email = null;
 
@@ -113,12 +120,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(["user:read", "user:write"])]
     #[Assert\Sequentially([
+        new Assert\NotBlank,
         new Assert\Length(max: 250)
+
     ])]
     private ?string $firstName = null;
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(["user:read", "user:write"])]
     #[Assert\Sequentially([
+        new Assert\NotBlank,
         new Assert\Length(max: 250)
     ])]
     private ?string $lastName = null;
@@ -128,9 +138,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[Groups(["user:read", "user:avatar"])]
     private $avatar;
 
-    #[Groups(["read:user"])]
+    #[Groups(["user:read"])]
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     /**
      * @var list<string> The user roles
@@ -141,7 +151,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    #[Groups(["user:read", "user:avatar"])]
+    #[Assert\Sequentially([
+        new Assert\NotBlank,
+        new Assert\Length(max: 250)
+    ])]
     private ?string $password = null;
 
     #[ORM\Column(type: "datetime")]
@@ -225,12 +240,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(?string $password): static
     {
         $this->password = $password;
 
@@ -312,5 +327,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
+    }
+
+    #[Groups(["user:read"])]
+    public function getCreatedAtAgo(): string
+    {
+        if ($this->createdAt === null) {
+            return "";
+        }
+        return Carbon::instance($this->createdAt)->diffForHumans();
+    }
+
+    #[Groups(["user:read"])]
+    public function getUpdatedAtAgo(): string
+    {
+        if ($this->updatedAt === null) {
+            return "";
+        }
+        return Carbon::instance($this->updatedAt)->diffForHumans();
     }
 }

@@ -35,6 +35,7 @@ export enum ApiRoutesWithoutPrefix {
     MODULE_STATUSES = '/module_statuses',
     STATISTICS = '/statistics',
     COMMANDS = '/commands',
+    LOGIN = "/login"
 }
 
 export enum AdminPages {
@@ -57,6 +58,7 @@ export enum AdminPages {
     PROFILES = '/profiles',
     CALENDAR = '/calendar',
     SIGN_IN = '/signin',
+    SIGN_UP = '/signup',
 }
 
 type BaseApiFilters = 'search' | 'page';
