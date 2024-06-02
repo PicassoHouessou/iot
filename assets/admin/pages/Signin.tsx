@@ -5,12 +5,12 @@ import { setCredentials, setTokenCredentials } from '@Admin/features/authSlice';
 import { getErrorMessage } from '@Admin/utils/getErrorMessage';
 import { useLoginMutation } from '@Admin/services/usersApi';
 import { useAppDispatch } from '@Admin/store/store';
-import { AdminPages, APP_NAME } from '@Admin/constants';
+import { AdminPages, APP_NAME, LoginAccess } from '@Admin/constants';
 import { useTranslation } from 'react-i18next';
 
 const form = {
-    email: 'admin@otp.picassohouessou.com',
-    password: 'admin',
+    email: LoginAccess.EMAIL,
+    password: LoginAccess.PASSWORD,
 };
 export default function Signin() {
     const { t } = useTranslation();
@@ -74,8 +74,12 @@ export default function Signin() {
                         )}
                     </Card.Text>
                     <ul>
-                        <li>{'Email :'} admin@otp.picassohouessou.com</li>
-                        <li>{t('Mot de passe :')} admin</li>
+                        <li>
+                            {'Email :'} <strong>{LoginAccess.EMAIL}</strong>
+                        </li>
+                        <li>
+                            {t('Mot de passe :')} <strong>{LoginAccess.PASSWORD}</strong>
+                        </li>
                     </ul>
                     <Form onSubmit={handleSubmit}>
                         <div className="mb-4">
