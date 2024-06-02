@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {Button, Card, Form} from 'react-bootstrap';
-import {Link, useNavigate} from 'react-router-dom';
-import {AdminPages, APP_NAME} from '@Admin/constants';
-import {useTranslation} from 'react-i18next';
-import {toast} from 'react-toastify';
-import {getErrorMessage} from '@Admin/utils';
-import {useAddUserMutation} from '@Admin/services/usersApi';
-import {UserRegistration} from '@Admin/models';
+import React, { useState } from 'react';
+import { Button, Card, Form } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { AdminPages, APP_NAME } from '@Admin/constants';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { getErrorMessage } from '@Admin/utils';
+import { useAddUserMutation } from '@Admin/services/usersApi';
+import { UserRegistration } from '@Admin/models';
 
 const initialState: UserRegistration & { confirmPassword: string } = {
     firstName: '',
@@ -18,23 +18,28 @@ const initialState: UserRegistration & { confirmPassword: string } = {
 
 export default function Signup() {
     const navigate = useNavigate();
-    const {t} = useTranslation();
-    const [formValue, setFormValue] = useState<UserRegistration & { confirmPassword: string }>(initialState);
+    const { t } = useTranslation();
+    const [formValue, setFormValue] = useState<
+        UserRegistration & { confirmPassword: string }
+    >(initialState);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [addUser] = useAddUserMutation();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormValue({
             ...formValue,
             [name]: value,
         });
-        setErrors((prevState) => ({...prevState, [name]: ''}));
-        if (name == "confirmPassword" && value != formValue.password) {
-            setErrors((prevState) => ({...prevState, [name]: t("Le mot de passe n'est pas le même")}));
+        setErrors((prevState) => ({ ...prevState, [name]: '' }));
+        if (name == 'confirmPassword' && value != formValue.password) {
+            setErrors((prevState) => ({
+                ...prevState,
+                [name]: t("Le mot de passe n'est pas le même"),
+            }));
         }
-        if (name == "confirmPassword" && value == formValue.password) {
-            setErrors((prevState) => ({...prevState, [name]: ""}));
+        if (name == 'confirmPassword' && value == formValue.password) {
+            setErrors((prevState) => ({ ...prevState, [name]: '' }));
         }
     };
 
@@ -45,13 +50,13 @@ export default function Signup() {
                 firstName: formValue.firstName,
                 lastName: formValue.lastName,
                 email: formValue.email,
-                password: formValue.password
+                password: formValue.password,
             }).unwrap();
             setErrors({});
-            navigate(AdminPages.VERIFY + "?id=" + user.id);
+            navigate(AdminPages.VERIFY + '?id=' + user.id);
             toast.success(t('Bienvenue, votre compte est créé '));
         } catch (err) {
-            const {detail, errors} = getErrorMessage(err);
+            const { detail, errors } = getErrorMessage(err);
             if (errors) {
                 setErrors(errors);
             }

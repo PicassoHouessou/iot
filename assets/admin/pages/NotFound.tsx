@@ -1,8 +1,8 @@
 import React from 'react';
-import {Col, Container, Nav, Row} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import { Col, Container, Nav, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import pageSvg from '../assets/svg/server_down.svg';
-import {AdminPages, APP_NAME} from '@Admin/constants';
+import { AdminPages, APP_NAME } from '@Admin/constants';
 
 export default function NotFound() {
     document.body.classList.remove('sidebar-show');

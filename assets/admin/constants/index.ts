@@ -36,8 +36,8 @@ export enum ApiRoutesWithoutPrefix {
     STATISTICS = '/statistics',
     COMMANDS = '/commands',
     LOGIN = '/login',
-    VERIFY_RESEND = "/verifies/resend",
-    FORGET_PASSWORD = "/forget_passwords",
+    VERIFY_RESEND = '/verifies/resend',
+    FORGET_PASSWORD = '/forget_passwords',
 }
 
 export enum AdminPages {
@@ -61,11 +61,10 @@ export enum AdminPages {
     CALENDAR = '/calendar',
     SIGN_IN = '/signin',
     SIGN_UP = '/signup',
-    VERIFY = "/verify",
-    LOCK = "/lock",
-    FORGOT_PASSWORD = "/forgot",
-    RESET_PASSWORD = "/reset-password",
-
+    VERIFY = '/verify',
+    LOCK = '/lock',
+    FORGOT_PASSWORD = '/forgot',
+    RESET_PASSWORD = '/reset-password',
 }
 
 type BaseApiFilters = 'search' | 'page';
@@ -108,11 +107,11 @@ export enum MERCURE_NOTIFICATION_TYPE {
 }
 
 export enum AUTHOR {
-    FULL_NAME = "Picasso Houessou",
-    EMAIL = "houessoupicasso@yahoo.fr",
-    WEBSITE = "https://picassohouessou.com",
-    LINKEDIN = "https://www.linkedin.com/in/picassohouessou",
-    GITHUB = "https://github.com/PicassoHouessou",
+    FULL_NAME = 'Picasso Houessou',
+    EMAIL = 'houessoupicasso@yahoo.fr',
+    WEBSITE = 'https://picassohouessou.com',
+    LINKEDIN = 'https://www.linkedin.com/in/picassohouessou',
+    GITHUB = 'https://github.com/PicassoHouessou',
 }
 
-export const APP_NAME = "IoTAdmin"
+export const APP_NAME = 'IoTAdmin';

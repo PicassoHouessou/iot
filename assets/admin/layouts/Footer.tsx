@@ -1,10 +1,10 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {useTranslation} from 'react-i18next';
-import {AUTHOR} from "@Admin/constants";
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { AUTHOR } from '@Admin/constants';
 
 export default function Footer() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     return (
         <div className="main-footer">
             <span>&copy; 2024. {AUTHOR.FULL_NAME}. All Rights Reserved.</span>
