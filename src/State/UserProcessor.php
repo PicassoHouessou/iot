@@ -47,7 +47,6 @@ final class UserProcessor implements ProcessorInterface
             try {
                 $this->dispatcher->dispatch($userEvent, UserEvent::CONFIRM_EMAIL);
             } catch (\Exception $e) {
-                dump($e);
             }
         }
 

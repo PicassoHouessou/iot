@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
 import userAvatar from '../assets/img/img1.jpg';
 import LanguageSwitcher from '@Admin/components/LanguagueSwitcher';
 import { useTranslation } from 'react-i18next';
 import { AdminPages } from '@Admin/constants';
+import { useAppDispatch } from '@Admin/store/store';
+import { logOut } from '@Admin/features/authSlice';
 
 export default function Header({
     onSkin,
@@ -12,6 +14,8 @@ export default function Header({
     onSkin: React.Dispatch<React.SetStateAction<string>>;
 }) {
     const { t } = useTranslation();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const CustomToggle = React.forwardRef(
         (
             {
@@ -289,7 +293,14 @@ export default function Header({
                             <img src={userAvatar} alt="" />
                         </div>
                         <nav className="nav">
-                            <Link to={AdminPages.SIGN_IN}>
+                            <Link
+                                to={AdminPages.SIGN_IN}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    dispatch(logOut());
+                                    navigate(AdminPages.SIGN_IN);
+                                }}
+                            >
                                 <i className="ri-logout-box-r-line"></i>{' '}
                                 {t('Se Déconnecter')}
                             </Link>

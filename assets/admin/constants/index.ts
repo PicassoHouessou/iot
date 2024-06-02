@@ -38,6 +38,7 @@ export enum ApiRoutesWithoutPrefix {
     LOGIN = '/login',
     VERIFY_RESEND = '/verifies/resend',
     FORGET_PASSWORD = '/forget_passwords',
+    LOGOUT = '/logout',
 }
 
 export enum AdminPages {

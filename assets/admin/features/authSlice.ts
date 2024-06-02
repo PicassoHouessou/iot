@@ -1,6 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@Admin/store/store';
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
 
 export interface UserAuth {
     id: string;
@@ -94,7 +95,9 @@ export const authSlice = createSlice({
         },
         // eslint-disable-next-line
         logOut: (state) => {
-            fetch('/api/logout', { credentials: 'include' }).finally(() => {
+            fetch('/api' + ApiRoutesWithoutPrefix.LOGOUT, {
+                credentials: 'include',
+            }).finally(() => {
                 localStorage.clear();
                 sessionStorage.clear();
                 state = initialState;
