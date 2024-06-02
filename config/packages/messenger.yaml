@@ -7,8 +7,9 @@ framework:
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
-                    use_notify: true
-                    check_delayed_interval: 60000
+                    redeliver_timeout: 30
+                    #use_notify: true
+                    #check_delayed_interval: 30
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
@@ -18,7 +19,7 @@ framework:
         default_bus: messenger.bus.default
 
         buses:
-            messenger.bus.default: []
+            messenger.bus.default: [ ]
 
         routing:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
