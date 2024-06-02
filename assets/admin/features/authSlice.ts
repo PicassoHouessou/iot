@@ -1,7 +1,7 @@
-import type {PayloadAction} from '@reduxjs/toolkit';
-import {createSlice} from '@reduxjs/toolkit';
-import {RootState} from '@Admin/store/store';
-import {ApiRoutesWithoutPrefix} from "@Admin/constants";
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '@Admin/store/store';
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
 
 export interface UserAuth {
     id: string;
@@ -68,7 +68,7 @@ export const authSlice = createSlice({
         },
         setCredentials: (
             state,
-            {payload: {user}}: PayloadAction<{ user: UserAuth }>,
+            { payload: { user } }: PayloadAction<{ user: UserAuth }>,
         ) => {
             state.user = user;
             localStorage.setItem('user', JSON.stringify(user));
@@ -80,7 +80,7 @@ export const authSlice = createSlice({
         setTokenCredentials: (
             state,
             {
-                payload: {token, refresh_token},
+                payload: { token, refresh_token },
             }: PayloadAction<{
                 token: string | null;
                 refresh_token: string | null;
@@ -95,22 +95,23 @@ export const authSlice = createSlice({
         },
         // eslint-disable-next-line
         logOut: (state) => {
-            fetch("/api" + ApiRoutesWithoutPrefix.LOGOUT, {credentials: 'include'}).finally(() => {
+            fetch('/api' + ApiRoutesWithoutPrefix.LOGOUT, {
+                credentials: 'include',
+            }).finally(() => {
                 localStorage.clear();
                 sessionStorage.clear();
                 state = initialState;
                 location.reload();
             });
         },
-
     },
 });
 
-export const {loginReducer} = authSlice.actions;
+export const { loginReducer } = authSlice.actions;
 
 //export const selectUser = (state: UserState) => state.user;
 
-export const {setCredentials, setTokenCredentials, logOut} = authSlice.actions;
+export const { setCredentials, setTokenCredentials, logOut } = authSlice.actions;
 
 export default authSlice.reducer;
 
