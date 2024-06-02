@@ -117,6 +117,6 @@ export enum AUTHOR {
 export const APP_NAME = 'IoTAdmin';
 
 export enum LoginAccess {
-    EMAIL = "admin@otp.picassohouessou.com",
-    PASSWORD = "admin",
+    EMAIL = 'admin@otp.picassohouessou.com',
+    PASSWORD = 'admin',
 }
