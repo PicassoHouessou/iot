@@ -3,7 +3,7 @@ import {Button, Card, Form} from "react-bootstrap";
 import {Link} from "react-router-dom";
 
 import img1 from "../assets/img/img1.jpg";
-import {AdminPages} from "@Admin/constants";
+import {AdminPages, APP_NAME} from "@Admin/constants";
 
 export default function LockScreen() {
     return (
