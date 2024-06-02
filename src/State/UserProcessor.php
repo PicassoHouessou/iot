@@ -13,11 +13,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 final class UserProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ProcessorInterface $persistProcessor,
-        private ProcessorInterface $removeProcessor,
+        private ProcessorInterface          $persistProcessor,
+        private ProcessorInterface          $removeProcessor,
         private UserPasswordHasherInterface $passwordHasher,
-        private EventDispatcherInterface $dispatcher
-    ) {
+        private EventDispatcherInterface    $dispatcher
+    )
+    {
     }
 
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
@@ -33,17 +34,10 @@ final class UserProcessor implements ProcessorInterface
             );
         }
 
-        $data->setDateUpdate(new \DateTime());
-
         // Send the mail only for new user
         $sendEmail = false;
         if ($data->getId() == null) {
             $sendEmail = true;
-
-            if (isset($data->sendConfirmationEmail) && $data->sendConfirmationEmail === false) {
-                $sendEmail = false;
-
-            }
         }
 
         $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
@@ -53,6 +47,7 @@ final class UserProcessor implements ProcessorInterface
             try {
                 $this->dispatcher->dispatch($userEvent, UserEvent::CONFIRM_EMAIL);
             } catch (\Exception $e) {
+                dump($e);
             }
         }
 

@@ -3,17 +3,16 @@ import {
     LoginRequest,
     User,
     UserChangePaswword,
-    UserEditWithoutId,
+    UserRegistration,
     UserResponse,
-    UserWithoutPassword,
 } from '../models';
 import { adminModuleApi } from './adminModuleApi';
 import { generateUrl } from '@Admin/utils';
-import { ApiRoutesWithoutPrefix } from '@Admin/constants';
+import { ApiRoutesWithoutPrefix, HttpMethod } from '@Admin/constants';
 
 export const usersApi = adminModuleApi.injectEndpoints({
     endpoints: (builder) => ({
-        users: builder.query<UserWithoutPassword[], object | void>({
+        users: builder.query<User[], object | void>({
             query: (params) => {
                 return {
                     url: generateUrl(ApiRoutesWithoutPrefix.USERS, params),
@@ -39,13 +38,13 @@ export const usersApi = adminModuleApi.injectEndpoints({
         }),
 
         user: builder.query<User, string | number>({
-            query: (id) => `/users/${id}`,
+            query: (id) => `${ApiRoutesWithoutPrefix.USERS}/${id}`,
             providesTags: ['User'],
         }),
-        addUser: builder.mutation<User, UserEditWithoutId>({
+        addUser: builder.mutation<User, UserRegistration>({
             query: (data) => ({
-                url: `/users`,
-                method: 'POST',
+                url: ApiRoutesWithoutPrefix.USERS,
+                method: HttpMethod.POST,
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
@@ -57,8 +56,8 @@ export const usersApi = adminModuleApi.injectEndpoints({
         updateUser: builder.mutation({
             query: ({ id, ...rest }) => {
                 return {
-                    url: `/users/${id}`,
-                    method: 'PUT',
+                    url: `${ApiRoutesWithoutPrefix.USERS}/${id}`,
+                    method: HttpMethod.PUT,
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
@@ -71,10 +70,10 @@ export const usersApi = adminModuleApi.injectEndpoints({
         editUserAvatar: builder.mutation<User, AvatarEdit>({
             query: ({ id, ...rest }) => {
                 const formData = new FormData();
-                formData.append('avatar', rest.avatar);
+                formData.append('avatar', rest?.avatar);
                 return {
-                    url: `/users/avatar/${id}`,
-                    method: 'POST',
+                    url: `${ApiRoutesWithoutPrefix.USERS}/avatar/${id}`,
+                    method: HttpMethod.POST,
                     body: formData,
                 };
             },
@@ -84,8 +83,8 @@ export const usersApi = adminModuleApi.injectEndpoints({
         changePasswordUser: builder.mutation<void, UserChangePaswword>({
             query: ({ id, ...rest }) => {
                 return {
-                    url: `/users/password/update/${id}`,
-                    method: 'PUT',
+                    url: `${ApiRoutesWithoutPrefix.USERS}/password/update/${id}`,
+                    method: HttpMethod.PUT,
                     body: { ...rest },
                 };
             },
@@ -93,42 +92,38 @@ export const usersApi = adminModuleApi.injectEndpoints({
         }),
         deleteUser: builder.mutation<void, string>({
             query: (id) => ({
-                url: `/users/${id}`,
-                method: 'DELETE',
+                url: `${ApiRoutesWithoutPrefix.USERS}/${id}`,
+                method: HttpMethod.DELETE,
             }),
             invalidatesTags: ['User'],
         }),
-        lastUsers: builder.query<User[], void>({
-            query: () => '/users/last',
-            providesTags: ['User'],
-        }),
+
         login: builder.mutation<UserResponse, LoginRequest>({
             query: (credentials) => {
                 return {
-                    url: '/login',
-                    method: 'POST',
+                    url: ApiRoutesWithoutPrefix.LOGIN,
+                    method: HttpMethod.POST,
                     body: credentials,
                 };
             },
         }),
-        messages: builder.query<Array<any>, void>({
-            query: () => ({
-                url: `/messages`,
-                method: 'GET',
-            }),
-            providesTags: ['User'],
-        }),
-        userTypes: builder.query<any[], object | void>({
-            query: (params) => {
+        resend: builder.mutation<any, number>({
+            query: (userId) => {
                 return {
-                    url: generateUrl('user_types', params),
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                    },
+                    url: ApiRoutesWithoutPrefix.VERIFY_RESEND,
+                    method: HttpMethod.POST,
+                    body: { userId },
                 };
             },
-            providesTags: ['User'],
+        }),
+        forgetPassword: builder.mutation<any, string>({
+            query: (email) => {
+                return {
+                    url: ApiRoutesWithoutPrefix.FORGET_PASSWORD,
+                    method: HttpMethod.POST,
+                    body: { email },
+                };
+            },
         }),
     }),
 });
@@ -137,7 +132,6 @@ export const {
     useUserQuery,
     useUsersQuery,
     useLazyUsersQuery,
-    useUserTypesQuery,
     useUsersJsonLdQuery,
     useAddUserMutation,
     useDeleteUserMutation,
@@ -145,5 +139,6 @@ export const {
     useUpdateUserMutation,
     useEditUserAvatarMutation,
     useLoginMutation,
-    useMessagesQuery,
+    useResendMutation,
+    useForgetPasswordMutation,
 } = usersApi;

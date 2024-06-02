@@ -1,35 +1,29 @@
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import pageSvg from '../assets/svg/server_down.svg';
-import { AdminPages } from '@Admin/constants';
-import { useTranslation } from 'react-i18next';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import pageSvg from '../assets/svg/pair_programming.svg';
 import AuthLayout from '@Admin/pages/AuthLayout';
 
-export default function NotFound() {
-    const { t } = useTranslation();
+export default function InternalServerError() {
     document.body.classList.remove('sidebar-show');
 
     return (
         <div className="page-error">
             <AuthLayout />
+
             <div className="content">
                 <Container>
                     <Row className="gx-5">
                         <Col lg="5" className="d-flex flex-column align-items-center">
-                            <h1 className="error-number">404</h1>
-                            <h2 className="error-title">{t('Page introuvable')}</h2>
+                            <h1 className="error-number">500</h1>
+                            <h2 className="error-title">Internal Server Error</h2>
                             <p className="error-text">
-                                {t(
-                                    "Oopps. La page que vous recherchez n'existe pas. Il se peut que vous ayez mal saisi l'adresse ou que la page ait été déplacée.",
-                                )}
+                                Oopps. The server encountered an internal server error and
+                                was unable to complete your request. Please try again
+                                later.
                             </p>
-                            <Link
-                                to={AdminPages.DASHBOARD}
-                                className="btn btn-primary btn-error"
-                            >
-                                {t('Retour au tableau de bord')}
-                            </Link>
+                            <Button variant="primary" className="btn-error">
+                                Back to Dashboard
+                            </Button>
                         </Col>
                         <Col xs="8" lg="6" className="mb-5 mb-lg-0">
                             <object
