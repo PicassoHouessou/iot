@@ -33,16 +33,11 @@ final class UserProcessor implements ProcessorInterface
                 $this->passwordHasher->hashPassword($data, $data->getPassword())
             );
         }
-        
+
         // Send the mail only for new user
         $sendEmail = false;
         if ($data->getId() == null) {
             $sendEmail = true;
-
-            if (isset($data->sendConfirmationEmail) && $data->sendConfirmationEmail === false) {
-                $sendEmail = false;
-
-            }
         }
 
         $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
@@ -52,6 +47,7 @@ final class UserProcessor implements ProcessorInterface
             try {
                 $this->dispatcher->dispatch($userEvent, UserEvent::CONFIRM_EMAIL);
             } catch (\Exception $e) {
+                dump($e);
             }
         }
 

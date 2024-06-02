@@ -1,14 +1,7 @@
-import {
-    AvatarEdit,
-    LoginRequest,
-    User,
-    UserChangePaswword,
-    UserRegistration,
-    UserResponse,
-} from '../models';
-import { adminModuleApi } from './adminModuleApi';
-import { generateUrl } from '@Admin/utils';
-import { ApiRoutesWithoutPrefix, HttpMethod } from '@Admin/constants';
+import {AvatarEdit, LoginRequest, User, UserChangePaswword, UserRegistration, UserResponse,} from '../models';
+import {adminModuleApi} from './adminModuleApi';
+import {generateUrl} from '@Admin/utils';
+import {ApiRoutesWithoutPrefix, HttpMethod} from '@Admin/constants';
 
 export const usersApi = adminModuleApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -54,7 +47,7 @@ export const usersApi = adminModuleApi.injectEndpoints({
             invalidatesTags: ['User'],
         }),
         updateUser: builder.mutation({
-            query: ({ id, ...rest }) => {
+            query: ({id, ...rest}) => {
                 return {
                     url: `${ApiRoutesWithoutPrefix.USERS}/${id}`,
                     method: HttpMethod.PUT,
@@ -68,7 +61,7 @@ export const usersApi = adminModuleApi.injectEndpoints({
             invalidatesTags: ['User'],
         }),
         editUserAvatar: builder.mutation<User, AvatarEdit>({
-            query: ({ id, ...rest }) => {
+            query: ({id, ...rest}) => {
                 const formData = new FormData();
                 formData.append('avatar', rest?.avatar);
                 return {
@@ -81,11 +74,11 @@ export const usersApi = adminModuleApi.injectEndpoints({
         }),
 
         changePasswordUser: builder.mutation<void, UserChangePaswword>({
-            query: ({ id, ...rest }) => {
+            query: ({id, ...rest}) => {
                 return {
                     url: `${ApiRoutesWithoutPrefix.USERS}/password/update/${id}`,
                     method: HttpMethod.PUT,
-                    body: { ...rest },
+                    body: {...rest},
                 };
             },
             invalidatesTags: ['User'],
@@ -107,7 +100,28 @@ export const usersApi = adminModuleApi.injectEndpoints({
                 };
             },
         }),
+        resend: builder.mutation<any, number>({
+            query: (userId) => {
+                return {
+                    url: ApiRoutesWithoutPrefix.VERIFY_RESEND,
+                    method: HttpMethod.POST,
+                    body: {userId},
+
+                };
+            },
+        }),
+        forgetPassword: builder.mutation<any, string>({
+            query: (email) => {
+                return {
+                    url: ApiRoutesWithoutPrefix.FORGET_PASSWORD,
+                    method: HttpMethod.POST,
+                    body: {email},
+
+                };
+            },
+        }),
     }),
+
 });
 
 export const {
@@ -121,4 +135,5 @@ export const {
     useUpdateUserMutation,
     useEditUserAvatarMutation,
     useLoginMutation,
+    useResendMutation, useForgetPasswordMutation
 } = usersApi;

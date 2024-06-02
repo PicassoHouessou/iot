@@ -1,8 +1,8 @@
 import React from 'react';
-import { Col, Container, Nav, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import {Col, Container, Nav, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import pageSvg from '../assets/svg/server_down.svg';
-import { AdminPages } from '@Admin/constants';
+import {AdminPages, APP_NAME} from '@Admin/constants';
 
 export default function NotFound() {
     document.body.classList.remove('sidebar-show');
@@ -11,8 +11,8 @@ export default function NotFound() {
         <div className="page-error">
             <div className="header">
                 <Container>
-                    <Link to="/" className="header-logo">
-                        IoTAdmin
+                    <Link to={AdminPages.DASHBOARD} className="header-logo">
+                        {APP_NAME}
                     </Link>
                     <Nav className="nav-icon">
                         <Nav.Link href="">

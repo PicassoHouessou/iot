@@ -6,11 +6,12 @@ import NotFound from "../pages/NotFound";
 import Signin from "../pages/Signin";
 import Signup from "../pages/Signup";
 import VerifyAccount from "../pages/VerifyAccount";
+import {AdminPages} from "@Admin/constants";
 
 const publicRoutes = [
-    {path: "signin", element: <Signin/>},
-    {path: "signup", element: <Signup/>},
-    {path: "verify", element: <VerifyAccount/>},
+    {path: AdminPages.SIGN_IN, element: <Signin/>},
+    {path: AdminPages.SIGN_UP, element: <Signup/>},
+    {path: AdminPages.VERIFY, element: <VerifyAccount/>},
     {path: "forgot", element: <ForgotPassword/>},
     {path: "lock", element: <LockScreen/>},
     {path: "error-404", element: <NotFound/>},

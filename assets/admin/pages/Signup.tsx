@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Button, Card, Form } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { AdminPages } from '@Admin/constants';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import { getErrorMessage } from '@Admin/utils';
-import { useAddUserMutation } from '@Admin/services/usersApi';
-import { UserRegistration } from '@Admin/models';
+import React, {useState} from 'react';
+import {Button, Card, Form} from 'react-bootstrap';
+import {Link, useNavigate} from 'react-router-dom';
+import {AdminPages, APP_NAME} from '@Admin/constants';
+import {useTranslation} from 'react-i18next';
+import {toast} from 'react-toastify';
+import {getErrorMessage} from '@Admin/utils';
+import {useAddUserMutation} from '@Admin/services/usersApi';
+import {UserRegistration} from '@Admin/models';
 
-const initialState: UserRegistration = {
+const initialState: UserRegistration & { confirmPassword: string } = {
     firstName: '',
     lastName: '',
     email: '',
@@ -18,29 +18,40 @@ const initialState: UserRegistration = {
 
 export default function Signup() {
     const navigate = useNavigate();
-    const { t } = useTranslation();
-    const [formValue, setFormValue] = useState<UserRegistration>(initialState);
+    const {t} = useTranslation();
+    const [formValue, setFormValue] = useState<UserRegistration & { confirmPassword: string }>(initialState);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [addUser] = useAddUserMutation();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormValue({
             ...formValue,
             [name]: value,
         });
-        setErrors((prevState) => ({ ...prevState, [name]: '' }));
+        setErrors((prevState) => ({...prevState, [name]: ''}));
+        if (name == "confirmPassword" && value != formValue.password) {
+            setErrors((prevState) => ({...prevState, [name]: t("Le mot de passe n'est pas le même")}));
+        }
+        if (name == "confirmPassword" && value == formValue.password) {
+            setErrors((prevState) => ({...prevState, [name]: ""}));
+        }
     };
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            await addUser(formValue).unwrap();
+            const user = await addUser({
+                firstName: formValue.firstName,
+                lastName: formValue.lastName,
+                email: formValue.email,
+                password: formValue.password
+            }).unwrap();
             setErrors({});
-            navigate(AdminPages.DASHBOARD);
+            navigate(AdminPages.VERIFY + "?id=" + user.id);
             toast.success(t('Bienvenue, votre compte est créé '));
         } catch (err) {
-            const { detail, errors } = getErrorMessage(err);
+            const {detail, errors} = getErrorMessage(err);
             if (errors) {
                 setErrors(errors);
             }
@@ -53,97 +64,11 @@ export default function Signup() {
             <Card className="card-sign">
                 <Card.Header>
                     <Link to={AdminPages.DASHBOARD} className="header-logo mb-4">
-                        IoTAdmin
+                        {APP_NAME}
                     </Link>
                     <Card.Title>{t("S'inscrire")}</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    {/*
-                    <Form
-                        {...formItemLayout}
-                        form={form}
-                        layout="vertical"
-                        name="register"
-                        onFinish={onFinish}
-                        initialValues={{firstName: "", lastName: "", email: "", password: "", confirmPassword: ""}}
-                        //style={{maxWidth: 600}}
-                        scrollToFirstError
-                    >
-                        <Form.Item
-                            name="lastName"
-                            label={t("Nom")}
-                            rules={[{required: true, message: t('Veuillez entrer votre nom'), whitespace: true}]}
-                        >
-                            <Input className="form-control"/>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="firstName"
-                            label={t("Prénoms")}
-                            rules={[
-                                {type: 'array', required: true, message: t('Veuillez entrer votre prénom')},
-                            ]}
-                        >
-                            <Input className="form-control"/>
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            label={t("Email")}
-                            rules={[
-                                {
-                                    type: 'email',
-                                    message: t('Veuillez entrer une adresse email valide'),
-                                },
-                                {
-                                    required: true,
-                                    message: t('Veuillez entrer une adresse email'),
-                                },
-                            ]}
-                        >
-                            <Input className="form-control"/>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="password"
-                            label="Password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: t("Veuillez entrer mot de passe"),
-                                },
-                            ]}
-                            hasFeedback
-                        >
-                            <Input.Password className="form-control"/>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="confirmPassword"
-                            label={t("Confirmer mot de passe")}
-                            dependencies={['password']}
-                            hasFeedback
-                            rules={[
-                                {
-                                    required: true,
-                                    message: t("Veuillez confirmer votre mot de passe"),
-                                },
-                                ({getFieldValue}) => ({
-                                    validator(_, value) {
-                                        if (!value || getFieldValue('password') === value) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(new Error(t('Le nouveau mot de passe ne correspond pas')));
-                                    },
-                                }),
-                            ]}
-                        >
-                            <Input.Password className="form-control"/>
-                        </Form.Item>
-                        <Button type="primary" className="btn-sign btn btn-primary" htmlType="submit">
-                            {t("Créer un compte")}
-                        </Button>
-                    </Form>
-                    */}
                     <Form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <Form.Label>{t('Email adresse')}</Form.Label>
@@ -164,6 +89,7 @@ export default function Signup() {
                                 type="text"
                                 name="lastName"
                                 placeholder={t('Entrez votre nom')}
+                                value={formValue.lastName}
                                 onChange={handleInputChange}
                                 isInvalid={!!errors.lastName}
                             />
@@ -177,6 +103,7 @@ export default function Signup() {
                                 type="text"
                                 name="firstName"
                                 placeholder={t('Entrez votre prénom')}
+                                value={formValue.firstName}
                                 onChange={handleInputChange}
                                 isInvalid={!!errors.firstName}
                             />
@@ -189,6 +116,7 @@ export default function Signup() {
                             <Form.Control
                                 type="password"
                                 name="password"
+                                value={formValue.password}
                                 onChange={handleInputChange}
                                 isInvalid={!!errors.password}
                             />
@@ -201,6 +129,7 @@ export default function Signup() {
                             <Form.Control
                                 type="password"
                                 name="confirmPassword"
+                                value={formValue.confirmPassword}
                                 onChange={handleInputChange}
                                 isInvalid={!!errors.confirmPassword}
                             />

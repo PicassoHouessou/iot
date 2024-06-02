@@ -105,6 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["user:read"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -152,7 +153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      * @var string The hashed password
      */
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    #[Groups(["user:read", "user:avatar"])]
+    #[Groups(["user:read", "user:write"])]
     #[Assert\Sequentially([
         new Assert\NotBlank,
         new Assert\Length(max: 250)

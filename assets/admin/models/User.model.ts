@@ -20,7 +20,7 @@ export type UserEdit = Pick<
 export type UserRegistration = Pick<
     UserEdit,
     'firstName' | 'lastName' | 'email' | 'password'
-> & { confirmPassword: string };
+>;
 
 export type UserChangePaswword = {
     oldPassword: string;

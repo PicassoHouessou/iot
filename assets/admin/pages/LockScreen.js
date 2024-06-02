@@ -10,14 +10,14 @@ export default function LockScreen() {
         <div className="page-sign">
             <Card className="card-sign">
                 <Card.Header className="d-flex flex-column align-items-center">
-                    <Link to="/" className="header-logo mb-4">IoTAdmin</Link>
+                    <Link to={AdminPages.DASHBOARD} className="header-logo mb-4">{APP_NAME}</Link>
                     <Card.Title className="text-center">Account Locked</Card.Title>
                     <Card.Text className="text-center">Your account was locked due to inactivity.</Card.Text>
                 </Card.Header>
                 <Card.Body>
-                    <Link to="/" className="card-thumb"><img src={img1} alt=""/></Link>
+                    <Link to={AdminPages.DASHBOARD} className="card-thumb"><img src={img1} alt=""/></Link>
                     <div className="mb-4">
-                        <Form.Label className="d-flex justify-content-between">Password <Link to="/">Forgot
+                        <Form.Label className="d-flex justify-content-between">Password <Link to={AdminPages.DASHBOARD}>Forgot
                             password?</Link></Form.Label>
                         <Form.Control type="password" placeholder="Enter your password"/>
                     </div>

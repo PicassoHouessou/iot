@@ -10,7 +10,7 @@ export default function Forbidden() {
         <div className="page-error">
             <div className="header">
                 <Container>
-                    <a href="/" className="sidebar-logo">IoTAdmin</a>
+                    <a href="/" className="sidebar-logo">{APP_NAME}</a>
                     <Nav className="nav-icon">
                         <Nav.Link href=""><i className="ri-twitter-fill"></i></Nav.Link>
                         <Nav.Link href=""><i className="ri-github-fill"></i></Nav.Link>
