@@ -1,15 +1,14 @@
-import React from "react";
-import {Button, Col, Container, Row} from "react-bootstrap";
-import pageSvg from "../assets/svg/security.svg";
-import AuthLayout from "@Admin/pages/AuthLayout";
+import React from 'react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import pageSvg from '../assets/svg/security.svg';
+import AuthLayout from '@Admin/pages/AuthLayout';
 
 export default function Forbidden() {
-
-    document.body.classList.remove("sidebar-show");
+    document.body.classList.remove('sidebar-show');
 
     return (
         <div className="page-error">
-            <AuthLayout/>
+            <AuthLayout />
 
             <div className="content">
                 <Container>
@@ -17,17 +16,25 @@ export default function Forbidden() {
                         <Col lg="5" className="d-flex flex-column align-items-center">
                             <h1 className="error-number">505</h1>
                             <h2 className="error-title">Forbidden</h2>
-                            <p className="error-text">Oopps. Something is broken. We've been automatically alerted of
-                                the issue and will work to fix it asap.</p>
-                            <Button variant="primary" className="btn-error">Back to Dashboard</Button>
+                            <p className="error-text">
+                                Oopps. Something is broken. We've been automatically
+                                alerted of the issue and will work to fix it asap.
+                            </p>
+                            <Button variant="primary" className="btn-error">
+                                Back to Dashboard
+                            </Button>
                         </Col>
                         <Col xs="8" lg="6" className="mb-5 mb-lg-0">
-                            <object type="image/svg+xml" data={pageSvg} className="w-100"
-                                    aria-label="svg image"></object>
+                            <object
+                                type="image/svg+xml"
+                                data={pageSvg}
+                                className="w-100"
+                                aria-label="svg image"
+                            ></object>
                         </Col>
                     </Row>
                 </Container>
             </div>
         </div>
-    )
+    );
 }
