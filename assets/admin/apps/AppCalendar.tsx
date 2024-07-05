@@ -1,31 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import '../assets/css/react-datepicker.min.css';
 import Header from '../layouts/Header';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Button, Card, Modal, Nav } from 'react-bootstrap';
-import ReactDatePicker, { registerLocale } from 'react-datepicker';
+import {Button, Card, Modal, Nav} from 'react-bootstrap';
+import ReactDatePicker, {registerLocale} from 'react-datepicker';
 import allLocales from '@fullcalendar/core/locales-all';
-import { fr } from 'date-fns/locale'; // Import locales from date-fns
+import {fr} from 'date-fns/locale'; // Import locales from date-fns
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { ModuleHistory } from '@Admin/models';
-import { useSkinMode } from '@Admin/hooks';
-import {
-    useModuleHistoriesJsonLdQuery,
-    useModuleStatusesQuery,
-} from '@Admin/services/modulesApi';
-import { Flex, Tag } from 'antd';
-import { DatesSetArg, EventClickArg } from '@fullcalendar/core';
+import {ModuleHistory} from '@Admin/models';
+import {useSkinMode} from '@Admin/hooks';
+import {useModuleHistoriesJsonLdQuery, useModuleStatusesQuery,} from '@Admin/services/modulesApi';
+import {Flex, Tag} from 'antd';
+import {DatesSetArg, EventClickArg} from '@fullcalendar/core';
 import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
-import { getApiRoutesWithPrefix } from '@Admin/utils';
-import { ApiRoutesWithoutPrefix, mercureUrl } from '@Admin/constants';
+import {useTranslation} from 'react-i18next';
+import {getApiRoutesWithPrefix} from '@Admin/utils';
+import {ApiRoutesWithoutPrefix, mercureUrl} from '@Admin/constants';
 
 registerLocale('fr', fr);
 
 export default function AppCalendar() {
-    const { t, i18n } = useTranslation();
+    const {t, i18n} = useTranslation();
     const [, setSkin] = useSkinMode();
     const [startDate, setStartDate] = useState(new Date());
     const calendarRef = useRef<FullCalendar>(null);
@@ -36,12 +33,12 @@ export default function AppCalendar() {
     });
     const [history, setHistory] = useState<ModuleHistory | null>(null);
     const [histories, setHistories] = useState<Array<ModuleHistory>>([]);
-    const { data, refetch: refetchHistories } = useModuleHistoriesJsonLdQuery({
+    const {data, refetch: refetchHistories} = useModuleHistoriesJsonLdQuery({
         'createdAt[after]': dayjs(visibleDateRange.start).format('YYYY-MM-DD'),
         itemsPerPage: 1000,
     });
-    const { data: moduleStatuses, refetch: refetchModuleStatuses } =
-        useModuleStatusesQuery({ pagination: false });
+    const {data: moduleStatuses, refetch: refetchModuleStatuses} =
+        useModuleStatusesQuery({pagination: false});
 
     // toggle sidebar calendar
     const [isSidebarShow, setSidebarShow] = useState(false);
@@ -116,10 +113,10 @@ export default function AppCalendar() {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
             if (date < visibleDateRange.start) {
-                calendarApi.gotoDate(date);
+                calendarApi?.gotoDate(date);
                 updateVisibleDateRange(calendarApi);
             } else {
-                calendarApi.gotoDate(date);
+                calendarApi?.gotoDate(date);
             }
         }
     };
@@ -127,20 +124,20 @@ export default function AppCalendar() {
     const handleViewChange = (view: string) => {
         setCurrentView(view);
         if (calendarRef.current) {
-            const calendarApi = calendarRef.current.getApi();
+            const calendarApi = calendarRef?.current?.getApi();
             updateVisibleDateRange(calendarApi);
         }
     };
 
     const updateVisibleDateRange = (calendarApi: any) => {
-        const start = calendarApi.view.activeStart;
-        const end = calendarApi.view.activeEnd;
-        setVisibleDateRange({ start, end });
+        const start = calendarApi?.view?.activeStart;
+        const end = calendarApi?.view?.activeEnd;
+        setVisibleDateRange({start, end});
     };
 
     return (
         <React.Fragment>
-            <Header onSkin={setSkin} />
+            <Header onSkin={setSkin}/>
             <div className={'main main-calendar' + (isSidebarShow ? ' show' : '')}>
                 <div className="calendar-sidebar">
                     <PerfectScrollbar className="sidebar-body">
@@ -228,7 +225,8 @@ export default function AppCalendar() {
                                             {history?.status?.name}
                                         </Tag>
                                     </div>
-                                    <div className="d-flex flex-row-reverse align-items-center justify-content-between mt-2 mb-1">
+                                    <div
+                                        className="d-flex flex-row-reverse align-items-center justify-content-between mt-2 mb-1">
                                         <span className="card-date">
                                             {history?.module?.createdAtAgo}
                                         </span>
@@ -244,7 +242,8 @@ export default function AppCalendar() {
                                             {history?.module?.description}
                                         </p>
                                     )}
-                                    <div className="d-flex align-items-center justify-content-between fs-xs text-secondary mb-1">
+                                    <div
+                                        className="d-flex align-items-center justify-content-between fs-xs text-secondary mb-1">
                                         <span>
                                             <strong className="fw-medium">
                                                 Changement

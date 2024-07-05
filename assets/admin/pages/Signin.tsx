@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { Alert, Button, Card, Form } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { setCredentials, setTokenCredentials } from '@Admin/features/authSlice';
-import { getErrorMessage } from '@Admin/utils/getErrorMessage';
-import { useLoginMutation } from '@Admin/services/usersApi';
-import { useAppDispatch } from '@Admin/store/store';
-import { AdminPages, APP_NAME, LoginAccess } from '@Admin/constants';
-import { useTranslation } from 'react-i18next';
+import React, {useState} from 'react';
+import {Alert, Button, Card, Form} from 'react-bootstrap';
+import {Link, useNavigate} from 'react-router-dom';
+import {setCredentials, setTokenCredentials} from '@Admin/features/authSlice';
+import {getErrorMessage} from '@Admin/utils/getErrorMessage';
+import {useLoginMutation} from '@Admin/services/usersApi';
+import {useAppDispatch} from '@Admin/store/store';
+import {AdminPages, APP_NAME, LoginAccess} from '@Admin/constants';
+import {useTranslation} from 'react-i18next';
 
 const form = {
     email: LoginAccess.EMAIL,
     password: LoginAccess.PASSWORD,
 };
 export default function Signin() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [formValue, setFormValue] = useState(form);
-    const { email, password } = formValue;
+    const {email, password} = formValue;
     //eslint-disable-next-line
     const [errorMessage, setErrorMessage] = useState<any>(null);
     const [login] = useLoginMutation();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const setFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setErrorMessage('');
-        setFormValue((prevState) => ({ ...prevState, [name]: value }));
+        setFormValue((prevState) => ({...prevState, [name]: value}));
     };
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -39,7 +39,7 @@ export default function Signin() {
                 (res.user?.roles?.includes('ROLE_ADMIN') ||
                     res.user?.roles?.includes('ROLE_USER'))
             ) {
-                dispatch(setCredentials({ user: res.user }));
+                dispatch(setCredentials({user: res.user}));
                 dispatch(
                     setTokenCredentials({
                         token: res?.token,
@@ -51,7 +51,7 @@ export default function Signin() {
                 setErrorMessage("Vous n'êtes pas autorisé à accéder à cette page");
             }
         } catch (err) {
-            const { detail } = getErrorMessage(err);
+            const {detail} = getErrorMessage(err);
             setErrorMessage(detail);
         }
     };
@@ -118,7 +118,7 @@ export default function Signin() {
                 </Card.Body>
                 <Card.Footer>
                     {t('Pas de compte?')}{' '}
-                    <Link to={AdminPages.SIGN_UP}>{'Créer un compte'}</Link>
+                    <Link to={AdminPages.SIGN_UP}>{t('Créer un compte')}</Link>
                 </Card.Footer>
             </Card>
         </div>
