@@ -13,18 +13,18 @@ const form = {
     password: LoginAccess.PASSWORD,
 };
 export default function Signin() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [formValue, setFormValue] = useState(form);
-    const {email, password} = formValue;
+    const { email, password } = formValue;
     //eslint-disable-next-line
     const [errorMessage, setErrorMessage] = useState<any>(null);
     const [login] = useLoginMutation();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const setFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setErrorMessage('');
-        setFormValue((prevState) => ({...prevState, [name]: value}));
+        setFormValue((prevState) => ({ ...prevState, [name]: value }));
     };
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -39,7 +39,7 @@ export default function Signin() {
                 (res.user?.roles?.includes('ROLE_ADMIN') ||
                     res.user?.roles?.includes('ROLE_USER'))
             ) {
-                dispatch(setCredentials({user: res.user}));
+                dispatch(setCredentials({ user: res.user }));
                 dispatch(
                     setTokenCredentials({
                         token: res?.token,
@@ -51,7 +51,7 @@ export default function Signin() {
                 setErrorMessage("Vous n'êtes pas autorisé à accéder à cette page");
             }
         } catch (err) {
-            const {detail} = getErrorMessage(err);
+            const { detail } = getErrorMessage(err);
             setErrorMessage(detail);
         }
     };
