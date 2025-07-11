@@ -19,22 +19,19 @@ use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
-#[Route('/reset-password', priority: 100)]
 class ResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
-
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
         private EntityManagerInterface       $entityManager, private string $noReplyEmail
     )
     {
     }
-
     /**
      * Display & process form to request a password reset.
      */
-    #[Route('', name: 'app_forgot_password_request')]
+    #[Route('/reset-password', name: 'app_forgot_password_request')]
     public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
@@ -52,11 +49,10 @@ class ResetPasswordController extends AbstractController
             'requestForm' => $form,
         ]);
     }
-
     /**
      * Confirmation page after a user has requested a password reset.
      */
-    #[Route('/check-email', name: 'app_check_email')]
+    #[Route('/reset-password/check-email', name: 'app_check_email')]
     public function checkEmail(): Response
     {
         // Generate a fake token if the user does not exist or someone hit this page directly.
@@ -69,11 +65,10 @@ class ResetPasswordController extends AbstractController
             'resetToken' => $resetToken,
         ]);
     }
-
     /**
      * Validates and process the reset URL that the user clicked in their email.
      */
-    #[Route('/reset/{token}', name: 'app_reset_password')]
+    #[Route('/reset-password/reset/{token}', name: 'app_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, ?string $token = null): Response
     {
         if ($token) {
@@ -130,7 +125,6 @@ class ResetPasswordController extends AbstractController
             'resetForm' => $form,
         ]);
     }
-
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
