@@ -1,6 +1,6 @@
-import { Statistic } from '../models';
-import { adminModuleApi } from './adminModuleApi';
-import { ApiRoutesWithoutPrefix } from '@Admin/constants';
+import {Statistic} from '../models';
+import {adminModuleApi} from './adminModuleApi';
+import {ApiRoutesWithoutPrefix} from '@Admin/constants';
 
 export const statisticApi = adminModuleApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -8,11 +8,7 @@ export const statisticApi = adminModuleApi.injectEndpoints({
             query: () => ApiRoutesWithoutPrefix.STATISTICS,
             providesTags: ['Module'],
         }),
-        statistic: builder.query<Statistic, string>({
-            query: (id) => `${ApiRoutesWithoutPrefix.STATISTICS}/${id}`,
-            providesTags: ['Module'],
-        }),
     }),
 });
 
-export const { useStatisticQuery, useStatisticsQuery } = statisticApi;
+export const { useStatisticsQuery } = statisticApi;

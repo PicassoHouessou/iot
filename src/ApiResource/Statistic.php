@@ -2,10 +2,8 @@
 
 namespace App\ApiResource;
 
-use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\State\StatisticStateProvider;
 use Carbon\Carbon;
@@ -14,18 +12,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
-        new Get(
-            controller: NotFoundAction::class,
-            output: false,
-            read: false
-        ),
         new GetCollection(
-            openapiContext: [
-                'summary' => 'Retrieve statistics for the current and previous week.',
-                'description' => 'Get a collection of statistics for users, modules, module statuses, module types, and module histories for the current and previous week.',
-                'responses' => [
+            openapi: new \ApiPlatform\OpenApi\Model\Operation(
+                summary: 'Retrieve statistics for the current and previous week.',
+                description: 'Get a collection of statistics for users, modules, module statuses, module types, and module histories for the current and previous week.',
+                responses: [
                     '200' => [
-                        'description' => 'Statistics collection retrieved successfully.',
+                        'description' => 'Statistic collection for users, modules, module statuses, module types, and module histories for the current and previous week.',
                         'content' => [
                             'application/json' => [
                                 'schema' => [
@@ -91,9 +84,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
                             ],
                         ],
                     ],
-                ],
-            ]
-        ),
+                ]
+            )
+        )
     ],
     normalizationContext: ['groups' => ['statistic:read']],
     paginationEnabled: false,

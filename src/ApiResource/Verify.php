@@ -2,10 +2,8 @@
 
 namespace App\ApiResource;
 
-use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\State\VerifyProcessor;
 use Carbon\Carbon;
@@ -14,22 +12,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
-        new Get(
-            controller: NotFoundAction::class,
-            output: false,
-            read: false
-        ),
         new Post(
             uriTemplate: '/verifies/resend',
-            openapiContext: [
-                'summary' => 'Resend Confirmation email',
-                'description' => 'Resend confirmation email',
-                'responses' => [
-                    '200' => [
-                        'description' => 'Statistics collection retrieved successfully.',
-                    ],
+            openapi: new \ApiPlatform\OpenApi\Model\Operation(
+                summary: 'Resend Confirmation email',
+                description: 'Resend confirmation email',
+                responses: [
+                    '200' => new \ApiPlatform\OpenApi\Model\Response(
+                        description: 'Confirmation email resent'
+                    )
                 ]
-            ]
+            )
         ),
     ],
     normalizationContext: ['groups' => ['verify:read']],
