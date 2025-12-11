@@ -175,7 +175,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         $user = new self;
 
         //$user->setId(Uuid::fromString($id));
-        $user->setId($id);
+        $user->setId((int)$id);
         $user->setEmail($payload['username'] ?? '');
         $user->setRoles($payload['roles']);
 
@@ -187,7 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this->id;
     }
 
-    public function setId($id): self
+    public function setId(?int $id): self
     {
         $this->id = $id;
 

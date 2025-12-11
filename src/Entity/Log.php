@@ -5,14 +5,17 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\FreeTextQueryFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\Filter\LogSearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\LogRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Monolog\Logger;
@@ -24,19 +27,25 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(security: 'is_granted(\'view\',object)'),
         new Delete(security: 'is_granted(\'edit\',object)'),
-        new GetCollection(),
     ],
     normalizationContext: ['groups' => ['log:read']],
     denormalizationContext: ['groups' => ['log:write']], paginationClientEnabled: true,
     paginationClientItemsPerPage: true, paginationEnabled: true,
     security: 'is_granted(\'ROLE_ADMIN\')',
 )]
+#[GetCollection(
+    parameters: [
+        'search' => new QueryParameter(
+            filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())),
+            properties: ['IP','userFirstName','userLastName', 'uri','error']
+        ),
+    ],
+)]
 #[ORM\Entity(repositoryClass: LogRepository::class)]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['IP', "error", 'userFirstName', 'userLastName', 'uri', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['IP' => 'partial', 'userFirstName' => 'partial', 'userLastName' => 'partial', 'uri' => 'partial'])]
 #[ApiFilter(filterClass: BooleanFilter::class, properties: ["error"])]
 #[ApiFilter(filterClass: DateFilter::class, properties: ['createdAt'])]
-#[ApiFilter(filterClass: LogSearchFilter::class)]
 class Log
 {
     public static $levelNameWithoutError = [

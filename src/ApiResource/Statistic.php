@@ -5,6 +5,8 @@ namespace App\ApiResource;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
 use App\State\StatisticStateProvider;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,13 +15,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new GetCollection(
-            openapi: new \ApiPlatform\OpenApi\Model\Operation(
+            openapi: new Operation(
                 summary: 'Retrieve statistics for the current and previous week.',
                 description: 'Get a collection of statistics for users, modules, module statuses, module types, and module histories for the current and previous week.',
                 responses: [
-                    '200' => [
-                        'description' => 'Statistic collection for users, modules, module statuses, module types, and module histories for the current and previous week.',
-                        'content' => [
+                    '200' => new Response(
+                        description: 'Statistic collection for users, modules, module statuses, module types, and module histories for the current and previous week.',
+                        content: new \ArrayObject([
                             'application/json' => [
                                 'schema' => [
                                     'type' => 'array',
@@ -82,8 +84,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
+                        ])
+                    ),
                 ]
             )
         )

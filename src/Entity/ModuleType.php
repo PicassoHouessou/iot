@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\FreeTextQueryFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -12,6 +15,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Filter\ModuleTypeSearchFilter;
 use App\Repository\ModuleTypeRepository;
 use App\State\ModuleTypeProcessor;
@@ -27,7 +31,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Put(),
         new Delete(),
         new Patch,
-        new GetCollection(),
         new Post(),
     ],
     normalizationContext: ['groups' => ['module_type:read']],
@@ -37,11 +40,18 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationEnabled: true,
     processor: ModuleTypeProcessor::class,
 )]
+#[GetCollection(
+    parameters: [
+        'search' => new QueryParameter(
+            filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())),
+            properties: ['name','description']
+        ),
+    ],
+)]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity("name")]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description', 'unitOfMeasure', 'unitDescription', 'minValue', 'maxValue'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'unitOfMeasure' => 'exact', 'unitDescription' => 'partial', 'minValue' => 'partial', 'maxValue' => 'partial'])]
-#[ApiFilter(filterClass: ModuleTypeSearchFilter::class)]
 #[ORM\Entity(repositoryClass: ModuleTypeRepository::class)]
 class ModuleType
 {

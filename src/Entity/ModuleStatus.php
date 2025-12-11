@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\FreeTextQueryFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -12,6 +15,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Filter\ModuleStatusSearchFilter;
 use App\Repository\ModuleStatusRepository;
 use App\State\ModuleStatusProcessor;
@@ -26,7 +30,12 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Put(),
         new Delete(),
         new Patch,
-        new GetCollection(),
+        new GetCollection(parameters: [
+            'search' => new QueryParameter(
+                filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())),
+                properties: ['name', 'slug']
+            ),
+        ]),
         new Post(),
     ],
     normalizationContext: ['groups' => ['module_status:read']],
@@ -40,7 +49,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'slug', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'slug' => 'partial'])]
-#[ApiFilter(filterClass: ModuleStatusSearchFilter::class)]
 #[ORM\Entity(repositoryClass: ModuleStatusRepository::class)]
 #[UniqueEntity("name")]
 #[UniqueEntity("slug")]
@@ -102,17 +110,17 @@ class ModuleStatus
 
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
     #[ORM\PrePersist]
     public function updatedTimestamps(): void
     {
         if ($this->getCreatedAt() === null) {
             $this->createdAt = new \DateTime('now');
         }
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
     }
 
     public function getColor(): string
