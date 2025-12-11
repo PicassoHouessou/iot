@@ -18,9 +18,14 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 /.idea
+/.vscode
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

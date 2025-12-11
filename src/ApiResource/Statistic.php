@@ -2,11 +2,11 @@
 
 namespace App\ApiResource;
 
-use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\Response;
 use App\State\StatisticStateProvider;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,19 +14,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     operations: [
-        new Get(
-            controller: NotFoundAction::class,
-            output: false,
-            read: false
-        ),
         new GetCollection(
-            openapiContext: [
-                'summary' => 'Retrieve statistics for the current and previous week.',
-                'description' => 'Get a collection of statistics for users, modules, module statuses, module types, and module histories for the current and previous week.',
-                'responses' => [
-                    '200' => [
-                        'description' => 'Statistics collection retrieved successfully.',
-                        'content' => [
+            openapi: new Operation(
+                summary: 'Retrieve statistics for the current and previous week.',
+                description: 'Get a collection of statistics for users, modules, module statuses, module types, and module histories for the current and previous week.',
+                responses: [
+                    '200' => new Response(
+                        description: 'Statistic collection for users, modules, module statuses, module types, and module histories for the current and previous week.',
+                        content: new \ArrayObject([
                             'application/json' => [
                                 'schema' => [
                                     'type' => 'array',
@@ -89,11 +84,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
-                ],
-            ]
-        ),
+                        ])
+                    ),
+                ]
+            )
+        )
     ],
     normalizationContext: ['groups' => ['statistic:read']],
     paginationEnabled: false,

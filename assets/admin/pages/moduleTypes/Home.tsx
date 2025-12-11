@@ -168,19 +168,17 @@ export default function Home() {
             setPagination((prevState) => ({
                 ...prevState,
                 total: Math.ceil(
-                    Number(
-                        dataApis['hydra:totalItems' as unknown as keyof typeof dataApis],
-                    ),
+                    Number(dataApis['totalItems' as unknown as keyof typeof dataApis]),
                 ),
             }));
             /*
             setNumberOfPages(
-                Math.ceil(Number(dataApis["hydra:totalItems" as unknown as keyof typeof dataApis]) / itemsPerPage)
+                Math.ceil(Number(dataApis["totalItems" as unknown as keyof typeof dataApis]) / itemsPerPage)
             );
 
              */
 
-            setData(dataApis['hydra:member' as unknown as keyof typeof dataApis]);
+            setData(dataApis['member' as unknown as keyof typeof dataApis]);
         }
     }, [setPagination, dataApis, itemsPerPage]);
 

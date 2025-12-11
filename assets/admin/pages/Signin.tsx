@@ -118,7 +118,7 @@ export default function Signin() {
                 </Card.Body>
                 <Card.Footer>
                     {t('Pas de compte?')}{' '}
-                    <Link to={AdminPages.SIGN_UP}>{'Créer un compte'}</Link>
+                    <Link to={AdminPages.SIGN_UP}>{t('Créer un compte')}</Link>
                 </Card.Footer>
             </Card>
         </div>

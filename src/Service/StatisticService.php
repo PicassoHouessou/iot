@@ -31,7 +31,7 @@ class StatisticService
         // Get entities created in the date ranges
         $thisWeekEntities = $repository->findCreatedBetween($startOfThisWeek, $endOfThisWeek);
         $lastWeekEntities = $repository->findCreatedBetween($startOfLastWeek, $endOfLastWeek);
-        
+
         // Calculate the counts and increase
         $thisWeekCount = count($thisWeekEntities);
         $lastWeekCount = count($lastWeekEntities);
@@ -43,7 +43,7 @@ class StatisticService
             'thisWeekCount' => $thisWeekCount,
             'lastWeekCount' => $lastWeekCount,
             'increase' => $increase,
-            'percentageIncrease' => abs($percentageIncrease)
+            'percentageIncrease' => round(abs($percentageIncrease), 2)
         ];
     }
 

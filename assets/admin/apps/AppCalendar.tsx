@@ -53,7 +53,7 @@ export default function AppCalendar() {
 
     useEffect(() => {
         if (data) {
-            setHistories(data['hydra:member' as unknown as keyof typeof data]);
+            setHistories(data['member' as unknown as keyof typeof data]);
         }
     }, [data]);
 
@@ -73,7 +73,7 @@ export default function AppCalendar() {
             getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_STATUSES),
         );
 
-        const eventSourceModuleStatus = new EventSource(urlModuleStatus);
+        const eventSourceModuleStatus = new EventSource(urlModuleStatus.toString());
         eventSourceModuleStatus.onmessage = (e: MessageEvent) => {
             if (e.data) {
                 refetchModuleStatuses();
@@ -92,7 +92,7 @@ export default function AppCalendar() {
             getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.COMMANDS),
         );
 
-        const eventSourceModuleHistory = new EventSource(url);
+        const eventSourceModuleHistory = new EventSource(url.toString());
         eventSourceModuleHistory.onmessage = (e: MessageEvent) => {
             if (e.data) {
                 refetchHistories();
@@ -116,10 +116,10 @@ export default function AppCalendar() {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
             if (date < visibleDateRange.start) {
-                calendarApi.gotoDate(date);
+                calendarApi?.gotoDate(date);
                 updateVisibleDateRange(calendarApi);
             } else {
-                calendarApi.gotoDate(date);
+                calendarApi?.gotoDate(date);
             }
         }
     };
@@ -127,14 +127,14 @@ export default function AppCalendar() {
     const handleViewChange = (view: string) => {
         setCurrentView(view);
         if (calendarRef.current) {
-            const calendarApi = calendarRef.current.getApi();
+            const calendarApi = calendarRef?.current?.getApi();
             updateVisibleDateRange(calendarApi);
         }
     };
 
     const updateVisibleDateRange = (calendarApi: any) => {
-        const start = calendarApi.view.activeStart;
-        const end = calendarApi.view.activeEnd;
+        const start = calendarApi?.view?.activeStart;
+        const end = calendarApi?.view?.activeEnd;
         setVisibleDateRange({ start, end });
     };
 

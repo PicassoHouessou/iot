@@ -37,10 +37,11 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/users/password/update/{id}',
             requirements: ['id' => '.+', '_method' => 'PUT'],
             controller: ChangePasswordController::class,
-            openapiContext: [
-                'summary' => 'Change the password of User Resource',
-                'requestBody' => [
-                    'content' => [
+            openapi: new \ApiPlatform\OpenApi\Model\Operation(
+                summary : 'Change the password of User Resource',
+                requestBody: new \ApiPlatform\OpenApi\Model\RequestBody(
+                    description : 'Change the password of User Resource',
+                    content :new \ArrayObject( [
                         'application/json' => [
                             'schema' => [
                                 '' => 'object',
@@ -51,18 +52,20 @@ use Symfony\Component\Validator\Constraints as Assert;
                                 ]
                             ]
                         ]
-                    ]
-                ]
-            ],
+                    ])
+                    ))
+            ,
             security: 'is_granted(\'edit\',object)'
         ),
         new Post(
             uriTemplate: '/users/avatar/{id}',
             requirements: ['id' => '.+', '_method' => 'POST'],
             controller: EditAvatarController::class,
-            openapiContext: [
-                'requestBody' => [
-                    'content' => [
+             openapi: new \ApiPlatform\OpenApi\Model\Operation(
+                summary: 'Add an avatar to User ressource',
+                requestBody: new \ApiPlatform\OpenApi\Model\RequestBody(
+                    description: 'Add an avatar to User ressource',
+                    content :new \ArrayObject( [
                         'multipart/form-data' => [
                             'schema' => [
                                 'type' => 'object',
@@ -74,9 +77,8 @@ use Symfony\Component\Validator\Constraints as Assert;
                                 ]
                             ]
                         ]
-                    ]
-                ]
-            ],
+                    ]))
+            ),
             security: 'is_granted(\'edit\',object)',
             deserialize: false
         ),
@@ -173,7 +175,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         $user = new self;
 
         //$user->setId(Uuid::fromString($id));
-        $user->setId($id);
+        $user->setId((int)$id);
         $user->setEmail($payload['username'] ?? '');
         $user->setRoles($payload['roles']);
 
@@ -185,7 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this->id;
     }
 
-    public function setId($id): self
+    public function setId(?int $id): self
     {
         $this->id = $id;
 

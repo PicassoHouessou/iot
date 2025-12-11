@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\FreeTextQueryFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -13,7 +16,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Filter\ModuleSearchFilter;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\ModuleRepository;
 use App\State\ModuleProcessor;
 use Carbon\Carbon;
@@ -30,7 +33,12 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Put(),
         new Patch(),
         new Delete(),
-        new GetCollection(),
+        new GetCollection(parameters: [
+            'search' => new QueryParameter(
+                filter: new FreeTextQueryFilter(new OrFilter(new PartialSearchFilter())),
+                properties: ['name', 'description']
+            ),
+        ]),
         new Post(),
     ],
     normalizationContext: ['groups' => ['module:read']],
@@ -43,7 +51,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(filterClass: OrderFilter::class, properties: ['id', 'name', 'description', 'createdAt'])]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial', 'description' => 'partial', 'type' => 'exact'])]
 #[ApiFilter(DateFilter::class, properties: ['createdAt', 'updatedAt'])]
-#[ApiFilter(filterClass: ModuleSearchFilter::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ModuleRepository::class)]
 class Module

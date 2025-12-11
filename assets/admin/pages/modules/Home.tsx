@@ -172,12 +172,10 @@ export default function Home() {
             setPagination((prevState) => ({
                 ...prevState,
                 total: Math.ceil(
-                    Number(
-                        dataApis['hydra:totalItems' as unknown as keyof typeof dataApis],
-                    ),
+                    Number(dataApis['totalItems' as unknown as keyof typeof dataApis]),
                 ),
             }));
-            const data = dataApis['hydra:member' as unknown as keyof typeof dataApis];
+            const data = dataApis['member' as unknown as keyof typeof dataApis];
             setData(data);
             if (Array.isArray(data) && data.length == 0 && canReset) {
                 //setPagination(prevState => ({...prevState,total: }))

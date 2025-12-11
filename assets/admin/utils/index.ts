@@ -136,7 +136,7 @@ export const useMercureSubscriber = <T extends { id: string }>() => {
                 'topic',
                 getApiRoutesWithPrefix(apiRoutesWithoutPrefix),
             );
-            const eventSource = new EventSource(url);
+            const eventSource = new EventSource(url.toString());
 
             eventSource.onmessage = (e: MessageEvent) => {
                 if (e.data) {

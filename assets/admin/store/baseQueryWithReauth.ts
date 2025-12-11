@@ -1,5 +1,5 @@
-import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import {
+    BaseQueryApi,
     BaseQueryFn,
     FetchArgs,
     fetchBaseQuery,

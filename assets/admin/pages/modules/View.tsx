@@ -35,11 +35,10 @@ export default function View() {
     useEffect(() => {
         if (histories) {
             if (
-                histories['hydra:view' as unknown as keyof typeof histories] &&
-                histories['hydra:view' as unknown as keyof typeof histories]['hydra:next']
+                histories['view' as unknown as keyof typeof histories] &&
+                histories['view' as unknown as keyof typeof histories]['next']
             ) {
-                const data =
-                    histories['hydra:member' as unknown as keyof typeof histories];
+                const data = histories['member' as unknown as keyof typeof histories];
                 setList((prevState) => [...prevState, ...data]);
 
                 // Resetting window's offsetTop so as to display react-virtualized demo underfloor.

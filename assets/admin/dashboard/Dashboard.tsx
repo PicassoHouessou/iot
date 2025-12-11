@@ -53,9 +53,9 @@ export default function Dashboard() {
             'topic',
             getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_TYPES),
         );
-        const eventSourceModule = new EventSource(urlModule);
-        const eventSourceModuleStatus = new EventSource(urlModuleStatus);
-        const eventSourceModuleType = new EventSource(urlModuleType);
+        const eventSourceModule = new EventSource(urlModule.toString());
+        const eventSourceModuleStatus = new EventSource(urlModuleStatus.toString());
+        const eventSourceModuleType = new EventSource(urlModuleType.toString());
 
         eventSourceModule.onmessage = (e: MessageEvent) => {
             if (e.data) {
