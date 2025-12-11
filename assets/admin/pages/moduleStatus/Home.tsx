@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Button, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import { Dropdown, GetProp, MenuProps, Table, TableProps, Tag } from 'antd';
-import {
-    useDeleteModuleStatusMutation,
-    useModuleStatusesJsonLdQuery,
-} from '@Admin/services/modulesApi';
-import { ModuleStatus } from '@Admin/models';
-import { getErrorMessage, useMercureSubscriber } from '@Admin/utils';
-import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
-import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
+import {useSkinMode} from '@Admin/hooks';
+import {Dropdown, GetProp, MenuProps, Table, TableProps, Tag} from 'antd';
+import {useDeleteModuleStatusMutation, useModuleStatusesJsonLdQuery,} from '@Admin/services/modulesApi';
+import {ModuleStatus} from '@Admin/models';
+import {getErrorMessage, useMercureSubscriber} from '@Admin/utils';
+import {AdminPages, ApiRoutesWithoutPrefix} from '@Admin/constants';
+import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
+import {toast} from 'react-toastify';
+import {useTranslation} from 'react-i18next';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -142,7 +139,7 @@ export default function Home() {
     React.useEffect(() => {
         const url = new URL(`${mercureUrl}/.well-known/mercure`);
         url.searchParams.append("topic", getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_STATUSES));
-        const eventSource = new EventSource(url);
+        const eventSource = new EventSource(url.toString());
         eventSource.onmessage = (e) => {
             if (e.data) {
 
@@ -192,18 +189,18 @@ export default function Home() {
                 ...prevState,
                 total: Math.ceil(
                     Number(
-                        dataApis['hydra:totalItems' as unknown as keyof typeof dataApis],
+                        dataApis['totalItems' as unknown as keyof typeof dataApis],
                     ),
                 ),
             }));
             /*
             setNumberOfPages(
-                Math.ceil(Number(dataApis["hydra:totalItems" as unknown as keyof typeof dataApis]) / itemsPerPage)
+                Math.ceil(Number(dataApis["totalItems" as unknown as keyof typeof dataApis]) / itemsPerPage)
             );
 
              */
 
-            setData(dataApis['hydra:member' as unknown as keyof typeof dataApis]);
+            setData(dataApis['member' as unknown as keyof typeof dataApis]);
         }
     }, [error, setPagination, dataApis, itemsPerPage]);
 

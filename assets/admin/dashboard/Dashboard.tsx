@@ -1,23 +1,23 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Button, Col, Row} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import Footer from '../layouts/Footer';
 import Header from '../layouts/Header';
-import { useSkinMode } from '@Admin/hooks';
-import { useStatisticsQuery } from '@Admin/services/statisticApi';
+import {useSkinMode} from '@Admin/hooks';
+import {useStatisticsQuery} from '@Admin/services/statisticApi';
 import TotalStatistic from '@Admin/components/TotalStatistic';
-import { ApiRoutesWithoutPrefix, mercureUrl, StatisticEnum } from '@Admin/constants';
-import { Tour, TourProps } from 'antd';
-import { useTranslation } from 'react-i18next';
-import { useSimulateMutation } from '@Admin/services/commandApi';
-import { toast } from 'react-toastify';
+import {ApiRoutesWithoutPrefix, mercureUrl, StatisticEnum} from '@Admin/constants';
+import {Tour, TourProps} from 'antd';
+import {useTranslation} from 'react-i18next';
+import {useSimulateMutation} from '@Admin/services/commandApi';
+import {toast} from 'react-toastify';
 import ChartBarModuleType from '@Admin/dashboard/ChartBarModuleType';
 import ChartPolarAreaSummaryType from '@Admin/dashboard/ChartPolarAreaSummaryType';
 import ChartProgressBarSummaryType from '@Admin/dashboard/ChartProgressBarSummaryType';
 import ChartDonutSummaryType from '@Admin/dashboard/ChartDonutSummaryType';
 import ChartSummaryStatus from '@Admin/dashboard/CharSummaryStatus';
 import LatestActivities from '@Admin/dashboard/LatestActivities';
-import { getApiRoutesWithPrefix } from '@Admin/utils';
+import {getApiRoutesWithPrefix} from '@Admin/utils';
 
 export default function Dashboard() {
     const { t } = useTranslation();
@@ -53,9 +53,9 @@ export default function Dashboard() {
             'topic',
             getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_TYPES),
         );
-        const eventSourceModule = new EventSource(urlModule);
-        const eventSourceModuleStatus = new EventSource(urlModuleStatus);
-        const eventSourceModuleType = new EventSource(urlModuleType);
+        const eventSourceModule = new EventSource(urlModule.toString());
+        const eventSourceModuleStatus = new EventSource(urlModuleStatus.toString());
+        const eventSourceModuleType = new EventSource(urlModuleType.toString());
 
         eventSourceModule.onmessage = (e: MessageEvent) => {
             if (e.data) {

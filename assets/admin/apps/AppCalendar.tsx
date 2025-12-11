@@ -1,26 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import '../assets/css/react-datepicker.min.css';
 import Header from '../layouts/Header';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { Button, Card, Modal, Nav } from 'react-bootstrap';
-import ReactDatePicker, { registerLocale } from 'react-datepicker';
+import {Button, Card, Modal, Nav} from 'react-bootstrap';
+import ReactDatePicker, {registerLocale} from 'react-datepicker';
 import allLocales from '@fullcalendar/core/locales-all';
-import { fr } from 'date-fns/locale'; // Import locales from date-fns
+import {fr} from 'date-fns/locale'; // Import locales from date-fns
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { ModuleHistory } from '@Admin/models';
-import { useSkinMode } from '@Admin/hooks';
-import {
-    useModuleHistoriesJsonLdQuery,
-    useModuleStatusesQuery,
-} from '@Admin/services/modulesApi';
-import { Flex, Tag } from 'antd';
-import { DatesSetArg, EventClickArg } from '@fullcalendar/core';
+import {ModuleHistory} from '@Admin/models';
+import {useSkinMode} from '@Admin/hooks';
+import {useModuleHistoriesJsonLdQuery, useModuleStatusesQuery,} from '@Admin/services/modulesApi';
+import {Flex, Tag} from 'antd';
+import {DatesSetArg, EventClickArg} from '@fullcalendar/core';
 import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
-import { getApiRoutesWithPrefix } from '@Admin/utils';
-import { ApiRoutesWithoutPrefix, mercureUrl } from '@Admin/constants';
+import {useTranslation} from 'react-i18next';
+import {getApiRoutesWithPrefix} from '@Admin/utils';
+import {ApiRoutesWithoutPrefix, mercureUrl} from '@Admin/constants';
 
 registerLocale('fr', fr);
 
@@ -53,7 +50,7 @@ export default function AppCalendar() {
 
     useEffect(() => {
         if (data) {
-            setHistories(data['hydra:member' as unknown as keyof typeof data]);
+            setHistories(data['member' as unknown as keyof typeof data]);
         }
     }, [data]);
 
@@ -73,7 +70,7 @@ export default function AppCalendar() {
             getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.MODULE_STATUSES),
         );
 
-        const eventSourceModuleStatus = new EventSource(urlModuleStatus);
+        const eventSourceModuleStatus = new EventSource(urlModuleStatus.toString());
         eventSourceModuleStatus.onmessage = (e: MessageEvent) => {
             if (e.data) {
                 refetchModuleStatuses();
@@ -92,7 +89,7 @@ export default function AppCalendar() {
             getApiRoutesWithPrefix(ApiRoutesWithoutPrefix.COMMANDS),
         );
 
-        const eventSourceModuleHistory = new EventSource(url);
+        const eventSourceModuleHistory = new EventSource(url.toString());
         eventSourceModuleHistory.onmessage = (e: MessageEvent) => {
             if (e.data) {
                 refetchHistories();
