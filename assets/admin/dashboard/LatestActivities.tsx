@@ -1,13 +1,13 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Card, Nav, Spinner} from 'react-bootstrap';
-import {ModuleHistory} from '@Admin/models';
-import {useTranslation} from 'react-i18next';
-import {List, Tag} from 'antd';
-import {useModuleHistoriesJsonLdQuery} from '@Admin/services/modulesApi';
-import {parseDate, useMercureSubscriber} from '@Admin/utils';
-import {useAppSelector} from '@Admin/store/store';
-import {selectCurrentLocale} from '@Admin/features/localeSlice';
-import {ApiRoutesWithoutPrefix} from '@Admin/constants';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Card, Nav, Spinner } from 'react-bootstrap';
+import { ModuleHistory } from '@Admin/models';
+import { useTranslation } from 'react-i18next';
+import { List, Tag } from 'antd';
+import { useModuleHistoriesJsonLdQuery } from '@Admin/services/modulesApi';
+import { parseDate, useMercureSubscriber } from '@Admin/utils';
+import { useAppSelector } from '@Admin/store/store';
+import { selectCurrentLocale } from '@Admin/features/localeSlice';
+import { ApiRoutesWithoutPrefix } from '@Admin/constants';
 
 const LatestActivities = () => {
     const { t } = useTranslation();
@@ -35,8 +35,7 @@ const LatestActivities = () => {
                 histories['view' as unknown as keyof typeof histories] &&
                 histories['view' as unknown as keyof typeof histories]['next']
             ) {
-                const data =
-                    histories['member' as unknown as keyof typeof histories];
+                const data = histories['member' as unknown as keyof typeof histories];
                 setList((prevState) => [...prevState, ...data]);
 
                 // Resetting window's offsetTop so as to display react-virtualized demo underfloor.

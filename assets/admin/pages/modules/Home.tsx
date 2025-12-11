@@ -1,20 +1,23 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Button, Row} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import {useSkinMode} from '@Admin/hooks';
-import type {GetProp, MenuProps, TableProps} from 'antd';
-import {Dropdown, Table} from 'antd';
-import {useDeleteModuleMutation, useModulesJsonLdQuery,} from '@Admin/services/modulesApi';
-import {Module} from '@Admin/models';
-import {formatDate, getErrorMessage, useMercureSubscriber} from '@Admin/utils';
-import {AdminPages, ApiRoutesWithoutPrefix} from '@Admin/constants';
-import {toast} from 'react-toastify';
-import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
-import {useTranslation} from 'react-i18next';
-import {useAppSelector} from '@Admin/store/store';
-import {selectCurrentLocale} from '@Admin/features/localeSlice';
+import { useSkinMode } from '@Admin/hooks';
+import type { GetProp, MenuProps, TableProps } from 'antd';
+import { Dropdown, Table } from 'antd';
+import {
+    useDeleteModuleMutation,
+    useModulesJsonLdQuery,
+} from '@Admin/services/modulesApi';
+import { Module } from '@Admin/models';
+import { formatDate, getErrorMessage, useMercureSubscriber } from '@Admin/utils';
+import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
+import { toast } from 'react-toastify';
+import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
+import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@Admin/store/store';
+import { selectCurrentLocale } from '@Admin/features/localeSlice';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -169,9 +172,7 @@ export default function Home() {
             setPagination((prevState) => ({
                 ...prevState,
                 total: Math.ceil(
-                    Number(
-                        dataApis['totalItems' as unknown as keyof typeof dataApis],
-                    ),
+                    Number(dataApis['totalItems' as unknown as keyof typeof dataApis]),
                 ),
             }));
             const data = dataApis['member' as unknown as keyof typeof dataApis];

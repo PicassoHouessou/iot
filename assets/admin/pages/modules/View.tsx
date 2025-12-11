@@ -1,14 +1,17 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Button, Col, Row, Spinner} from 'react-bootstrap';
-import {Link, useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Col, Row, Spinner } from 'react-bootstrap';
+import { Link, useParams } from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import {useSkinMode} from '@Admin/hooks';
-import {AdminPages} from '@Admin/constants';
-import {useModuleHistoriesJsonLdQuery, useModuleQuery,} from '@Admin/services/modulesApi';
-import {List, Tag} from 'antd';
-import {ModuleHistory} from '@Admin/models';
-import {useTranslation} from 'react-i18next';
+import { useSkinMode } from '@Admin/hooks';
+import { AdminPages } from '@Admin/constants';
+import {
+    useModuleHistoriesJsonLdQuery,
+    useModuleQuery,
+} from '@Admin/services/modulesApi';
+import { List, Tag } from 'antd';
+import { ModuleHistory } from '@Admin/models';
+import { useTranslation } from 'react-i18next';
 
 export default function View() {
     const { id } = useParams();
@@ -35,8 +38,7 @@ export default function View() {
                 histories['view' as unknown as keyof typeof histories] &&
                 histories['view' as unknown as keyof typeof histories]['next']
             ) {
-                const data =
-                    histories['member' as unknown as keyof typeof histories];
+                const data = histories['member' as unknown as keyof typeof histories];
                 setList((prevState) => [...prevState, ...data]);
 
                 // Resetting window's offsetTop so as to display react-virtualized demo underfloor.

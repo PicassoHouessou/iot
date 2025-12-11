@@ -1,17 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Row} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Button, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Footer from '../../layouts/Footer';
 import Header from '../../layouts/Header';
-import {useSkinMode} from '@Admin/hooks';
-import {Dropdown, GetProp, MenuProps, Table, TableProps, Tag} from 'antd';
-import {useDeleteModuleStatusMutation, useModuleStatusesJsonLdQuery,} from '@Admin/services/modulesApi';
-import {ModuleStatus} from '@Admin/models';
-import {getErrorMessage, useMercureSubscriber} from '@Admin/utils';
-import {AdminPages, ApiRoutesWithoutPrefix} from '@Admin/constants';
-import {useFiltersQuery, useHandleTableChange} from '@Admin/hooks/useFilterQuery';
-import {toast} from 'react-toastify';
-import {useTranslation} from 'react-i18next';
+import { useSkinMode } from '@Admin/hooks';
+import { Dropdown, GetProp, MenuProps, Table, TableProps, Tag } from 'antd';
+import {
+    useDeleteModuleStatusMutation,
+    useModuleStatusesJsonLdQuery,
+} from '@Admin/services/modulesApi';
+import { ModuleStatus } from '@Admin/models';
+import { getErrorMessage, useMercureSubscriber } from '@Admin/utils';
+import { AdminPages, ApiRoutesWithoutPrefix } from '@Admin/constants';
+import { useFiltersQuery, useHandleTableChange } from '@Admin/hooks/useFilterQuery';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -188,9 +191,7 @@ export default function Home() {
             setPagination((prevState) => ({
                 ...prevState,
                 total: Math.ceil(
-                    Number(
-                        dataApis['totalItems' as unknown as keyof typeof dataApis],
-                    ),
+                    Number(dataApis['totalItems' as unknown as keyof typeof dataApis]),
                 ),
             }));
             /*

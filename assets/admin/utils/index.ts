@@ -1,10 +1,15 @@
-import {ApiRoutesWithoutPrefix, DATE_FORMAT, MERCURE_NOTIFICATION_TYPE, mercureUrl,} from '@Admin/constants';
-import dayjs, {ConfigType} from 'dayjs';
+import {
+    ApiRoutesWithoutPrefix,
+    DATE_FORMAT,
+    MERCURE_NOTIFICATION_TYPE,
+    mercureUrl,
+} from '@Admin/constants';
+import dayjs, { ConfigType } from 'dayjs';
 import 'dayjs/locale/fr'; // Import the locale you want to use
 import localizedFormat from 'dayjs/plugin/localizedFormat'; // Import the localizedFormat plugin
-import {defaultLocale, Locale} from '@Admin/constants/language';
+import { defaultLocale, Locale } from '@Admin/constants/language';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import {useCallback} from 'react';
+import { useCallback } from 'react';
 
 // Extend dayjs with the localizedFormat plugin
 dayjs.extend(localizedFormat);
