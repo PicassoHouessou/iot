@@ -18,6 +18,7 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 /.idea
+/.vscode
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
